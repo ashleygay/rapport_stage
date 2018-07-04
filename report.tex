@@ -1,0 +1,378 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[11pt,]{article}
+\usepackage[]{utopia}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={Rapport de stage de fin d'etudes},
+            pdfauthor={13 June 2018},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{48,48,48}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.94,0.87,0.69}{#1}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.87,0.87,0.75}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.86,0.86,0.80}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.75,0.75,0.82}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{\textbf{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.94,0.94,0.56}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.94,0.94,0.56}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.94,0.87,0.69}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.94,0.94,0.82}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{\textbf{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.76,0.75,0.62}{#1}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\clearpage
+\title{Rapport de stage de fin d'etudes}
+\author{13 June 2018}
+\date{Corentin Gay}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\clearpage
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+\thispagestyle{empty}
+\clearpage
+}
+\section{Resume}\label{resume}
+
+J'ai decouvert Ada lors des cours a EPITA donnes par Raphael Amiard.
+J'ai trouve le langage tres interessant car les concepts (notamment
+l'oriente objet) sont assez differents de leurs equivalents en C++. Lors
+de ce cours, nous avions essaye de faire fonctionner un emulateur
+Gameboy code en C++ avec un programme Ada qui devait se charger de
+l'affichage, tout cela tournant sur une carte STM32F729. Malheureusement
+le projet n'a pas abouti mais j'en ai tout de meme garde
+
+Parler des trucs rtos ??
+
+parler de faire des trucs embedded mais d'avoir a les integrer dans un
+IDE ?? possibilite d'en apprendre plus sur le fonctionnement des
+runtimes et de leur role dans le developpement embarque en Ada
+
+Plusieurs facteurs ont affecte mon choix pour ce stage. Le premier est
+l'opportunite d'integrer mon travail dans un outil pre-existant. Ce
+point me semble important car il permet de comprendre le contexte
+technique dans lequel sera utilise mon travail. Le second point est le
+sujet qui me permet de toucher a plusieurs technologies tout en restant
+dans mon domaine de predilection, le developpement embarque. Par
+exemple, en apprendre plus sur les differents processeurs ARM et leurs
+assembleurs differents me paraissait etre une bonne experience a avoir.
+
+En Ada, il existe un concept de runtime, cette runtime est le logiciel
+qui va permettre d'utiliser certaines fonctionnalites du langage (par
+exemple : un allocateur memoire).
+
+Plusieurs types de runtime, 2 principaux types:
+
+\begin{itemize}
+\tightlist
+\item
+  runtimes ravenscar : possedent presque les features d'un RTOS
+\item
+  runtimes ZFP : minimum pour faire tourner du code Ada
+\end{itemize}
+
+Par exemple, la ZFP fournit un allocateur memoire utilisant une pile,
+avec une fonction \texttt{free} qui ne fait rien. Etant donne cet
+allocateur memoire il est impossible d'avoir une propagation d'exception
+efficace car on ne peut pas recupere la memoire allouee lorsqu'une
+exception est levee.
+
+Dans le contexte de ce stage nous ne parlerons que de runtimes ZFP.
+
+C'est quoi le linker script et le startup code ????
+
+Dans ce cadre la, lorsque je veux developper pour une nouvelle cible en
+compilation croisee, il faut recompiler une runtime pour en generer une
+adaptee a la cible. Pour cela il faut modifier le
+\texttt{linker\ script} pour representer le \texttt{mapping\ memoire} et
+le \texttt{startup\ code} afin d'utiliser l'assembleur de la cible.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{with}\NormalTok{ Ada.Text_IO;}
+
+\KeywordTok{procedure}\NormalTok{ Test (Entier : }\DataTypeTok{Integer}\NormalTok{);}
+\NormalTok{Test : }\DataTypeTok{Integer}\NormalTok{ := }\DecValTok{8}\NormalTok{;}
+\NormalTok{Test : }\DataTypeTok{Integer}\NormalTok{ := }\DecValTok{8}\NormalTok{;}
+\NormalTok{Test : }\DataTypeTok{Integer}\NormalTok{ := }\DecValTok{8}\NormalTok{;}
+\NormalTok{Test : }\DataTypeTok{Integer}\NormalTok{ := }\DecValTok{8}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+On peut diviser le contenu d'une runtime en trois grandes parties :
+
+\begin{itemize}
+\tightlist
+\item
+  cpu specifiques : architecture and float handling
+\item
+  device specific : memory mapping
+\item
+  board specific : additionnal mem mapping + device mapping
+\end{itemize}
+
+Dans le cas de ZFP, le code de la runtime elle-meme est identique d'un
+materiel a l'autre, c'est le contenu du \texttt{linker\ script} et du
+\texttt{startup\ code} qui va changer.
+
+Heureusement, ARM a creer un standard qui permet de decrire le materiel
+d'une famille de boards et de devices. Ce sont les CMSIS-Packs
+
+A partir de ces packs, on a toute les informations necessaires pour
+generer un linker script et le startup code pour une board donnee.
+
+\section{Introduction}\label{introduction}
+
+Contexte et complexite du stage
+
+\subsection{Rappel du sujet de stage}\label{rappel-du-sujet-de-stage}
+
+Mon sujet de stage s'intitulait `Improve baremetal support in GPS' et
+comportait plusieurs axes. Par exemple : ameliorer la stack view ou bien
+developper une register view ou encore, `investiguer' comment rendre la
+creation d'un projet plus simple et plus generique.
+
+J'ai choisi de m'attaquer a ce dernier. L'idee etait de fournir les
+outils a l'utilisateur fin qu'il puisse choisir sa cible de
+developpement et que GPS genere les fichiers necessaires afin de pouvoir
+commencer a developper apres la creation du projet.
+
+Cependant pour pouvoir executer du code Ada sur une cible donnee, il
+faut avoir un logiciel appelle une \texttt{runtime}. Ce logiciel fournit
+des fonctionnalitees du langage qui sont utilisee par le programme comme
+le support multi-taches, la propagation des exceptions ou un allocateur
+memoire.
+
+Etant donne que le code etant dans la runtime doit tourner sur la cible,
+il faut adapter la runtime a chaque cible. Actuellement, c'est une etape
+qui est fait manuellement. Il faut egalement savoir qu'il y a plusieurs
+types de runtime qui ne fournissent pas toutes les memes
+fonctionnatlites. Dans le cas de mon stage je me suis attaque a la
+question des \texttt{runtimes} dites \texttt{ZFP} pour
+\texttt{zero\ footprint}. Ce type de runtime est le minimum pour pouvoir
+faire tourner du code Ada. Par exemple, elle n'a pas de propagation
+d'exception, pas de support multi-taches et ne possede qu'un allocateur
+memoire naif.
+
+Dans le cas decrit ci-dessus, les modifications a effectuer dans le code
+de la runtime elle-meme sont nulles. Cependant, il faut tout de meme
+modifier le \texttt{crt0} qui permet de preparer les differentes
+memoires et qui appelle la fonction \texttt{main}. Il faut egalement
+modifier le \texttt{linker\ script}, le fichier responsable de la
+cartographie memoire, afin de specifier les zones memoires et quelles
+portions du code y mettre.
+
+Ces modifications dependent de la cible et necessite actuellement de
+lire la documentation afin de recuperer les infos utiles. Dans le cas
+d'une cible possedant un processeur cortex-m, ARM a creer un standard
+qui permet de decrire le materiel d'une \texttt{board} ou d'un
+\texttt{device} et \texttt{packageant} ces infos dans une archive zip.
+On appelle ces archives des CMSIS-Packs.
+
+La solution est donc d'utiliser ces packs pour automatiser le processus
+de modification du \texttt{startup\ code} et du \texttt{linker\ script}.
+Cette automatisation permet a l'utilisateur de choisir sa \texttt{board}
+de developpement lors de la creation d'un projet
+
+\subsection{Presentation de
+l'entreprise}\label{presentation-de-lentreprise}
+
+En 1992, l'universite de New York conclut un contrat avec
+l'\texttt{US\ Air\ Force} afin de creer un compilateur libre et standard
+afin d'aider a la diffusion du nouveau standard Ada, Ada 9X (qui
+deviendra Ada 95). Suite a ce projet, la societe Ada Core Technologies
+est cree a New York et la societee soeur ACT-Europe est cree deux annees
+plus tard. Ce n'est qu'en 2012 que les deux societes sont unifiees.
+
+AdaCore fournit un compilateur Ada appelle GNAT en plusieurs versions
+avec des licenses differentes. La version chaque version des
+fonctionnalite differentes, par exemple la version \texttt{Community} ne
+supporte que la derniere version du standard Ada, Ada 2012, alors que la
+version \texttt{Assurance} destinee aux projets de certifications ou a
+des projets de longues durees supporte jusqu'a Ada 83. De plus, avec la
+version \texttt{Community}, tout le code ecrit est soumis a la license
+GPL tandis qu'avec la version commerciale, une exception est presente
+dans la license permettant de ne pas etre soumis a la GPL.
+
+Pour aller avec le compilateur, AdaCore peut egalement aider les clients
+avec des projets de certifications. En effet, une partie des outils
+fournis par AdaCore, comme GNATcoverage, est qualifie pour le
+developpement d'outil en DO-178B en DAL A. C'est a dire le niveau de
+criticite le plus eleve dans l'industrie avionique. GNATcoverage aide a
+l'analyse de couverture de code ce qui permet de garantie qu'il n'y a
+pas de code qui n'est jamais execute.
+
+AdaCore a beaucoup de clients dans des domaines ou la presence d'erreurs
+n'est pas acceptable comme le domaine de l'avionique ou de la defense.
+Voici quelques projets que des clients d'AdaCore ont realises :
+
+\begin{itemize}
+\item
+  MDA, une division de Maxar Technologies, va utiliser Ada ainsi que le
+  produit GNAT Pro Assurance afin de realiser le logiciel en charge de
+  la communication espace-terre a bord de l'ISS.
+\item
+  Real Heart AB est une entreprise suedoise qui travaille sur un coeur
+  totalement artificiel. Afin de garantir le bon fonctionnement du
+  logiciel qui pilote le moteur de la pompe du coeur artificiel, elle a
+  choisi d'utiliser Ada ainsi que le compilateur GNAT Pro fourni par
+  AdaCore.
+\end{itemize}
+
+AdaCore travaille sur un compilateur Ada, GNAT. Ils fournissent des
+compilateurs croises qui visent une plate-forme specifique a leurs
+clients. Ils offrent egalement du support pro sur tous leurs produits.
+Parler des differentes runtimes ? Domaines : defense, aeorospatiale,
+securite (voir site)
+
+Mon stage se situe dans la perspective d'ameliorer l'experience des
+utilisateurs de GPS dans le domaine du \texttt{bare\ board}.
+
+Thematiques du stage : bare board, IDE et CMSIS-Packs Actuellement pas
+d'integration des CMSIS-Packs dans GPS. Contrairement a Eclipse qui
+supporte parfaitement les pack.
+
+Mon stage se deroule dans l'equipe IDE. Cette equipe s'occupe de la
+maintenace de l'IDE GPS. Cet IDE utilise les references croisees afin de
+fournir une meilleure experience de developpement a l'utilisateur. Mon
+stage s'insere donc parfaitement dans les thematiques de cette equipe.
+
+Ce support est specifique au langage Ada, le concepte de runtime est
+plus ou moins unique a ce langage.
+
+Rapport a epita: j'ai fait du bareboard et de l'Ada. J'avais deja essaye
+de faire un projet mixant Ada et C++, mais ce ne s'etait pas fini comme
+prevu. Pas de compilateur ds la toolchain d'AdaCore. Motivation: ca
+touchait a du bare metal, mais il fallait quand meme integrer ca dans un
+ide `classique' (en Ada lol)
+
+\section{Aspects organisationnels}\label{aspects-organisationnels}
+
+\subsection{Decoupage du stage}\label{decoupage-du-stage}
+
+\subsection{Diagramme de Gantt, Kanban
+??}\label{diagramme-de-gantt-kanban}
+
+\subsection{Points de controle}\label{points-de-controle}
+
+\subsection{Situations de Crise ?????
+Kesako}\label{situations-de-crise-kesako}
+
+\section{Aspects techniques}\label{aspects-techniques}
+
+Liste:
+
+\begin{itemize}
+\tightlist
+\item
+  generation du startup code
+\item
+  generation du linker script
+\item
+  base de donnees representant les packs
+\item
+  integration dans GPS
+\end{itemize}
+
+\subsection{Objectifs}\label{objectifs}
+
+\subsubsection{Alternatives}\label{alternatives}
+
+\subsection{Cadre du stage dans
+l'entreprise}\label{cadre-du-stage-dans-lentreprise}
+
+\subsection{Propositions retenues ou
+pas}\label{propositions-retenues-ou-pas}
+
+on ne genere pas des runtimes on prend celles de bb\_runtimes
+probablement par raison politique, le code de la runtime n'est pas
+ouvert au public \#\# Difficultes eventuelles \#\# Resultats obtenus
+avancement
+
+\section{Bilan}\label{bilan}
+
+\begin{itemize}
+\tightlist
+\item
+  pretty good
+\end{itemize}
+
+\end{document}
