@@ -1,10 +1,11 @@
 % Rapport de stage de fin d'etudes
-% 13 June 2018
+% X fevrier au 24 aout
 % Corentin Gay
 
 ---
 fontsize: 11pt
 fontfamily: utopia
+graphics: true
 ---
 
 # Resume
@@ -14,11 +15,7 @@ trouve le langage tres interessant car les concepts (notamment l'oriente objet)
 sont assez differents de leurs equivalents en C++. Lors de ce cours, nous
 avions essaye de faire fonctionner un emulateur Gameboy code en C++ avec un
 programme Ada qui devait se charger de l'affichage, tout cela tournant sur une
-carte STM32F729. Malheureusement le projet n'a pas abouti mais j'en ai tout de
-meme garde
-
-
-Parler des trucs rtos ??
+carte STM32F729. Les difficultes technique de ce projet m'ont passione et j'ai 
 
 parler de faire des trucs embedded mais d'avoir a les integrer dans un IDE ??
 possibilite d'en apprendre plus sur le fonctionnement des runtimes et de leur

@@ -2,6 +2,11 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[11pt,]{article}
+\usepackage{graphicx}
+\usepackage{titlesec}
+% Adds page clear before each new section
+\newcommand{\sectionbreak}{\clearpage}
+\usepackage{titletoc}
 \usepackage[]{utopia}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -30,7 +35,7 @@
 \usepackage{hyperref}
 \hypersetup{
             pdftitle={Rapport de stage de fin d'etudes},
-            pdfauthor={13 June 2018},
+            pdfauthor={X fevrier au 24 aout},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -74,6 +79,15 @@
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.76,0.75,0.62}{#1}}
 \newcommand{\NormalTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -95,12 +109,19 @@
 
 
 \clearpage
+%TODO: fix images for on the title page
 \title{Rapport de stage de fin d'etudes}
-\author{13 June 2018}
+\author{X fevrier au 24 aout}
 \date{Corentin Gay}
 
 \begin{document}
 \maketitle
+\begin{figure}
+\centering
+	\includegraphics{adacore.jpg}
+	\includegraphics[height=7cm]{epita.png}
+\end{figure}
+
 \thispagestyle{empty}
 \clearpage
 
@@ -117,10 +138,8 @@ J'ai trouve le langage tres interessant car les concepts (notamment
 l'oriente objet) sont assez differents de leurs equivalents en C++. Lors
 de ce cours, nous avions essaye de faire fonctionner un emulateur
 Gameboy code en C++ avec un programme Ada qui devait se charger de
-l'affichage, tout cela tournant sur une carte STM32F729. Malheureusement
-le projet n'a pas abouti mais j'en ai tout de meme garde
-
-Parler des trucs rtos ??
+l'affichage, tout cela tournant sur une carte STM32F729. Les difficultes
+technique de ce projet m'ont passione et j'ai
 
 parler de faire des trucs embedded mais d'avoir a les integrer dans un
 IDE ?? possibilite d'en apprendre plus sur le fonctionnement des
