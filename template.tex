@@ -5,6 +5,10 @@ $if(colorlinks)$
 $endif$
 %
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$if(beamer)$ignorenonframetext,$if(handout)$handout,$endif$$if(aspectratio)$aspectratio=$aspectratio$,$endif$$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\usepackage{graphicx}
+\usepackage{titlesec}
+% Adds page clear before each new section
+\newcommand{\sectionbreak}{\clearpage}
 $if(beamer)$
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
@@ -13,6 +17,8 @@ $if(beamer)$
 $endif$
 $if(beamerarticle)$
 \usepackage{beamerarticle} % needs to be loaded first
+$else$
+\usepackage{titletoc}
 $endif$
 $if(fontfamily)$
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
@@ -314,6 +320,7 @@ $endif$
 
 $if(title)$
 \clearpage
+%TODO: fix images for on the title page
 \title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 $if(subtitle)$
@@ -343,6 +350,12 @@ $if(beamer)$
 \frame{\titlepage}
 $else$
 \maketitle
+\begin{figure}
+\centering
+	\includegraphics{adacore.jpg}
+	\includegraphics[height=7cm]{epita.png}
+\end{figure}
+
 \thispagestyle{empty}
 \clearpage
 $endif$
