@@ -1,6 +1,6 @@
 % Rapport de stage de fin d'etudes
 % X fevrier au 24 aout
-% Corentin Gay
+% Corentin Gay : GISTRE
 
 ---
 fontsize: 11pt
@@ -12,14 +12,16 @@ graphics: true
 
 J'ai decouvert Ada lors des cours a EPITA donnes par Raphael Amiard. J'ai
 trouve le langage tres interessant car les concepts (notamment l'oriente objet)
-sont assez differents de leurs equivalents en C++. Lors de ce cours, nous
+sont assez differents de leurs equivalents en C++.
+
+Lors du projet associe a ce cours, nous
 avions essaye de faire fonctionner un emulateur Gameboy code en C++ avec un
 programme Ada qui devait se charger de l'affichage, tout cela tournant sur une
-carte STM32F729. Les difficultes technique de ce projet m'ont passione et j'ai 
-
-parler de faire des trucs embedded mais d'avoir a les integrer dans un IDE ??
-possibilite d'en apprendre plus sur le fonctionnement des runtimes et de leur
-role dans le developpement embarque en Ada
+carte STM32F729. Du a l'absence de compilateur croise pour le C++ dans la suite
+d'outil d'AdaCore, il a fallu faire fonctionner un compilateur C++ recuperer
+sur Internet avec les outils AdaCore. Ce projet n'a pas abouti mais les
+problematiques rencontrees ont ete interessantes et m'ont convaincu d'en
+apprendre plus sur le langage Ada.
 
 Plusieurs facteurs ont affecte mon choix pour ce stage. Le premier est
 l'opportunite d'integrer mon travail dans un outil pre-existant. Ce point me
@@ -30,59 +32,7 @@ developpement embarque. Par exemple, en apprendre plus sur les differents
 processeurs ARM et leurs assembleurs differents me paraissait etre une bonne
 experience a avoir.
 
-En Ada, il existe un concept de runtime, cette runtime est le
-logiciel qui va permettre d'utiliser certaines fonctionnalites du langage
-(par exemple : un allocateur memoire).
-
-Plusieurs types de runtime, 2 principaux types:
-
-- runtimes ravenscar : possedent presque les features d'un RTOS
-- runtimes ZFP : minimum pour faire tourner du code Ada
-
-Par exemple, la ZFP fournit un allocateur memoire utilisant une pile,
-avec une fonction `free` qui ne fait rien. Etant donne cet allocateur memoire
-il est impossible d'avoir une propagation d'exception efficace car on
-ne peut pas recupere la memoire allouee lorsqu'une exception est levee.
-
-Dans le contexte de ce stage nous ne parlerons que de runtimes ZFP.
-
-C'est quoi le linker script et le startup code ????
-
-Dans ce cadre la, lorsque je veux developper pour une nouvelle cible
-en compilation croisee, il faut recompiler une runtime pour en generer une
-adaptee a la cible. Pour cela il faut modifier le `linker script` pour
-representer le `mapping memoire` et le `startup code` afin d'utiliser
-l'assembleur de la cible.
-
-```Ada
-with Ada.Text_IO;
-
-procedure Test (Entier : Integer);
-Test : Integer := 8;
-Test : Integer := 8;
-Test : Integer := 8;
-Test : Integer := 8;
-```
-
-On peut diviser le contenu d'une runtime en trois grandes parties :
-
-- cpu specifiques : architecture and float handling
-- device specific : memory mapping
-- board specific : additionnal mem mapping + device mapping
-
-Dans le cas de ZFP, le code de la runtime elle-meme est identique d'un
-materiel a l'autre, c'est le contenu du `linker script` et du
-`startup code` qui va changer.
-
-Heureusement, ARM a creer un standard qui permet de decrire le materiel
-d'une famille de boards et de devices. Ce sont les CMSIS-Packs
-
-A partir de ces packs, on a toute les informations necessaires pour
-generer un linker script et le startup code pour une board donnee.
-
 # Introduction
-Contexte et complexite du stage
-
 
 ## Rappel du sujet de stage
 
@@ -165,13 +115,6 @@ communication espace-terre a bord de l'ISS.
 artificiel. Afin de garantir le bon fonctionnement du logiciel qui
 pilote le moteur de la pompe du coeur artificiel, elle a choisi d'utiliser
 Ada ainsi que le compilateur GNAT Pro fourni par AdaCore.
-
-AdaCore travaille sur un compilateur Ada, GNAT.
-Ils fournissent des compilateurs croises qui visent
-une plate-forme specifique a leurs clients.
-Ils offrent egalement du support pro sur tous leurs produits.
-Parler des differentes runtimes ?
-Domaines : defense, aeorospatiale, securite (voir site)
 
 Mon stage se situe dans la perspective d'ameliorer l'experience
 des utilisateurs de GPS dans le domaine du `bare board`.
