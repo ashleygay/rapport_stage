@@ -1,6 +1,7 @@
 % Rapport de stage de fin d'études
-% 19 février au 24 aout
-% Corentin Gay : GISTRE
+% Corentin Gay
+  GISTRE 2018
+% 19/02/2018 au 24/08/2018
 
 ---
 fontsize: 11pt
@@ -10,20 +11,21 @@ graphics: true
 
 # Résumé
 
-J'ai découvert Ada lors des cours a EPITA donnes par Raphael Amiard. J'ai
-trouve le langage tres interessant car les concepts (notamment l'oriente objet)
-sont assez differents de leurs equivalents en C++.
+J'ai découvert Ada lors des cours à EPITA donnés par Raphaël Amiard. J'ai
+trouvé le langage très intéressant car les concepts (notamment l'orienté objet)
+sont assez différents de leurs équivalents en C++. De plus, grâce aux concepts
+des `contrats`, Ada simplifie la vérification de l'exactitude d'un programme.
 
 Plusieurs facteurs ont affecte mon choix pour ce stage. Le premier est
-l'opportunite d'integrer mon travail dans un outil pre-existant. Ce point me
+l'opportunite d'intégrer mon travail dans un outil pré-éxistant. Ce point me
 semble important car il permet de comprendre le contexte technique dans lequel
-sera utilise mon travail. Le second point est le sujet qui me permet de toucher
-a plusieurs technologies tout en restant dans mon domaine de predilection, le
-developpement embarque. Par exemple, en apprendre plus sur les differents
-processeurs ARM et leurs assembleurs differents me paraissait etre une bonne
-experience a avoir.
+sera utilisé mon travail. Le second point est le sujet qui me permet de toucher
+a plusieurs technologies tout en restant dans mon domaine de prédilection, le
+développement embarqué. Par exemple, en apprendre plus sur les différents
+processeurs ARM et leurs assembleurs me paraissait être une bonne
+expérience a avoir.
 
-C'est donc pour ca que j'ai candidaté chez AdaCore pour ce stage.
+C'est donc pour ces différentes raisons que j'ai candidaté chez AdaCore.
 
 J'ai commencé mon stage le 19 février, j'ai d'abord été accueilli par mes
 collègues et ma première tâche a été d'écrire un plugin Python pour l'IDE
@@ -32,57 +34,61 @@ de revue de code ainsi qu'avec le code de GPS. J'ai ensuite commencé à étudie
 mon sujet de stage et comment pouvions nous améliorer le support du
 `bare-metal` dans GPS.
 
-Apres a
+Apres deux prototypes explorant le sujet, nous avons fait une réunion avec
+mes encadrants afin de décider de la suite du stage et nous avons ainsi
+décidé d'une architecture et des outils que j'allait développer.
 
 # Introduction
 
 ## Rappel du sujet de stage
 
 Mon sujet de stage s'intitulait 'Improve baremetal support in GPS' et
-comportait plusieurs axes. Par exemple : ameliorer la stack view ou bien
-developper une register view ou encore, 'investiguer' comment rendre la
-creation d'un projet plus simple et plus generique.
+comportait les axes suivants:
 
-J'ai choisi de m'attaquer a ce dernier. L'idee etait de fournir les outils a
+- améliorer la `stack view`
+- développer une register view
+- explorer la possibilité d'intégrer les CMSIS-Packs dans GPS
+
+J'ai choisi de m'attaquer à ce dernier sujet. L'idée etait de fournir les outils a
 l'utilisateur fin qu'il puisse choisir sa cible de developpement et que GPS
-genere les fichiers necessaires afin de pouvoir commencer a developper apres la
-creation du projet.
+génère les fichiers nécessaires afin de pouvoir commencer a développer apres la
+création du projet.
 
-Cependant pour pouvoir executer du code Ada sur une cible donnee, il faut
-avoir un logiciel appelle une `runtime`. Ce logiciel fournit des
-fonctionnalitees du langage qui sont utilisee par le programme comme le support
-multi-taches, la propagation des exceptions ou un allocateur memoire.
+Cependant pour pouvoir exécuter du code Ada sur une cible donnée, il faut
+avoir un logiciel appellé une `runtime`. Ce logiciel implémente des
+fonctionnalitées du langage qui sont utilisée par le programme comme le support
+multi-tâches, la propagation des exceptions ou un allocateur mémoire.
 
-Etant donne que le code etant dans la runtime doit tourner sur la cible, il
-faut adapter la runtime a chaque cible. Actuellement, c'est une etape qui est
-fait manuellement. Il faut egalement savoir qu'il y a plusieurs types de
-runtime qui ne fournissent pas toutes les memes fonctionnatlites. Dans le cas
-de mon stage je me suis attaque a la question des `runtimes` dites `ZFP` pour
+Etant donné que le code étant dans la runtime doit tourner sur la cible, il
+faut adapter la runtime à chaque cible. Actuellement, c'est une étape qui est
+faite manuellement. Il faut également savoir qu'il y a plusieurs types de
+runtime qui ne fournissent pas toutes les mêmes fonctionnatlités. Dans le cas
+de mon stage je me suis attaqué a la question des `runtimes` dites `ZFP` pour
 `zero footprint`. Ce type de runtime est le minimum pour pouvoir faire tourner
 du code Ada. Par exemple, elle n'a pas de propagation d'exception, pas de
-support multi-taches et ne possede qu'un allocateur memoire naif.
+support multi-tâches et ne possède qu'un allocateur memoire naif.
 
-Dans le cas decrit ci-dessus, les modifications a effectuer dans le code de la
-runtime elle-meme sont nulles. Cependant, il faut tout de meme modifier le
-`crt0` qui permet de preparer les differentes memoires et qui appelle la
-fonction `main`. Il faut egalement modifier le `linker script`, le fichier
-responsable de la cartographie memoire, afin de specifier les zones memoires et
+Dans le cas décrit ci-dessus, les modifications à effectuer dans le code de la
+runtime elle-même sont nulles. Cependant, il faut tout de même modifier le
+`startup-code` qui permet de préparer le matériel à l'execution du programme et
+appelle la fonction `main`. Il faut également modifier le `linker script`, le fichier
+responsable de la cartographie mémoire, afin de spécifier les zones memoires et
 quelles portions du code y mettre.
 
-Ces modifications dependent de la cible et necessite actuellement de lire la
-documentation afin de recuperer les infos utiles. Dans le cas d'une cible
-possedant un processeur cortex-m, ARM a creer un standard qui permet de decrire
+Ces modifications dépendent de la cible et nécessite actuellement de lire la
+documentation afin de récuperer les infos utiles. Dans le cas ou on travail
+avec un processeur cortex-m, ARM a créé un standard qui permet de décrire
 le materiel d'une `board` ou d'un `device` et `packageant` ces infos dans une
 archive zip. On appelle ces archives des CMSIS-Packs.
 
 La solution est donc d'utiliser ces packs pour automatiser le processus de
 modification du `startup code` et du `linker script`. Cette automatisation
 permet a l'utilisateur de choisir sa `board` de dévelopement lors de la
-création d'un projet 
+création d'un projet.
 
 ## Présentation de l'entreprise
 En 1992, l'universite de New York conclut un contrat avec l'`US Air Force` afin
-de creer un compilateur libre et standard afin d'aider a la diffusion du
+de creer un compilateur libre afin d'aider a la diffusion du
 nouveau standard Ada, Ada 9X (qui deviendra Ada 95).
 Suite a ce projet, la societe Ada Core Technologies est cree a New York et la
 societee soeur ACT-Europe est cree deux annees plus tard. Ce n'est qu'en 2012
@@ -118,6 +124,20 @@ artificiel. Afin de garantir le bon fonctionnement du logiciel qui
 pilote le moteur de la pompe du coeur artificiel, elle a choisi d'utiliser
 Ada ainsi que le compilateur GNAT Pro fourni par AdaCore.
 
+secteur <> entreprise <> service <> equipe <> stage
+Secteur:
+
+- leader dans son secteur malgré de la compétition
+    - PTC ObjectAda, partial support for Ada 2012 ppc and x86 targets
+
+- service PE: product enhancement c'est la partie technique de l'entreprise
+
+- équipe IDE: s'occupe de l'outil GPS, ainsi qu'une partie des outils qu'il
+  utilise : GNATCOLL,  GNATHub, integration de GNAT dans workbench
+
+- stage : improve the experience of a user starting developing in Ada on a new
+  board
+
 Mon stage se situe dans la perspective d'ameliorer l'experience
 des utilisateurs de GPS dans le domaine du `bare board`.
 
@@ -147,13 +167,13 @@ dont le but était d'interfacer du code C++ avec du code Ada.
 Cursus EPITA:
 - projet Ada
 
-## Intérèt du stage pour l'entreprise
+## Intérêt du stage pour l'entreprise
 
-Rapport a epita: j'ai fait du bareboard et de l'Ada.
-J'avais deja essaye de faire un projet mixant Ada et C++, mais ce
-ne s'etait pas fini comme prevu. Pas de compilateur ds la toolchain d'AdaCore.
-Motivation: ca touchait a du bare metal, mais il fallait quand meme integrer ca
-dans un ide 'classique' (en Ada lol)
+Rapport a EPITA: j'ai fait du bareboard et de l'Ada.
+J'avais déjà essayé de faire un projet mixant Ada et C++, mais ce
+ne s'était pas fini comme prévu. Pas de compilateur dans la toolchain d'AdaCore.
+Motivation: ça touchait à du bare metal, mais il fallait quand meme intégrer ça
+dans un IDE 'classique' (en Ada lol)
 
 ## Contexte de travail
 
@@ -163,40 +183,101 @@ dans un ide 'classique' (en Ada lol)
     - wiki interne
     - github de Fabien avec un prototype
     - github ARM avec le standard CMSIS-Pack
-- disponibilite des personnes competentes
+- disponibilité des personnes compétentes
     - Anthony
     - Fabien
-- description de ce que j'ai utilise et comment cela a aide la realisation
+- description de ce que j'ai utilisé et comment cela a aidé la réalisation
   de mon stage
-    - bibliotheque standard python 2.7
-    - bibliotheque GNATCOLL pour interfacer avec les fichiers projets
+    - bibliothèque standard python 2.7
+    - bibliothèque GNATCOLL pour interfacer avec les fichiers projets
 - apports externes
-    - parler des papers sur gnat de cyrille comar
+    - parler des papiers sur gnat et du site qui explique les runtimes
 
 # Aspects organisationnels
 ## Découpage du stage
+Périodes:
+
+- plugin GPS au début
+- fais 2-3 scripts pour explorer les possibilités des packs
+- phase principale
+    - point sur le stage
+    - architecture des outils
+    - travail sur les differents outils
+        - gpr2ld
+	- database
+	- integration dans GPS
+	- tests
+Livrables:
+
+- différents outils
+
 ## Diagramme de Gantt, Kanban ??
+
+- schéma des tâches successives a réaliser
+
 ## Points de controle
-## Situations de Crise ????? Kesako
+
+- Parler des monthly internship commits
+
+## Gestions des problèmes
+Liste:
+
+- mauvais analyseur syntaxique pour le python XML
+    - problemes d'efficacite (malloc tout le fichier en memoire)
+
+- probleme du schéma de la base de donnée
+    - refait le schéma en simplifiant les données (plus 'd'héritage')
+
+- intégration a pris plus de temps que prévu, j'ai du ajouter une
+  fonctionnalité à GPS afin de pouvoir y intégrer mon travail
+
 
 # Aspects techniques
 Liste:
 
-- generation du startup code
-- generation du linker script
-- base de donnees representant les packs
-- integration dans GPS
+- schéma de l'architecture du code
+- géneration du startup code
+- géneration du linker script
+- base de données représentant les packs
+- intégration dans GPS
+- fix des bugs
 
 ## Objectifs
 ### Alternatives
 ## Cadre du stage dans l'entreprise
 ## Propositions retenues ou pas
-on ne genere pas des runtimes on prend celles de bb_runtimes
+on ne génère pas des runtimes on prend celles de bb_runtimes
 probablement par raison politique, le code de la runtime n'est pas ouvert au
 public
 ## Difficultes éventuelles
 ## Résultats obtenus
 avancement
 
-# Bilan
-- pretty good
+# Premier bilan
+## état de l'art du marché ? (Eclipse)
+- intégration totale des cmsispacks dans Eclipse (pick and choose your
+  driver)
+- plugin Ada incompatible avec l'integration CMSIS-Packs ??
+## intéret pour l'entreprise
+- perspectives pour le futur
+    - ajouter le support des drivers pour les packs
+    - générer des bindings Ada pour les drivers
+    - intégrer l'outil dans la suite de compilation
+- valeur ajoutée (way better support for hobbyists)
+## expérience (technique et organisationnelle) acquise pendant le stage
+- technique
+	- bien meilleure connaissance de l'Ada
+    - bien meilleure connaissance de Python
+    - ameliore mes connaissances en Vim
+    - ameliore mes connaissances en Assembleur (ARM)
+    - plus de facilite a lire du code
+    - grace aux internships commits,
+      meilleur a communiquer mon avancement et a des presentations
+- organisationnelle
+    - meilleure organisation personnelle
+    - note tout
+    - peut etre utilise un agenda electronique pour noter mes
+    - taches plutot qu'un cahier
+## retour d'expérience, points perfectibles a posteriori
+## pertinence de la formation au regard du stage
+
