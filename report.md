@@ -1,5 +1,5 @@
-% Rapport de stage de fin d'etudes
-% X fevrier au 24 aout
+% Rapport de stage de fin d'études
+% 19 février au 24 aout
 % Corentin Gay : GISTRE
 
 ---
@@ -8,20 +8,11 @@ fontfamily: utopia
 graphics: true
 ---
 
-# Resume
+# Résumé
 
-J'ai decouvert Ada lors des cours a EPITA donnes par Raphael Amiard. J'ai
+J'ai découvert Ada lors des cours a EPITA donnes par Raphael Amiard. J'ai
 trouve le langage tres interessant car les concepts (notamment l'oriente objet)
 sont assez differents de leurs equivalents en C++.
-
-Lors du projet associe a ce cours, nous
-avions essaye de faire fonctionner un emulateur Gameboy code en C++ avec un
-programme Ada qui devait se charger de l'affichage, tout cela tournant sur une
-carte STM32F729. Du a l'absence de compilateur croise pour le C++ dans la suite
-d'outil d'AdaCore, il a fallu faire fonctionner un compilateur C++ recuperer
-sur Internet avec les outils AdaCore. Ce projet n'a pas abouti mais les
-problematiques rencontrees ont ete interessantes et m'ont convaincu d'en
-apprendre plus sur le langage Ada.
 
 Plusieurs facteurs ont affecte mon choix pour ce stage. Le premier est
 l'opportunite d'integrer mon travail dans un outil pre-existant. Ce point me
@@ -31,6 +22,17 @@ a plusieurs technologies tout en restant dans mon domaine de predilection, le
 developpement embarque. Par exemple, en apprendre plus sur les differents
 processeurs ARM et leurs assembleurs differents me paraissait etre une bonne
 experience a avoir.
+
+C'est donc pour ca que j'ai candidaté chez AdaCore pour ce stage.
+
+J'ai commencé mon stage le 19 février, j'ai d'abord été accueilli par mes
+collègues et ma première tâche a été d'écrire un plugin Python pour l'IDE
+d'AdaCore, GPS. Le but de cette tâche était de me familiariser avec le système
+de revue de code ainsi qu'avec le code de GPS. J'ai ensuite commencé à étudier
+mon sujet de stage et comment pouvions nous améliorer le support du
+`bare-metal` dans GPS.
+
+Apres a
 
 # Introduction
 
@@ -75,10 +77,10 @@ archive zip. On appelle ces archives des CMSIS-Packs.
 
 La solution est donc d'utiliser ces packs pour automatiser le processus de
 modification du `startup code` et du `linker script`. Cette automatisation
-permet a l'utilisateur de choisir sa `board` de developpement lors de la
-creation d'un projet 
+permet a l'utilisateur de choisir sa `board` de dévelopement lors de la
+création d'un projet 
 
-## Presentation de l'entreprise
+## Présentation de l'entreprise
 En 1992, l'universite de New York conclut un contrat avec l'`US Air Force` afin
 de creer un compilateur libre et standard afin d'aider a la diffusion du
 nouveau standard Ada, Ada 9X (qui deviendra Ada 95).
@@ -119,6 +121,8 @@ Ada ainsi que le compilateur GNAT Pro fourni par AdaCore.
 Mon stage se situe dans la perspective d'ameliorer l'experience
 des utilisateurs de GPS dans le domaine du `bare board`.
 
+## Maturité de l'entreprise sur les thématiques du stage
+
 Thematiques du stage : bare board, IDE et CMSIS-Packs
 Actuellement pas d'integration des CMSIS-Packs dans GPS.
 Contrairement a Eclipse qui supporte parfaitement les pack.
@@ -129,7 +133,21 @@ meilleure experience de developpement a l'utilisateur. Mon stage s'insere donc
 parfaitement dans les thematiques de cette equipe.
 
 Ce support est specifique au langage Ada,
-le concepte de runtime est plus ou moins unique a ce langage.
+car le concept de runtime est plus ou moins unique a ce langage.
+
+## État des connaissances sur le sujet
+
+J'avais déjà utilisé les runtimes Ada pour un projet embarque sur une STM32F729
+dont le but était d'interfacer du code C++ avec du code Ada.
+
+- Détailler Ada
+- Détailler Python
+- Détailler ASM
+
+Cursus EPITA:
+- projet Ada
+
+## Intérèt du stage pour l'entreprise
 
 Rapport a epita: j'ai fait du bareboard et de l'Ada.
 J'avais deja essaye de faire un projet mixant Ada et C++, mais ce
@@ -137,8 +155,26 @@ ne s'etait pas fini comme prevu. Pas de compilateur ds la toolchain d'AdaCore.
 Motivation: ca touchait a du bare metal, mais il fallait quand meme integrer ca
 dans un ide 'classique' (en Ada lol)
 
+## Contexte de travail
+
+- moyens fournis par l'entreprise
+    - ordinateur configure comme je l'entendais (QWERTY)
+- l'accessibilite des documentation
+    - wiki interne
+    - github de Fabien avec un prototype
+    - github ARM avec le standard CMSIS-Pack
+- disponibilite des personnes competentes
+    - Anthony
+    - Fabien
+- description de ce que j'ai utilise et comment cela a aide la realisation
+  de mon stage
+    - bibliotheque standard python 2.7
+    - bibliotheque GNATCOLL pour interfacer avec les fichiers projets
+- apports externes
+    - parler des papers sur gnat de cyrille comar
+
 # Aspects organisationnels
-## Decoupage du stage
+## Découpage du stage
 ## Diagramme de Gantt, Kanban ??
 ## Points de controle
 ## Situations de Crise ????? Kesako
@@ -158,8 +194,8 @@ Liste:
 on ne genere pas des runtimes on prend celles de bb_runtimes
 probablement par raison politique, le code de la runtime n'est pas ouvert au
 public
-## Difficultes eventuelles
-## Resultats obtenus
+## Difficultes éventuelles
+## Résultats obtenus
 avancement
 
 # Bilan
