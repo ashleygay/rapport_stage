@@ -1,14 +1,14 @@
 % Rapport de stage de fin d'études
 % Corentin Gay
   GISTRE 2018
-% 19/02/2018 au 24/08/2018
+% Du 19/02/2018 au 24/08/2018
 
 ---
 fontsize: 11pt
 fontfamily: utopia
 graphics: true
 ---
-
+[//]: # (Hello this is a comment)
 # Résumé
 
 J'ai découvert Ada lors des cours à EPITA donnés par Raphaël Amiard. J'ai
@@ -87,36 +87,37 @@ permet a l'utilisateur de choisir sa `board` de dévelopement lors de la
 création d'un projet.
 
 ## Présentation de l'entreprise
-En 1992, l'universite de New York conclut un contrat avec l'`US Air Force` afin
-de creer un compilateur libre afin d'aider a la diffusion du
+En 1992, l'université de New York conclut un contrat avec l'`US Air Force` afin
+de créer un compilateur libre afin d'aider a la diffusion du
 nouveau standard Ada, Ada 9X (qui deviendra Ada 95).
-Suite a ce projet, la societe Ada Core Technologies est cree a New York et la
-societee soeur ACT-Europe est cree deux annees plus tard. Ce n'est qu'en 2012
-que les deux societes sont unifiees.
+Suite a ce projet, la société Ada Core Technologies est crée a New York et la
+sociétée sœur ACT-Europe est crée deux années plus tard. Ce n'est qu'en 2012
+que les deux sociétés sont unifiées.
 
-AdaCore fournit un compilateur Ada appelle GNAT en plusieurs versions avec des
-licenses differentes. La version chaque version des fonctionnalite differentes,
-par exemple la version `Community` ne supporte que la derniere version du
-standard Ada, Ada 2012, alors que la version `Assurance` destinee aux projets
-de certifications ou a des projets de longues durees supporte jusqu'a Ada 83.
-De plus, avec la version `Community`, tout le code ecrit est soumis a la
-license GPL tandis qu'avec la version commerciale, une exception est presente
-dans la license permettant de ne pas etre soumis a la GPL.
+AdaCore fournit un compilateur Ada appellé GNAT en plusieurs versions avec des
+licenses différentes. Chaque version possède des fonctionnalite differentes,
+par exemple la version `Community` ne supporte que la dernière version du
+standard Ada, Ada 2012, alors que la version `Assurance` destinée aux projets
+de certifications ou a des projets de longues durees supporte jusqu'à Ada 83.
+De plus, avec la version `Community`, tout le code écrit est soumis à la
+license GPL ce qui n'est pas le cas avec la version commerciale
 
 Pour aller avec le compilateur, AdaCore peut egalement aider les clients avec
 des projets de certifications. En effet,
 une partie des outils fournis par AdaCore, comme GNATcoverage, est qualifie
-pour le developpement d'outil en DO-178B en DAL A. C'est a dire le niveau de
-criticite le plus eleve dans l'industrie avionique. GNATcoverage aide a
-l'analyse de couverture de code ce qui permet de garantie qu'il n'y a pas de
-code qui n'est jamais execute.
+pour le développement d'outil en DO-178B en DAL A. C'est a dire le niveau de
+criticité le plus élevé dans pourl le standard avionique. GNATcoverage aide a
+l'analyse de couverture de code ce qui permet de garantir qu'il n'y a pas de
+code qui n'est jamais éxecuté.
 
-AdaCore a beaucoup de clients dans des domaines ou la presence d'erreurs n'est
-pas acceptable comme le domaine de l'avionique ou de la defense. Voici quelques
-projets que des clients d'AdaCore ont realises :
+AdaCore a beaucoup de clients dans des domaines ou la présence d'erreurs dans
+un logiciel d'erreurs n'est pas acceptable. Par exemple, les deux domaines ou
+AdaCore le plus de clients sont l'avionique de le secteur de la défense.
+
+Exemple de projets que des clients d'AdaCore ont realisés :
 
 - MDA, une division de Maxar Technologies, va utiliser Ada ainsi que le
-produit GNAT Pro Assurance afin de realiser le logiciel en charge de la
+produit GNAT Pro Assurance afin de remplacer le logiciel en charge de la
 communication espace-terre a bord de l'ISS.
 
 - Real Heart AB est une entreprise suedoise qui travaille sur un coeur totalement
@@ -143,7 +144,11 @@ des utilisateurs de GPS dans le domaine du `bare board`.
 
 ## Maturité de l'entreprise sur les thématiques du stage
 
-Thematiques du stage : bare board, IDE et CMSIS-Packs
+En ce qui concerne le support des plates-formes embarquées, AdaCore supporte a
+la fois des cibles dites `bare-metal` ou des cibles avec des OS embarqués de
+type VxWorks, PikeOS ou encore LynxOS.
+
+Thematiques du stage : bare board, IDE et CMSIS-Packs et Communauté
 Actuellement pas d'integration des CMSIS-Packs dans GPS.
 Contrairement a Eclipse qui supporte parfaitement les pack.
 
@@ -161,24 +166,28 @@ J'avais déjà utilisé les runtimes Ada pour un projet embarque sur une STM32F7
 dont le but était d'interfacer du code C++ avec du code Ada.
 
 - Détailler Ada
-- Détailler Python
-- Détailler ASM
+Projet Ada en GISTRE
 
-Cursus EPITA:
-- projet Ada
+- Détailler Python
+
+- Détailler ASM
+Projet Assembleur en ING1, projet ARM en GISTRE + projet de fin d'études
+
+Je ne connaissais pas les CMSIS-Packs.
 
 ## Intérêt du stage pour l'entreprise
 
 Rapport a EPITA: j'ai fait du bareboard et de l'Ada.
 J'avais déjà essayé de faire un projet mixant Ada et C++, mais ce
 ne s'était pas fini comme prévu. Pas de compilateur dans la toolchain d'AdaCore.
+
 Motivation: ça touchait à du bare metal, mais il fallait quand meme intégrer ça
 dans un IDE 'classique' (en Ada lol)
 
 ## Contexte de travail
 
 - moyens fournis par l'entreprise
-    - ordinateur configure comme je l'entendais (QWERTY)
+    - ordinateur configuré comme je l'entendais (QWERTY)
 - l'accessibilite des documentation
     - wiki interne
     - github de Fabien avec un prototype
@@ -189,7 +198,7 @@ dans un IDE 'classique' (en Ada lol)
 - description de ce que j'ai utilisé et comment cela a aidé la réalisation
   de mon stage
     - bibliothèque standard python 2.7
-    - bibliothèque GNATCOLL pour interfacer avec les fichiers projets
+    - bibliothèque GNATCOLL pour lire avec les fichiers projets
 - apports externes
     - parler des papiers sur gnat et du site qui explique les runtimes
 
@@ -231,7 +240,6 @@ Liste:
 - intégration a pris plus de temps que prévu, j'ai du ajouter une
   fonctionnalité à GPS afin de pouvoir y intégrer mon travail
 
-
 # Aspects techniques
 Liste:
 
@@ -254,7 +262,7 @@ public
 avancement
 
 # Premier bilan
-## état de l'art du marché ? (Eclipse)
+## état de l'art du marché ? (Eclipse, sans doute ??)
 - intégration totale des cmsispacks dans Eclipse (pick and choose your
   driver)
 - plugin Ada incompatible avec l'integration CMSIS-Packs ??
