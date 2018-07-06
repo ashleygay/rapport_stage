@@ -49,8 +49,8 @@ comportait les axes suivants:
 - développer une register view
 - explorer la possibilité d'intégrer les CMSIS-Packs dans GPS
 
-J'ai choisi de m'attaquer à ce dernier sujet. L'idée etait de fournir les outils a
-l'utilisateur fin qu'il puisse choisir sa cible de developpement et que GPS
+J'ai choisi de m'attaquer à ce dernier sujet. L'idée etait de fournir les outils à
+l'utilisateur fin qu'il puisse choisir sa cible de développement et que GPS
 génère les fichiers nécessaires afin de pouvoir commencer a développer apres la
 création du projet.
 
@@ -87,6 +87,7 @@ permet a l'utilisateur de choisir sa `board` de dévelopement lors de la
 création d'un projet.
 
 ## Présentation de l'entreprise
+### Historique
 En 1992, l'université de New York conclut un contrat avec l'`US Air Force` afin
 de créer un compilateur libre afin d'aider a la diffusion du
 nouveau standard Ada, Ada 9X (qui deviendra Ada 95).
@@ -116,34 +117,95 @@ AdaCore le plus de clients sont l'avionique de le secteur de la défense.
 
 Exemple de projets que des clients d'AdaCore ont realisés :
 
-- MDA, une division de Maxar Technologies, va utiliser Ada ainsi que le
-produit GNAT Pro Assurance afin de remplacer le logiciel en charge de la
-communication espace-terre a bord de l'ISS.
+- MDA, une division de Maxar Technologies, va utiliser Ada ainsi que le produit
+  GNAT Pro Assurance afin de remplacer le logiciel en charge de la
+  communication espace-terre a bord de l'ISS.
 
 - Real Heart AB est une entreprise suedoise qui travaille sur un coeur totalement
-artificiel. Afin de garantir le bon fonctionnement du logiciel qui
-pilote le moteur de la pompe du coeur artificiel, elle a choisi d'utiliser
-Ada ainsi que le compilateur GNAT Pro fourni par AdaCore.
+  artificiel. Afin de garantir le bon fonctionnement du logiciel qui pilote le
+  moteur de la pompe du coeur artificiel, elle a choisi d'utiliser Ada ainsi
+  que le compilateur GNAT Pro fourni par AdaCore.
 
-secteur <> entreprise <> service <> equipe <> stage
-Secteur:
+### Contexte concurentiel
 
-- leader dans son secteur malgré de la compétition
-    - PTC ObjectAda, partial support for Ada 2012 ppc and x86 targets
+AdaCore n'est pas seule dans le domaine des compilateurs Ada.
+Voici un aperçu des principaux concurrents.
 
-- service PE: product enhancement c'est la partie technique de l'entreprise
+                        Green Hills Ada Compilers                 ObjectAda
+---------------------   --------------------------                ----------------
+Company                 Greens Hills Software                     PTC
+Supported standards     Ada95                                     Ada95, Ada2012 (partiel)
+Targets                 Power, ARM/Thumb, 68k, MIPS, x86, SPARC   PPC, x86
+Runtime                 Ravenscar (non multitâche)                Ravenscar
+---------------------   --------------------------                ----------------
+: Aperçu des compilateurs Ada concurrents
 
-- équipe IDE: s'occupe de l'outil GPS, ainsi qu'une partie des outils qu'il
-  utilise : GNATCOLL,  GNATHub, integration de GNAT dans workbench
+Note: pour plus de détails sur le standard Ada2012 voir
+-> https://en.wikibooks.org/wiki/Ada_Programming/Ada_2012
 
-- stage : improve the experience of a user starting developing in Ada on a new
-  board
+#### ObjectAda
 
-Mon stage se situe dans la perspective d'ameliorer l'experience
+Ce compilateur est écrit par la société PTC. Il a l'avantage de supporter une
+partie du standard Ada 2012. Il supporte les pré-conditions et les
+post-conditions, les nouveaux types d'expressions ainsi que la gestion des
+aspects. Cependant, ces fonctionnalités ne sont disponible sur les
+plates-formes natives Windows.
+
+À côté de ça, il supporte Ada95 et cible les architectures PowerPC et x86
+
+#### Green Hills Ada Compilers
+
+Mon stage se situe dans la perspective d'améliorer l'expérience
 des utilisateurs de GPS dans le domaine du `bare board`.
 
-## Maturité de l'entreprise sur les thématiques du stage
 
+### Organisation
+
+AdaCore est organisée en cercles. Chaque cercle a une responsabilité bien
+particulière. Dans mon cas, j'ai intégré le cercle PE (Product Engineering).
+Ce cercle est responsable de créer, de faire évoluer et de maintenir les
+produits d'AdaCore. Il est également responsable du support client pour les outils qu'il
+maintient. C'est la force du support offert d'AdaCore, de pouvoir contacter
+directement les personnes qui ont une expertise forte sur les produits qu'ils
+maintiennent. Ce cercle s'occupe aussi
+de la QA (Quality Assurance) et des partenariats de contrats de recherche.
+
+Au sein de ce cercle j'ai intégrer le sous-cercle IDE. Son rôle est de s'occuper de
+l'IDE (GPS) ainsi que des bibliothèques périphériques. Par exemple, cette
+équipe s'occupe de l'intégration de GNAT dans l'IDE de WindRiver (Workbench)
+afin de pouvoir facilement faire tourner des applications en Ada sur les
+différentes versions de VxWorks, un OS propriétaire très utilisé dans le
+domaine du temps-réel embarqué.
+
+Dans ce contexte j'ai surtout interagi avec l'équipe GPS dont mon maître de
+stage fait partie. Comme je devait intégrer mon travail dans GPS, cela a été
+très utile de pouvoir communiquer facilement avec les personnes qui
+travaillent sur l'outil. J'ai également beaucoup avec un membre de l'équipe
+CROSS qui a été à l'origine de mon sujet de stage. Il a pu me guider lorsque
+j'avais des questions techniques vis-a-vis des `runtimes` Ada.
+
+## État des connaissances sur le sujet
+
+J'avais déjà utilisé les runtimes Ada pour un projet embarque sur une STM32F729
+dont le but était d'interfacer du code C++ avec du code Ada. Mon expérience
+avec l'Ada était donc plutôt limitée et je voulais profiter de ce stage pour en
+apprendre plus sur ce langage.
+
+Au cours de mon cursus, je n'ai pas beaucoup utilisé Python, cependant je
+l'utilise sur mon temps libre pour personnaliser certains aspects de ma
+distribution Linux, je n'étais donc pas complètement novice sur ce sujet.
+
+J'ai l'expérience de plusieurs projets à EPITA concernant l'assembleur, le
+premier projet est le projet assembleur en ING1 qui touchait surtout
+l'assembleur x86. En GISTRE, j'ai touché un peu à de l'assembleur ARM grâce au
+projet ARM. Enfin, lors de mon projet de fin d'études, j'ai dû lire de
+l'assembleur 8080 afin de débugguer notre émulateur Gameboy. Je voulais
+profiter de mon stage pour en apprendre plus sur les différentes architectures
+ARM et leurs différents assembleurs.
+
+## Maturité et intérêt du stage pour l'entreprise
+
+Maturite:
 En ce qui concerne le support des plates-formes embarquées, AdaCore supporte a
 la fois des cibles dites `bare-metal` ou des cibles avec des OS embarqués de
 type VxWorks, PikeOS ou encore LynxOS.
@@ -152,43 +214,20 @@ Thematiques du stage : bare board, IDE et CMSIS-Packs et Communauté
 Actuellement pas d'integration des CMSIS-Packs dans GPS.
 Contrairement a Eclipse qui supporte parfaitement les pack.
 
-Mon stage se deroule dans l'equipe IDE. Cette equipe s'occupe de la maintenace
-de l'IDE GPS. Cet IDE utilise les references croisees afin de fournir une
-meilleure experience de developpement a l'utilisateur. Mon stage s'insere donc
-parfaitement dans les thematiques de cette equipe.
+Mon stage se déroule dans l'équipe IDE. Cette équipe s'occupe de la maintenance
+de l'IDE GPS. Cet IDE utilise les références croisées afin de fournir une
+meilleure experience de développement a l'utilisateur. Mon stage s'insère donc
+parfaitement dans les thématiques de cette équipe.
 
-Ce support est specifique au langage Ada,
-car le concept de runtime est plus ou moins unique a ce langage.
-
-## État des connaissances sur le sujet
-
-J'avais déjà utilisé les runtimes Ada pour un projet embarque sur une STM32F729
-dont le but était d'interfacer du code C++ avec du code Ada.
-
-- Détailler Ada
-Projet Ada en GISTRE
-
-- Détailler Python
-
-- Détailler ASM
-Projet Assembleur en ING1, projet ARM en GISTRE + projet de fin d'études
-
-Je ne connaissais pas les CMSIS-Packs.
-
-## Intérêt du stage pour l'entreprise
-
-Rapport a EPITA: j'ai fait du bareboard et de l'Ada.
-J'avais déjà essayé de faire un projet mixant Ada et C++, mais ce
-ne s'était pas fini comme prévu. Pas de compilateur dans la toolchain d'AdaCore.
-
-Motivation: ça touchait à du bare metal, mais il fallait quand meme intégrer ça
-dans un IDE 'classique' (en Ada lol)
+Ce support est spécifique au langage Ada,
+car le concept de runtime est plus ou moins unique à ce langage.
 
 ## Contexte de travail
 
 - moyens fournis par l'entreprise
     - ordinateur configuré comme je l'entendais (QWERTY)
-- l'accessibilite des documentation
+    - 3 boards différentes pour pouvoir tester mes outils
+- l'accessibilité des documentations
     - wiki interne
     - github de Fabien avec un prototype
     - github ARM avec le standard CMSIS-Pack
@@ -199,8 +238,10 @@ dans un IDE 'classique' (en Ada lol)
   de mon stage
     - bibliothèque standard python 2.7
     - bibliothèque GNATCOLL pour lire avec les fichiers projets
+    - code pré-existant des autres runtimes pour comprendre leur fonctionnement
 - apports externes
     - parler des papiers sur gnat et du site qui explique les runtimes
+    - papiers envoyé par Fabien
 
 # Aspects organisationnels
 ## Découpage du stage
