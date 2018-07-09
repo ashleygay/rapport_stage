@@ -5,7 +5,6 @@ $if(colorlinks)$
 $endif$
 %
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$if(beamer)$ignorenonframetext,$if(handout)$handout,$endif$$if(aspectratio)$aspectratio=$aspectratio$,$endif$$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
-\usepackage{graphicx}
 \usepackage[french]{babel}
 \usepackage{titlesec}
 % Adds page clear before each new section
@@ -396,6 +395,12 @@ $if(lof)$
 \listoffigures
 $endif$
 $body$
+
+$if(glossary)$
+\clearpage
+\thispagestyle{empty}
+\printglossaries
+$endif$
 
 $if(natbib)$
 $if(bibliography)$

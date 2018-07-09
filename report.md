@@ -6,9 +6,36 @@
 ---
 fontsize: 11pt
 fontfamily: utopia
+glossary: true
 graphics: true
+header-includes:
+    - \usepackage{glossaries}
+    - \makeglossaries
+    - \newglossaryentry{bare-metal}{name=Bare-Metal,
+       description={Un programme dit `bare-metal` est un programme qui tourne
+       sur du matériel sans système d'exploitation}}
+    - \newglossaryentry{IDE}{name=IDE,
+       description={(Integrated Development Environment) Programme qui facilite
+       le développement informatique en intégrant plusieurs outils dans le même
+       environnement}}
+    - \newglossaryentry{GPS}{name=GPS,
+       description={GNAT Programming Studio, l'IDE phare d'AdaCore}}
+    - \newglossaryentry{runtime}{name=Runtime,
+       description={Bibliothèque nécessaire pour faire tourner du code Ada sur
+       une cible, elle fournit certaines fonctionnalitées du langage}}
+    - \newglossaryentry{GNATCOLL}{name=GNATCOLL,
+       description={(GNAT Components Collection) Bibliotèque Ada fournissant
+       du code permettant d'utiliser des bibliothèques externes. Par
+       exemple, GNATCOLL fournie une API pour interragir avec une base de
+       données.}}
+    - \newglossaryentry{linker script}{name=Linker Script,
+       description={Fichier décrivant à l'éditeur de lien comment arranger la
+       cartographie mémoire dans l'éxécutable final.}}
+    - \newglossaryentry{startup code}{name=Startup Code,
+       description={Aussi appellé 'crt0', c'est le bout de code qui est
+       responsable d'initialiser la mémoire ainsi que d'appeller le point
+       d'entrée du programme.}}
 ---
-[//]: # (Hello this is a comment)
 # Résumé
 
 J'ai découvert Ada lors des cours à EPITA donnés par Raphaël Amiard. J'ai
@@ -28,11 +55,11 @@ expérience a avoir.
 C'est donc pour ces différentes raisons que j'ai candidaté chez AdaCore.
 
 J'ai commencé mon stage le 19 février, j'ai d'abord été accueilli par mes
-collègues et ma première tâche a été d'écrire un plugin Python pour l'IDE
-d'AdaCore, GPS. Le but de cette tâche était de me familiariser avec le système
-de revue de code ainsi qu'avec le code de GPS. J'ai ensuite commencé à étudier
+collègues et ma première tâche a été d'écrire un plugin Python pour l'\gls{IDE}
+d'AdaCore, \gls{GPS}. Le but de cette tâche était de me familiariser avec le système
+de revue de code ainsi qu'avec le code de \gls{GPS}. J'ai ensuite commencé à étudier
 mon sujet de stage et comment pouvions nous améliorer le support du
-`bare-metal` dans GPS.
+\gls{bare-metal} dans \gls{GPS}.
 
 Apres deux prototypes explorant le sujet, nous avons fait une réunion avec
 mes encadrants afin de décider de la suite du stage et nous avons ainsi
@@ -42,15 +69,15 @@ décidé d'une architecture et des outils que j'allait développer.
 
 ## Rappel du sujet de stage
 
-Mon sujet de stage s'intitulait 'Improve baremetal support in GPS' et
+Mon sujet de stage s'intitulait 'Improve baremetal support in \gls{GPS}' et
 comportait les axes suivants:
 
 - améliorer la `stack view`
 - développer une register view
-- explorer la possibilité d'intégrer les CMSIS-Packs dans GPS
+- explorer la possibilité d'intégrer les CMSIS-Packs dans \gls{GPS}
 
 J'ai choisi de m'attaquer à ce dernier sujet. L'idée etait de fournir les outils à
-l'utilisateur fin qu'il puisse choisir sa cible de développement et que GPS
+l'utilisateur fin qu'il puisse choisir sa cible de développement et que \gls{GPS}
 génère les fichiers nécessaires afin de pouvoir commencer a développer apres la
 création du projet.
 
@@ -103,16 +130,16 @@ de certifications ou a des projets de longues durees supporte jusqu'à Ada 83.
 De plus, avec la version `Community`, tout le code écrit est soumis à la
 license GPL ce qui n'est pas le cas avec la version commerciale
 
-Pour aller avec le compilateur, AdaCore peut egalement aider les clients avec
+Pour aller avec le compilateur, AdaCore peut également aider les clients avec
 des projets de certifications. En effet,
-une partie des outils fournis par AdaCore, comme GNATcoverage, est qualifie
-pour le développement d'outil en DO-178B en DAL A. C'est a dire le niveau de
-criticité le plus élevé dans pourl le standard avionique. GNATcoverage aide a
+une partie des outils fournis par AdaCore, comme GNATcoverage, est qualifié
+pour le développement d'outil en DO-178B en DAL A. C'est à dire le niveau de
+criticité le plus élevé pour le standard avionique. GNATcoverage aide à
 l'analyse de couverture de code ce qui permet de garantir qu'il n'y a pas de
-code qui n'est jamais éxecuté.
+code qui n'est jamais exécuté.
 
 AdaCore a beaucoup de clients dans des domaines ou la présence d'erreurs dans
-un logiciel d'erreurs n'est pas acceptable. Par exemple, les deux domaines ou
+un logiciel n'est pas acceptable. Par exemple, les deux domaines ou
 AdaCore le plus de clients sont l'avionique de le secteur de la défense.
 
 Voici des exemples de projets que des clients d'AdaCore ont realisés :
@@ -168,15 +195,15 @@ directement les personnes qui ont une expertise forte sur les produits qu'ils
 maintiennent. Ce cercle s'occupe aussi
 de la QA (Quality Assurance) et des partenariats de contrats de recherche.
 
-Au sein de ce cercle j'ai intégrer le sous-cercle IDE. Son rôle est de s'occuper de
-l'IDE (GPS) ainsi que des bibliothèques périphériques. Par exemple, cette
-équipe s'occupe de l'intégration de GNAT dans l'IDE de WindRiver (Workbench)
+Au sein de ce cercle j'ai intégrer le sous-cercle \gls{IDE}. Son rôle est de s'occuper de
+l'\gls{IDE} (\gls{GPS}) ainsi que des bibliothèques périphériques. Par exemple, cette
+équipe s'occupe de l'intégration de GNAT dans l'\gls{IDE} de WindRiver (Workbench)
 afin de pouvoir facilement faire tourner des applications en Ada sur les
 différentes versions de VxWorks, un OS propriétaire très utilisé dans le
 domaine du temps-réel embarqué.
 
-Dans ce contexte j'ai surtout interagi avec l'équipe GPS dont mon maître de
-stage fait partie. Comme je devait intégrer mon travail dans GPS, cela a été
+Dans ce contexte j'ai surtout interagi avec l'équipe \gls{GPS} dont mon maître de
+stage fait partie. Comme je devait intégrer mon travail dans \gls{GPS}, cela a été
 très utile de pouvoir communiquer facilement avec les personnes qui
 travaillent sur l'outil. J'ai également beaucoup avec un membre de l'équipe
 CROSS qui a été à l'origine de mon sujet de stage. Il a pu me guider lorsque
@@ -203,62 +230,66 @@ ARM et leurs différents assembleurs.
 
 ## Maturité et intérêt du stage pour l'entreprise
 
-[//]: # (TODO DO IT)
+Côté embarqué, AdaCore possède beaucoup de ports différents. GNAT Pro
+supporte des OS dits temps-réels comme VxWorks ou LynxOS et supporte
+également des cibles \gls{bare-metal}, c'est à dire des cibles sans OS.
 
-Maturite:
-En ce qui concerne le support des plates-formes embarquées, AdaCore supporte a
-la fois des cibles dites `bare-metal` ou des cibles avec des OS embarqués de
-type VxWorks, PikeOS ou encore LynxOS.
+L'\gls{IDE} d'AdaCore (\gls{GPS}) permet de faciliter le développement embarqué en
+fournissant une interface de connection à la `board` facile d'utilisation.
+Cependant, \gls{GPS} ne supporte pas les CMSIS-Packs dans son état actuel, ce qui
+rend difficile le développement embarqué sur une carte non supportée.
+L'intérêt du stage est donc clair pour AdaCore, la simplification du processus
+de développement permet d'enlever une barrière à l'adoption de l'\gls{IDE} \gls{GPS}.
 
-Thematiques du stage : bare board, IDE et CMSIS-Packs et Communauté
-Actuellement pas d'integration des CMSIS-Packs dans GPS.
-Contrairement a Eclipse qui supporte parfaitement les pack.
-
-Mon stage se déroule dans l'équipe IDE. Cette équipe s'occupe de la maintenance
-de l'IDE GPS. Cet IDE utilise les références croisées afin de fournir une
-meilleure experience de développement a l'utilisateur. Mon stage s'insère donc
-parfaitement dans les thématiques de cette équipe.
-
-Ce support est spécifique au langage Ada,
-car le concept de runtime est plus ou moins unique à ce langage.
+Aucun outil Ada ne posséde actuellement d'intégration des CMSIS-Packs,
+contrairement aux outils pour le C ou il y a déjà un écosystème bien installé.
+Cela permet donc de faciliter la diffusion du langage en levant une autre
+barrière au développement.
 
 ## Contexte de travail
 
-J'ai pu rapidement me mettre a travailler efficacement grace a la
-documentation interne. De plus, la disposition physique des locaux m'a permit,
-lorsque j'avais des questions complexes, d'aller voir directemetn la personne
-concernee afin d'obtenir une reponse claire.
+J'ai pu rapidement me mettre à travailler efficacement grâce a la
+documentation interne. De plus, la disposition physique des locaux m'a permis,
+lorsque j'avais des questions complexes, d'aller voir directement la personne
+concernée afin d'obtenir une réponse claire.
 
-Concernant le sujet du stage, un collegue avait deja realise un prototype
-utilisant les CMSIS-Packs, j'ai pu donc m'en inspirer afin d'avancer plus vite
-dans mon travail. De plus, la haute disponibilite des 2 personnes encadrant mon
-stage m'a permis d'avancer vite et de ne pas rester bloque sur des obstacles
+J'était encadré par deux personnes, Anthony Leonardo Gracio et Fabien
+Chouteau, deux anciens épitéens. Anthony fait partie de l'équipe \gls{GPS} et m'a
+aidé à intégrer mon code dans \gls{GPS} et à écrire du meilleur code en faisant les
+revues sur le code que j'écrivait. Fabien fait partie de l'équipe Bare-Board et
+c'est lui qui est à l'origine de mon sujet de stage. Il m'a aidé lorsque
+j'avais des questions vis à vis de certaines technologies ou du
+fonctionnement d'Ada dans le domaine de l'embarqué.
+
+Concernant le sujet du stage, un collègue avait deja realisé un prototype
+utilisant les CMSIS-Packs, j'ai pu m'en inspirer afin d'avancer plus vite
+dans mon travail. De plus, la haute disponibilité des 2 personnes encadrant mon
+stage m'a permis d'avancer vite et de ne pas rester bloqué sur des obstacles
 qu'ils pouvaient m'aider a resoudre.
 
-Pour comprendre comment fonctionnaient les runtimes j'ai utilise les papiers
+Pour comprendre comment fonctionnaient les runtimes j'ai utilisé les papiers
 suivants (Papers related to runtimes HERE). + DETAILS
-
-Lorsque j'ai commence a tester les prototypes que j'ai fait, j'avait 3 cartes
-differentes a ma disposition. Une STM32F429 et deux cartes Atmel, une xplained
-pro samd20 et une xplained pro sam4e. Toutes ces cartes avaient de moyens de
-communication et des CPUS differents afin de me permettre de tester mes outils
-le plus possible.
-
 LINK TO DESCRIPTION of those boards in the appendix
 
-En termes de logiciels utilises, j'ai principalement utilise la bibliotheque
-standard Python 2.7, ainsi qu'une bibliotheque Ada nommee GNATCOLL (GNAT
-COLlection of Libraries). J'ai utilisee cette derniere afin de pouvoir
-interagir avec ce qu'on appelle les fichiers projets. Ces fichiers decrivent
-comment compiler un programme en Ada en utilisant GNAT, j'ai utilise la
-grammaire de ces fichiers pour pouvoir representer les infos concernat une
-board.
+Lorsque j'ai commence a tester les prototypes que j'ai fait, j'avait 3 cartes
+differentes a ma disposition. Une STM32F429 et deux cartes Atmel, une SAMD20
+et une SAM4E. Toutes ces cartes avaient des moyens de communication ou des
+CPUS différents afin de me permettre de tester le code que je produisait sur le
+plus de cibles variées.
+
+En termes de logiciels utilisés, j'ai principalement utilisé la bibliothèque
+standard Python 2.7, ainsi qu'une bibliothèque Ada nommée \gls{GNATCOLL}.
+Cette bibliothèque fournie beaucoup de
+fonctionnalitées, mais je l'ai principalement utilisé pour modifier et lire les
+fichiers dits `projets`. Ces fichiers servent à décrire la structure d'un
+projet Ada et j'ai utilisé le même formalisme afin de décrire les informations
+nécessaires pour décrire une board.
 
 # Aspects organisationnels
 ## Découpage du stage
 Périodes:
 
-- plugin GPS au début
+- plugin \gls{GPS} au début
 - fais 2-3 scripts pour explorer les possibilités des packs
 - phase principale
     - point sur le stage
@@ -266,7 +297,7 @@ Périodes:
     - travail sur les differents outils
         - gpr2ld
 	- database
-	- integration dans GPS
+	- integration dans \gls{GPS}
 	- tests
 Livrables:
 
@@ -287,19 +318,24 @@ Liste:
     - problemes d'efficacite (malloc tout le fichier en memoire)
 
 - probleme du schéma de la base de donnée
-    - refait le schéma en simplifiant les données (plus 'd'héritage')
+    - refait le schéma en simplifiant les données (no more héritage)
 
 - intégration a pris plus de temps que prévu, j'ai du ajouter une
-  fonctionnalité à GPS afin de pouvoir y intégrer mon travail
+  fonctionnalité à \gls{GPS} afin de pouvoir y intégrer mon travail.
 
 # Aspects techniques
+
+Présentation de l'architecture du code yeah probably
+
+expliquer le concept de runtime dans un des outils
+
 Liste:
 
 - schéma de l'architecture du code
 - géneration du startup code
 - géneration du linker script
 - base de données représentant les packs
-- intégration dans GPS
+- intégration dans \gls{GPS}
 - fix des bugs
 
 ## Objectifs
@@ -307,37 +343,123 @@ Liste:
 ## Cadre du stage dans l'entreprise
 ## Propositions retenues ou pas
 on ne génère pas des runtimes on prend celles de bb_runtimes
-probablement par raison politique, le code de la runtime n'est pas ouvert au
-public
+probablement par raison politique, le code de la runtime n'est pas public
+
 ## Difficultes éventuelles
+
 ## Résultats obtenus
+
 avancement
 
 # Premier bilan
-## état de l'art du marché ? (Eclipse, sans doute ??)
+
+## État de l'art sur les IDE Ada
+
 - intégration totale des cmsispacks dans Eclipse (pick and choose your
   driver)
-- plugin Ada incompatible avec l'integration CMSIS-Packs ??
-## intéret pour l'entreprise
+
+- plugin Ada incompatible avec l'intégration CMSIS-Packs ??
+
+## État de l'art sur l'intégration des CMSIS-Packs ???
+
+- currently Eclipse
+    - integration totale des CMSIS-Packs
+    - choisir quels drivers utiliser
+    - choisir des exemples de projets à instancier
+    - accéder à la documentation
+
 - perspectives pour le futur
     - ajouter le support des drivers pour les packs
     - générer des bindings Ada pour les drivers
     - intégrer l'outil dans la suite de compilation
 - valeur ajoutée (way better support for hobbyists)
-## expérience (technique et organisationnelle) acquise pendant le stage
-- technique
-	- bien meilleure connaissance de l'Ada
-    - bien meilleure connaissance de Python
-    - ameliore mes connaissances en Vim
-    - ameliore mes connaissances en Assembleur (ARM)
-    - plus de facilite a lire du code
-    - grace aux internships commits,
-      meilleur a communiquer mon avancement et a des presentations
-- organisationnelle
-    - meilleure organisation personnelle
-    - note tout
-    - peut etre utilise un agenda electronique pour noter mes
-    - taches plutot qu'un cahier
-## retour d'expérience, points perfectibles a posteriori
-## pertinence de la formation au regard du stage
+
+## Intérêt du stage pour l'entreprise
+
+- easier to start learning Ada (more boards)
+    - easier to start using GNAT
+    - Ada can now compete on every platform that supports cmsis packs
+
+-  maybe we generate ravenscar runtimes
+
+## Expérience personnelle acquise pendant le stage
+
+### Intérêt technique
+
+J'avais seulement fait un projet en Ada lors de mon cursus à EPITA et je
+voulais profiter de mon expérience à AdaCore pour en apprendre plus. En
+travaillant sur un des outils que j'ai fait en Ada j'ai beaucoup appris sur la
+manière de travailler avec ce langage. Ada est un langage ou la phase de
+design est particulièrement importante car le langage se veut résilient au
+changement. J'ai pu donc m'améliorer sur ce que je considère être une de mes
+faiblesse, la propention a commencer à coder sans avoir une vision claire de
+l'architecture du code. Les diverses revues de code m'ont permis également de
+rendre mon code plus clair notamment en limitant la taille des fonctions et en
+choisissant des noms de fonction appropriées.
+
+J'ai égalment beaucoup progressé dans mon apprentissage du Python. Beaucoup de
+mes outils était développé sont en Python, ce qui m'a permis de mieux
+comprendre certains idiomes du langage et d'avoir appris à mieux utiliser la
+bibliothèque standard du langage.
+
+En arrivant à AdaCore j'ai du configurer mon éditeur (Vim) afin de pouvoir
+écrire du code Ada efficacement. J'ai écris plusieurs scripts qui me permettent
+de générer du code `boiler plate` et d'appliquer la coding-style
+automatiquement en tappant du code. J'ai également écrit des scripts me
+permettant d'écrire ce rapport en français de manière plus efficace, notamment
+pour ce qui touche aux charactères accentués.
+
+Lors de mon stage j'ai dû écrire des patrons de générations de code Assembleur
+pour plusieurs architectures différentes (ARMV6 et ARMV7). J'ai du traduire du
+code tournant sur ARMV7 vers l'architecture ARMV6. Comme j'ai dû écrire un
+patron de linker script à générer, j'ai également approfondi ma connaissance des
+différentes sections du linker et de leurs rôles.
+
+A certains moments de mon stage, j'ai dû aller lire du code, soit parceque
+j'avais des interrogations et que personne ne connaissait le réponse, soit
+parceque j'avais un doute sur la façon dont certaines fonctions étaient
+implémentées. Notamment, je n'ai pas trouvé de documentation qui expliquait
+clairement quelles unitées de mesure de mémoire utilisait l'éditeur de liens,
+j'ai du donc aller lire le code.
+
+AdaCore organise des `Monthly Interns Commits`. Ce sont des séances d'une heure
+ou chaqun des stagiaires d'AdaCore présente son travail, son avancement et les
+problêmes qu'il a rencontré. Les retours suite aux présentations m'ont vraiment
+aidé à rendre mes diapositives plus claires ainsi qu'à les rendre plus
+synthétiques. J'ai passé un peu de temps à améliorer ma présentation et j'ai
+réussi à rendre l'explication de mon sujet de stage beaucoup plus abordable,
+notamment en situant mieux le contexte des runtimes qui est particulier à Ada.
+Anthony a également revu certaines de mes présentations et m'a aidé à les
+améliorer en les rendants plus pertinentes et plus claires, notamment en
+remplaçant des slides par un schéma.
+
+### Intérêt organisationnel
+
+J'ai appliqué ce que j'avais appris lors de mon stage précédent, c'est à dire
+de ne pas hésiter à demander des éclaircissements quand les spécifications de
+ce que je devais développer n'étaient pas claires. Dans le cas où je suis
+bloqué à cause d'un problême technique j'ai également tiré les leçons de mon
+stage précédent et je n'ai pas hésité à aller poser des questions aux personnes
+qui m'encadraient.
+
+Je pense également avoir été plus TODO que pendant mon stage précédent. Lorsque
+je trouvais un problême dans les outils que j'utilisait, je créais un ticket au
+minimum et dans certains cas je cherchais un peu pour essayer de trouver d'ou
+venait le bug et j'ai soumis quelques patchs de cette façon.
+
+Je me suis également beaucoup mieux organisé puisque je gardais une trace de
+mes tâches à réaliser dans mon cahier. Cela m'a permis d'être beaucoup mieux
+organisé, de prioriser mon travail et de me donner des buts à accomplir chaque
+jour. Si j'avais quelquechose à changer dans cette organisation ce serait
+d'utiliser un programme plutôt qu'un cahier pour organiser mes tâches.
+
+## Retours sur le stage et pertinence de la formation
+
+En ce qui concerne les points perfectibles du stage, je pense que j'aurais dû
+commencer à penser au design des outils depuis le début du stage. En effet,
+j'ai commencé par faire plusieurs scripts prototypes. Cependant, n'ayant pas
+encore très bien cerné mon sujet de stage, ces script n'ont finalement pas été
+utilisés car le problême qu'ils resolvaient était déjà résolu par d'autres
+outils d'AdaCore.
+
 
