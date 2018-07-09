@@ -115,7 +115,7 @@ AdaCore a beaucoup de clients dans des domaines ou la présence d'erreurs dans
 un logiciel d'erreurs n'est pas acceptable. Par exemple, les deux domaines ou
 AdaCore le plus de clients sont l'avionique de le secteur de la défense.
 
-Exemple de projets que des clients d'AdaCore ont realisés :
+Voici des exemples de projets que des clients d'AdaCore ont realisés :
 
 - MDA, une division de Maxar Technologies, va utiliser Ada ainsi que le produit
   GNAT Pro Assurance afin de remplacer le logiciel en charge de la
@@ -128,36 +128,34 @@ Exemple de projets que des clients d'AdaCore ont realisés :
 
 ### Contexte concurentiel
 
-AdaCore n'est pas seule dans le domaine des compilateurs Ada.
-Voici un aperçu des principaux concurrents.
+AdaCore n'est pas la seule entreprise  dans le domaine des compilateurs Ada.
+Voici un rapide aperçu des principaux compilateurs concurrents.
 
-                        Green Hills Ada Compilers                 ObjectAda
----------------------   --------------------------                ----------------
-Company                 Greens Hills Software                     PTC
-Supported standards     Ada95                                     Ada95, Ada2012 (partiel)
-Targets                 Power, ARM/Thumb, 68k, MIPS, x86, SPARC   PPC, x86
-Runtime                 Ravenscar (non multitâche)                Ravenscar
----------------------   --------------------------                ----------------
+                        Green Hills Ada Compilers
+---------------------   -----------------------------------------
+Entreprise              Greens Hills Software
+Standards               Ada95
+Plates-formes cibles    Power, ARM/Thumb, 68k, MIPS, x86, SPARC
+Runtime                 Ravenscar (non multitâche)
+---------------------   -----------------------------------------
 : Aperçu des compilateurs Ada concurrents
 
-Note: pour plus de détails sur le standard Ada2012 voir
--> https://en.wikibooks.org/wiki/Ada_Programming/Ada_2012
+                          ObjectAda
+---------------------     -----------------------------------------------------
+Entreprise                PTC
+Standards                 Ada95
+                          Ada2012 (partiel, seulement pour Windows 10 natif)
+Plates-formes cibles      PPC, x86
+Runtime                   Ravenscar
+---------------------     -----------------------------------------------------
 
-#### ObjectAda
-
-Ce compilateur est écrit par la société PTC. Il a l'avantage de supporter une
-partie du standard Ada 2012. Il supporte les pré-conditions et les
-post-conditions, les nouveaux types d'expressions ainsi que la gestion des
-aspects. Cependant, ces fonctionnalités ne sont disponible sur les
-plates-formes natives Windows.
-
-À côté de ça, il supporte Ada95 et cible les architectures PowerPC et x86
-
-#### Green Hills Ada Compilers
-
-Mon stage se situe dans la perspective d'améliorer l'expérience
-des utilisateurs de GPS dans le domaine du `bare board`.
-
+Par rapport a ses concurrents, GNAT Pro a l'avantage de supporter la derniere
+version du standard Ada (Ada2012) ainsi que toutes les version anterieures, et
+ce tout aussi bien sur des plate-formes natives qu'en compilation croisee.
+GNAT Pro supporte egalement bien plus de plate-formes cibles 64bits et supporte
+egalement plus d'OS temps-reels comme PikeOS ou LynxOS. On peut donc en
+conclure que meme si AdaCore a de la competition, elle reste premiere dans
+son domaine.
 
 ### Organisation
 
@@ -205,6 +203,8 @@ ARM et leurs différents assembleurs.
 
 ## Maturité et intérêt du stage pour l'entreprise
 
+[//]: # (TODO DO IT)
+
 Maturite:
 En ce qui concerne le support des plates-formes embarquées, AdaCore supporte a
 la fois des cibles dites `bare-metal` ou des cibles avec des OS embarqués de
@@ -224,24 +224,35 @@ car le concept de runtime est plus ou moins unique à ce langage.
 
 ## Contexte de travail
 
-- moyens fournis par l'entreprise
-    - ordinateur configuré comme je l'entendais (QWERTY)
-    - 3 boards différentes pour pouvoir tester mes outils
-- l'accessibilité des documentations
-    - wiki interne
-    - github de Fabien avec un prototype
-    - github ARM avec le standard CMSIS-Pack
-- disponibilité des personnes compétentes
-    - Anthony
-    - Fabien
-- description de ce que j'ai utilisé et comment cela a aidé la réalisation
-  de mon stage
-    - bibliothèque standard python 2.7
-    - bibliothèque GNATCOLL pour lire avec les fichiers projets
-    - code pré-existant des autres runtimes pour comprendre leur fonctionnement
-- apports externes
-    - parler des papiers sur gnat et du site qui explique les runtimes
-    - papiers envoyé par Fabien
+J'ai pu rapidement me mettre a travailler efficacement grace a la
+documentation interne. De plus, la disposition physique des locaux m'a permit,
+lorsque j'avais des questions complexes, d'aller voir directemetn la personne
+concernee afin d'obtenir une reponse claire.
+
+Concernant le sujet du stage, un collegue avait deja realise un prototype
+utilisant les CMSIS-Packs, j'ai pu donc m'en inspirer afin d'avancer plus vite
+dans mon travail. De plus, la haute disponibilite des 2 personnes encadrant mon
+stage m'a permis d'avancer vite et de ne pas rester bloque sur des obstacles
+qu'ils pouvaient m'aider a resoudre.
+
+Pour comprendre comment fonctionnaient les runtimes j'ai utilise les papiers
+suivants (Papers related to runtimes HERE). + DETAILS
+
+Lorsque j'ai commence a tester les prototypes que j'ai fait, j'avait 3 cartes
+differentes a ma disposition. Une STM32F429 et deux cartes Atmel, une xplained
+pro samd20 et une xplained pro sam4e. Toutes ces cartes avaient de moyens de
+communication et des CPUS differents afin de me permettre de tester mes outils
+le plus possible.
+
+LINK TO DESCRIPTION of those boards in the appendix
+
+En termes de logiciels utilises, j'ai principalement utilise la bibliotheque
+standard Python 2.7, ainsi qu'une bibliotheque Ada nommee GNATCOLL (GNAT
+COLlection of Libraries). J'ai utilisee cette derniere afin de pouvoir
+interagir avec ce qu'on appelle les fichiers projets. Ces fichiers decrivent
+comment compiler un programme en Ada en utilisant GNAT, j'ai utilise la
+grammaire de ces fichiers pour pouvoir representer les infos concernat une
+board.
 
 # Aspects organisationnels
 ## Découpage du stage
