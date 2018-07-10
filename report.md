@@ -12,8 +12,8 @@ header-includes:
     - \usepackage{glossaries}
     - \makeglossaries
     - \newglossaryentry{bare-metal}{name=Bare-Metal,
-       description={Un programme dit `bare-metal` est un programme qui tourne
-       sur du matériel sans système d'exploitation}}
+       description={Un programme dit `bare-metal` (métal nu) est un programme
+       qui tourne sur du matériel sans système d'exploitation}}
     - \newglossaryentry{IDE}{name=IDE,
        description={(Integrated Development Environment) Programme qui facilite
        le développement informatique en intégrant plusieurs outils dans le même
@@ -34,7 +34,13 @@ header-includes:
     - \newglossaryentry{startup code}{name=Startup Code,
        description={Aussi appellé 'crt0', c'est le bout de code qui est
        responsable d'initialiser la mémoire ainsi que d'appeller le point
-       d'entrée du programme.}}
+       d'entrée du programme}}
+    - \newglossaryentry{plugin}{name=Plugin,
+       description={Logiciel qui se greffe à un logiciel hôte et qui permet
+       d'étendre les fonctionnalités de ce dernier}}
+    - \newglossaryentry{boilerplate}{name=Boilerplate,
+       description={Se dit d'une fonctionnalité ou d'un programme dont le code
+       source est quasiment le même quel que soit le programme}}
 ---
 # Résumé
 
@@ -103,7 +109,7 @@ responsable de la cartographie mémoire, afin de spécifier les zones memoires e
 quelles portions du code y mettre.
 
 Ces modifications dépendent de la cible et nécessite actuellement de lire la
-documentation afin de récuperer les infos utiles. Dans le cas ou on travail
+documentation afin de récuperer les informations nécessaires. Dans le cas où on travaille
 avec un processeur cortex-m, ARM a créé un standard qui permet de décrire
 le materiel d'une `board` ou d'un `device` et `packageant` ces infos dans une
 archive zip. On appelle ces archives des CMSIS-Packs.
@@ -142,7 +148,8 @@ AdaCore a beaucoup de clients dans des domaines ou la présence d'erreurs dans
 un logiciel n'est pas acceptable. Par exemple, les deux domaines ou
 AdaCore le plus de clients sont l'avionique de le secteur de la défense.
 
-Voici des exemples de projets que des clients d'AdaCore ont realisés :
+Cependant AdaCore n'est pas présente que dans ces domaines, voici deux exemples
+de projets menés par des clients d'AdaCore dans des domaines très distincts.
 
 - MDA, une division de Maxar Technologies, va utiliser Ada ainsi que le produit
   GNAT Pro Assurance afin de remplacer le logiciel en charge de la
@@ -181,7 +188,7 @@ version du standard Ada (Ada2012) ainsi que toutes les version anterieures, et
 ce tout aussi bien sur des plate-formes natives qu'en compilation croisee.
 GNAT Pro supporte egalement bien plus de plate-formes cibles 64bits et supporte
 egalement plus d'OS temps-reels comme PikeOS ou LynxOS. On peut donc en
-conclure que meme si AdaCore a de la competition, elle reste premiere dans
+conclure que même si AdaCore a de la compétition, elle reste première dans
 son domaine.
 
 ### Organisation
@@ -253,26 +260,26 @@ documentation interne. De plus, la disposition physique des locaux m'a permis,
 lorsque j'avais des questions complexes, d'aller voir directement la personne
 concernée afin d'obtenir une réponse claire.
 
-J'était encadré par deux personnes, Anthony Leonardo Gracio et Fabien
-Chouteau, deux anciens épitéens. Anthony fait partie de l'équipe \gls{GPS} et m'a
+J'était encadré par deux anciens épitéens, Anthony Leonardo Gracio et Fabien
+Chouteau. Anthony fait partie de l'équipe \gls{GPS} et m'a
 aidé à intégrer mon code dans \gls{GPS} et à écrire du meilleur code en faisant les
 revues sur le code que j'écrivait. Fabien fait partie de l'équipe Bare-Board et
 c'est lui qui est à l'origine de mon sujet de stage. Il m'a aidé lorsque
 j'avais des questions vis à vis de certaines technologies ou du
 fonctionnement d'Ada dans le domaine de l'embarqué.
 
-Concernant le sujet du stage, un collègue avait deja realisé un prototype
+Concernant le sujet du stage, un collègue avait déjà realisé un prototype
 utilisant les CMSIS-Packs, j'ai pu m'en inspirer afin d'avancer plus vite
-dans mon travail. De plus, la haute disponibilité des 2 personnes encadrant mon
-stage m'a permis d'avancer vite et de ne pas rester bloqué sur des obstacles
-qu'ils pouvaient m'aider a resoudre.
+dans mon travail. De plus, la haute disponibilité de mes 2 encadrants m'a permis
+d'avancer vite et de ne pas rester bloqué sur des problêmes qu'ils pouvaient
+m'aider a resoudre.
 
 Pour comprendre comment fonctionnaient les runtimes j'ai utilisé les papiers
 suivants (Papers related to runtimes HERE). + DETAILS
 LINK TO DESCRIPTION of those boards in the appendix
 
-Lorsque j'ai commence a tester les prototypes que j'ai fait, j'avait 3 cartes
-differentes a ma disposition. Une STM32F429 et deux cartes Atmel, une SAMD20
+Lorsque j'ai commencé à tester mon travail, j'avait 3 cartes
+différentes a ma disposition. Une STM32F429 et deux cartes Atmel, une SAMD20
 et une SAM4E. Toutes ces cartes avaient des moyens de communication ou des
 CPUS différents afin de me permettre de tester le code que je produisait sur le
 plus de cibles variées.
@@ -307,9 +314,11 @@ Livrables:
 
 - schéma des tâches successives a réaliser
 
-## Points de controle
+## Points de contrôle
 
 - Parler des monthly internship commits
+- points réguliers avec mon maître de stage
+- pull requests sur github
 
 ## Gestions des problèmes
 Liste:
@@ -332,7 +341,7 @@ expliquer le concept de runtime dans un des outils
 Liste:
 
 - schéma de l'architecture du code
-- géneration du startup code
+- géneration du startup code et du linker script
 - géneration du linker script
 - base de données représentant les packs
 - intégration dans \gls{GPS}
@@ -351,36 +360,71 @@ probablement par raison politique, le code de la runtime n'est pas public
 
 avancement
 
+## Choix techniques possibles
+
 # Premier bilan
 
-## État de l'art sur les IDE Ada
+## État de l'art sur l'intégration des CMSIS-Packs
 
-- intégration totale des cmsispacks dans Eclipse (pick and choose your
-  driver)
+Eclipse est l'\gls{IDE} le plus populaire pour écrire du code Java. Il possède un système
+de plugins (écrits en Java) et supporte beaucoup de langages allant du Fortran
+au Scala.
 
-- plugin Ada incompatible avec l'intégration CMSIS-Packs ??
+ARM a réalisé un plugin permettant de sélectionner quel pack utiliser et de
+sélectionner précisément quels éléments (pilotes, exemples) du pack l'utilisateur
+veut utiliser dans son projet. Le plugin permet également à l'utilisateur
+d'accéder à toute la documentation concernant les éléments que l'utilisateur a
+choisi.
 
-## État de l'art sur l'intégration des CMSIS-Packs ???
-
-- currently Eclipse
-    - integration totale des CMSIS-Packs
-    - choisir quels drivers utiliser
-    - choisir des exemples de projets à instancier
-    - accéder à la documentation
-
-- perspectives pour le futur
-    - ajouter le support des drivers pour les packs
-    - générer des bindings Ada pour les drivers
-    - intégrer l'outil dans la suite de compilation
-- valeur ajoutée (way better support for hobbyists)
+Le plugin est également capable de générer des \gls{linker script}s.
+Cependant, le plugin génère un type de \gls{linker script} spécifique à l'éditeur de
+liens ARM qui est incompatible avec l'outil LD que GNAT utilise. De plus, le \gls{plugin}
+est réalisé en Java, ce qui rend l'intégration dans d'autres outils quasi-impossible.
 
 ## Intérêt du stage pour l'entreprise
 
-- easier to start learning Ada (more boards)
-    - easier to start using GNAT
-    - Ada can now compete on every platform that supports cmsis packs
+Mon stage est surtout un avantage à long terme pour AdaCore. En effet, en
+réduisant la barrière à l'entrée de la programmation embarquée en Ada, mon
+stage permet de faciliter la transition du C vers l'Ada.
+Il permet d'aider au support des runtimes ZFP et pourrait même être utiliser en
+interne pour générer les futures runtimes distribuées aux clients.
 
--  maybe we generate ravenscar runtimes
+Enfin, il est possible d'utiliser la chaîne d'outil actuelle pour d'autres
+architectures qu'ARM et il serait très intéressant à long terme de supporter
+les architectures LEON et PowerPC de cette manière.
+
+## Perspectives pour le futur
+
+Toutes les fonctionnalitées que fournie Eclipse sont très intéressantes pour
+l'utilisateur et seraient un atout pour AdaCore de les intégrer dans GPS.
+Elles pourraient vraiment améliorer le développement en C dans GPS. On pourrait
+également imaginer le cas où l'utilisateur veut utiliser certains pilotes du
+pack depuis le code Ada, il pourrait être intéressant de fournir cette
+fonctionnalité 'out-of-the-box'. On pourrait utiliser l'option '-fdump-ada-spec'
+du compilateur qui permet de générer des fichiers .ads qui permetteraient au code
+Ada d'appeller le code C.
+
+La dernière étape de l'intégration dans GPS serait la re-génération du
+\gls{linker script} et du \gls{startup code} dans le cas où l'utilisateur
+changerait la description du matériel, par exemple, dans le cas où
+l'utilisateur voudrait faire démarrer son code en RAM plutôt qu'en ROM.
+Actuellement, il faut relancer l'outil qui génère ces fichiers.
+
+Concernant la base de donnée stockant le contenu des packs, il serait
+intéressant de pouvoir la synchronizer avec une version distante.
+En effet, certains CMSIS-Packs, sont non-fonctionnels ou mal-formatés et il
+pourrait être intéressant pour AdaCore de fournir des versions corrigées de ces
+packs. Cela permet également à AdaCore de corriger des bogues trouvés dans le
+contenu des packs et de propager rapidement le patch.
+
+Certaines architectures possède une cartographie mémoire particulière (deux
+sections de RAM et pas de ROM par exemple). Il serait intéressant de pouvoir
+gérer ces cas en permettant à l'utilisateur de choisir précisément où il va
+mettre une section de l'executable.
+
+Il serait intéressant de se pencher sur la question de génération de runtime
+plus complexes, comme les runtimes Ravenscar. Ces runtimes implémentent toutes
+les fonctionnalitées du langage.
 
 ## Expérience personnelle acquise pendant le stage
 
@@ -404,7 +448,7 @@ bibliothèque standard du langage.
 
 En arrivant à AdaCore j'ai du configurer mon éditeur (Vim) afin de pouvoir
 écrire du code Ada efficacement. J'ai écris plusieurs scripts qui me permettent
-de générer du code `boiler plate` et d'appliquer la coding-style
+de générer du code \gls{boilerplate} et d'appliquer la coding-style
 automatiquement en tappant du code. J'ai également écrit des scripts me
 permettant d'écrire ce rapport en français de manière plus efficace, notamment
 pour ce qui touche aux charactères accentués.

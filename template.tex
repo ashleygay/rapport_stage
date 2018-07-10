@@ -5,6 +5,9 @@ $if(colorlinks)$
 $endif$
 %
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$if(beamer)$ignorenonframetext,$if(handout)$handout,$endif$$if(aspectratio)$aspectratio=$aspectratio$,$endif$$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+
+\usepackage{placeins}
+
 \usepackage[french]{babel}
 \usepackage{titlesec}
 % Adds page clear before each new section
@@ -193,6 +196,7 @@ $if(graphics)$
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\FloatBarrier
 $endif$
 $if(beamer)$
 % Prevent slide breaks in the middle of a paragraph:
@@ -204,18 +208,21 @@ $if(section-titles)$
 \begin{beamercolorbox}[sep=16pt,center]{part title}
   \usebeamerfont{part title}\insertpart\par
 \end{beamercolorbox}
+\FloatBarrier
 }
 \setbeamertemplate{section page}{
 \centering
 \begin{beamercolorbox}[sep=12pt,center]{part title}
   \usebeamerfont{section title}\insertsection\par
 \end{beamercolorbox}
+\FloatBarrier
 }
 \setbeamertemplate{subsection page}{
 \centering
 \begin{beamercolorbox}[sep=8pt,center]{part title}
   \usebeamerfont{subsection title}\insertsubsection\par
 \end{beamercolorbox}
+\FloatBarrier
 }
 \AtBeginPart{
   \frame{\partpage}
@@ -320,7 +327,6 @@ $endif$
 
 $if(title)$
 \clearpage
-%TODO: fix images for on the title page
 \title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 $if(subtitle)$
@@ -356,6 +362,7 @@ $else$
 	\includegraphics{adacore.jpg}
 	\includegraphics[height=7cm]{epita.png}
 \end{figure}
+\FloatBarrier
 
 \thispagestyle{empty}
 \clearpage
