@@ -41,6 +41,9 @@ header-includes:
     - \newglossaryentry{boilerplate}{name=Boilerplate,
        description={Se dit d'une fonctionnalité ou d'un programme dont le code
        source est quasiment le même quel que soit le programme}}
+    - \newglossaryentry{generator function}{name=Generator Function,
+       description={Fonction qui sauvegarde son état interne pour pouvoir y
+       revenir plus tard lors d'un prochain appel}}
 ---
 # Résumé
 
@@ -183,11 +186,11 @@ Plates-formes cibles      PPC, x86
 Runtime                   Ravenscar
 ---------------------     -----------------------------------------------------
 
-Par rapport a ses concurrents, GNAT Pro a l'avantage de supporter la derniere
-version du standard Ada (Ada2012) ainsi que toutes les version anterieures, et
-ce tout aussi bien sur des plate-formes natives qu'en compilation croisee.
+Par rapport a ses concurrents, GNAT Pro a l'avantage de supporter la dernière
+version du standard Ada (Ada2012) ainsi que toutes les versions antèrieures, et
+ce tout aussi bien sur des plate-formes natives qu'en compilation croisée.
 GNAT Pro supporte egalement bien plus de plate-formes cibles 64bits et supporte
-egalement plus d'OS temps-reels comme PikeOS ou LynxOS. On peut donc en
+également plus d'OS temps-réels comme PikeOS ou LynxOS. On peut donc en
 conclure que même si AdaCore a de la compétition, elle reste première dans
 son domaine.
 
@@ -342,25 +345,104 @@ Liste:
 
 - schéma de l'architecture du code
 - géneration du startup code et du linker script
-- géneration du linker script
 - base de données représentant les packs
 - intégration dans \gls{GPS}
 - fix des bugs
 
-## Objectifs
-### Alternatives
-## Cadre du stage dans l'entreprise
-## Propositions retenues ou pas
-on ne génère pas des runtimes on prend celles de bb_runtimes
-probablement par raison politique, le code de la runtime n'est pas public
+## Faire fonctionner les harnais de test avec l'émulateur
+### Objectifs
 
-## Difficultes éventuelles
+GPS possède un outil appellé GNATtest. Cet outil permet de générer un projet
+qui va se charger de tester les fonctions d'un autre projet, ce sont les
+harnais de test.
 
-## Résultats obtenus
+L'objectif de cette tâche étaient de pouvoir lancer le harnais de test sur
+l'émulateur lorsque la compilation n'étaient pas vers une cible native.
 
-avancement
+GNATtest était déjà intégré dans GPS avec un \gls{plugin}. Il fallait modifier
+ce dernier afin de prendre en compte le cas où la cible de compilation était
+non-native.
 
-## Choix techniques possibles
+### Cadre de la tâche
+
+GPS utilise des \gls{plugins} en Python.
+
+### Propositions retenues ou pas
+### Difficultés éventuelles
+
+Problêmes avec la compréhension des workflows.???
+
+### Résultats obtenus et impact sur l'avancement du stage
+
+Le plugin GPS a été modifié pour tenir compte de la cible et permet de lancer
+la suite de test sur l'émulateur. J'ai utilisé les bibliothèques de workflows
+python pour rendre mon code asynchrone. J'ai également utilisé les
+\gls{generator function} pour rendre mon code plus efficace.
+
+Ce \gls{plugin} mais possède une limitation. Dans GNATtest, on peut définir des
+listes de tests qui vont contenir plusieurs harnais de test. Une limitation de
+l'implémentation est la gestion de ces listes.
+
+## Prototypes de générations de runtimes
+### Objectifs
+
+L'objectif principal était de me familiariser avec le comportement des runtimes
+Ada et comment elle fonctionnaient. Je devais également explorer ce qu'il était
+possible de faire avec les CMSIS-Packs et comment nous pourrions les utiliser
+dans le contexte de la programmation embarqué Ada.
+
+Le rôle du script est de générer une runtime ZFP pour une board spécifique.
+Le script doit pouvoir analyser le contenu du fichier et proposer à
+l'utilisateur quelle board choisir.
+
+### Cadre de la tâche
+
+
+
+### Difficultes éventuelles
+
+Je n'était pas très familier avec le parsing XML en Python. J'ai donc passé un
+peu de temps à comprendre comment récupérer les informations intéressantes dans
+le fichier XML.
+
+### Résultats obtenus
+
+
+## Architecture de la chaîne d'outils
+### Objectifs
+#### Alternatives
+### Cadre de la tâche
+### Propositions retenues ou pas
+### Difficultes éventuelles
+### Résultats obtenus
+
+
+## Génération du \gls{startup code} et du \gls{linker script}
+### Objectifs
+#### Alternatives
+### Cadre de la tâche
+### Propositions retenues ou pas
+### Difficultes éventuelles
+### Résultats obtenus
+
+
+## Base de données
+### Objectifs
+#### Alternatives
+### Cadre de la tâche
+### Propositions retenues ou pas
+### Difficultes éventuelles
+### Résultats obtenus
+
+
+## Intégration dans GPS
+### Objectifs
+#### Alternatives
+### Cadre de la tâche
+### Propositions retenues ou pas
+### Difficultes éventuelles
+### Résultats obtenus
+
 
 # Premier bilan
 

@@ -388,6 +388,7 @@ $else$
 $if(colorlinks)$
 \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
 $endif$
+\addtocontents{toc}{\protect\thispagestyle{empty}}
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 \thispagestyle{empty}
