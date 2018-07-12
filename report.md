@@ -11,7 +11,7 @@ graphics: true
 header-includes:
     - \usepackage{glossaries}
     - \makeglossaries
-    - \newglossaryentry{bare-metal}{name=Bare-Metal,
+    - \newglossaryentry{bare-metal}{name=bare-metal,
        description={Un programme dit `bare-metal` (métal nu) est un programme
        qui tourne sur du matériel sans système d'exploitation}}
     - \newglossaryentry{IDE}{name=IDE,
@@ -20,7 +20,7 @@ header-includes:
        environnement}}
     - \newglossaryentry{GPS}{name=GPS,
        description={GNAT Programming Studio, l'IDE phare d'AdaCore}}
-    - \newglossaryentry{runtime}{name=Runtime,
+    - \newglossaryentry{runtime}{name=runtime,
        description={Bibliothèque nécessaire pour faire tourner du code Ada sur
        une cible, elle fournit certaines fonctionnalitées du langage}}
     - \newglossaryentry{GNATCOLL}{name=GNATCOLL,
@@ -28,32 +28,36 @@ header-includes:
        du code permettant d'utiliser des bibliothèques externes. Par
        exemple, GNATCOLL fournie une API pour interragir avec une base de
        données.}}
-    - \newglossaryentry{linker script}{name=Linker Script,
+    - \newglossaryentry{linker script}{name=linker script,
        description={Fichier décrivant à l'éditeur de lien comment arranger la
        cartographie mémoire dans l'éxécutable final.}}
-    - \newglossaryentry{startup code}{name=Startup Code,
+    - \newglossaryentry{startup code}{name=startup code,
        description={Aussi appellé 'crt0', c'est le bout de code qui est
        responsable d'initialiser la mémoire ainsi que d'appeller le point
        d'entrée du programme}}
-    - \newglossaryentry{plugin}{name=Plugin,
+    - \newglossaryentry{plugin}{name=plugin,
        description={Logiciel qui se greffe à un logiciel hôte et qui permet
        d'étendre les fonctionnalités de ce dernier}}
-    - \newglossaryentry{boilerplate}{name=Boilerplate,
+    - \newglossaryentry{boilerplate}{name=boilerplate,
        description={Se dit d'une fonctionnalité ou d'un programme dont le code
        source est quasiment le même quel que soit le programme}}
-    - \newglossaryentry{generator function}{name=Generator Function,
-       description={Fonction qui sauvegarde son état interne pour pouvoir y
-       revenir plus tard lors d'un prochain appel}}
+    - \newglossaryentry{generator function}{name=fonction génératrice,
+       description={Fonction qui sauvegarde son état interne pour pouvoir
+       reprendre l'execution lors d'un prochain appel}}
+    - \newglossaryentry{pull-request}{name=pull-request,
+       description={Requète pour qu'un projet incorpore des modifications
+       tierces dans le code}}
 ---
+[//]: # (TODO: Add transitionnal comments to all parts)
 # Résumé
 
 J'ai découvert Ada lors des cours à EPITA donnés par Raphaël Amiard. J'ai
 trouvé le langage très intéressant car les concepts (notamment l'orienté objet)
-sont assez différents de leurs équivalents en C++. De plus, grâce aux concepts
-des `contrats`, Ada simplifie la vérification de l'exactitude d'un programme.
+étaient assez différents de leurs équivalents en C++. De plus, grâce à la
+programmation par contrat, Ada simplifie la vérification de l'exactitude d'un programme.
 
-Plusieurs facteurs ont affecte mon choix pour ce stage. Le premier est
-l'opportunite d'intégrer mon travail dans un outil pré-éxistant. Ce point me
+Plusieurs facteurs ont affectés mon choix pour ce stage. Le premier est
+l'opportunité d'intégrer mon travail dans un outil pré-éxistant. Ce point me
 semble important car il permet de comprendre le contexte technique dans lequel
 sera utilisé mon travail. Le second point est le sujet qui me permet de toucher
 a plusieurs technologies tout en restant dans mon domaine de prédilection, le
@@ -72,7 +76,7 @@ mon sujet de stage et comment pouvions nous améliorer le support du
 
 Apres deux prototypes explorant le sujet, nous avons fait une réunion avec
 mes encadrants afin de décider de la suite du stage et nous avons ainsi
-décidé d'une architecture et des outils que j'allait développer.
+décidé d'une architecture pour les outils que j'allait développer.
 
 # Introduction
 
@@ -189,7 +193,7 @@ Runtime                   Ravenscar
 Par rapport a ses concurrents, GNAT Pro a l'avantage de supporter la dernière
 version du standard Ada (Ada2012) ainsi que toutes les versions antèrieures, et
 ce tout aussi bien sur des plate-formes natives qu'en compilation croisée.
-GNAT Pro supporte egalement bien plus de plate-formes cibles 64bits et supporte
+GNAT Pro supporte également bien plus de plate-formes 64bits et supporte
 également plus d'OS temps-réels comme PikeOS ou LynxOS. On peut donc en
 conclure que même si AdaCore a de la compétition, elle reste première dans
 son domaine.
@@ -307,6 +311,7 @@ Périodes:
     - travail sur les differents outils
         - gpr2ld
 	- database
+	- json2gpr
 	- integration dans \gls{GPS}
 	- tests
 Livrables:
@@ -337,8 +342,6 @@ Liste:
 
 # Aspects techniques
 
-Présentation de l'architecture du code yeah probably
-
 expliquer le concept de runtime dans un des outils
 
 Liste:
@@ -349,15 +352,21 @@ Liste:
 - intégration dans \gls{GPS}
 - fix des bugs
 
-## Faire fonctionner les harnais de test avec l'émulateur
+## Faire fonctionner les harnais de test avec GNATemu
 ### Objectifs
 
 GPS possède un outil appellé GNATtest. Cet outil permet de générer un projet
 qui va se charger de tester les fonctions d'un autre projet, ce sont les
 harnais de test.
 
+Dans GPS, pour un projet embarqué, il est possible de lancer
+le projet sur un émulateur : GNATemu. Il se repose sur l'émulateur libre QEMU.
+GNATemu est utilisé pour tester des projets plus facilement que sur une carte
+physique. Il permet également d'émuler des devices sur un bus (AMBA ou PCI)
+via l'outil GNATbus.
+
 L'objectif de cette tâche étaient de pouvoir lancer le harnais de test sur
-l'émulateur lorsque la compilation n'étaient pas vers une cible native.
+l'émulateur dans le cas d'un projet embarqué.
 
 GNATtest était déjà intégré dans GPS avec un \gls{plugin}. Il fallait modifier
 ce dernier afin de prendre en compte le cas où la cible de compilation était
@@ -365,12 +374,7 @@ non-native.
 
 ### Cadre de la tâche
 
-GPS utilise des \gls{plugins} en Python.
-
-### Propositions retenues ou pas
-### Difficultés éventuelles
-
-Problêmes avec la compréhension des workflows.???
+GPS utilise des \gls{plugin}s en Python.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
@@ -379,9 +383,15 @@ la suite de test sur l'émulateur. J'ai utilisé les bibliothèques de workflows
 python pour rendre mon code asynchrone. J'ai également utilisé les
 \gls{generator function} pour rendre mon code plus efficace.
 
+J'ai refactorer le code qui servait à lancer l'émulateur afin de permettre
+l'appel des fonctions depuis d'autre modules python.
+
 Ce \gls{plugin} mais possède une limitation. Dans GNATtest, on peut définir des
 listes de tests qui vont contenir plusieurs harnais de test. Une limitation de
 l'implémentation est la gestion de ces listes.
+
+Ce projet m'a permis de me familiariser avec l'API des \gls{plugin}s Python
+dans GPS. J'ai pu également aussi prendre en main le système de revue de code.
 
 ## Prototypes de générations de runtimes
 ### Objectifs
@@ -397,52 +407,312 @@ l'utilisateur quelle board choisir.
 
 ### Cadre de la tâche
 
+- intégration dans GPS et bonne utilisation de gnatemu
 
+### Propositions retenues ou pas
 
-### Difficultes éventuelles
+- pas d'outils traduisant l'assembleur et le linker script ARM vers leurs
+  équivalents GCC
+
+### Difficultés éventuelles
 
 Je n'était pas très familier avec le parsing XML en Python. J'ai donc passé un
 peu de temps à comprendre comment récupérer les informations intéressantes dans
 le fichier XML.
 
-### Résultats obtenus
+J'ai également passé du temps à comprendre la structure des CMSIS-Packs.
+Le ficher XML peut associer certains fichiers à des conditions. Par exemple, le
+pack peut faire la distinction entre le compilateur GCC et le compilateur ARM
+et peut spécifier quels fichiers utiliser pour un compilateur donné. GNAT est
+basé sur GCC, il était donc nécessaire dans notre cas de ne récupérer que les
+informations utilisables avec GCC.
 
+
+### Résultats obtenus et impact sur l'avancement du stage
+
+À la fin de cette tâche, j'avais réaliser deux outils. Le premier outil
+sert à générer les fichiers utilisés lors de la compilation comme le
+\gls{linker script} ou le \gls{startup code}.
+
+Le second outil générait la structure d'une runtime prête à compiler. C'est à
+dire les fichiers projets qui décrivaient à GPRbuild comment compiler la
+runtime.
+
+Cette tâche m'a permis de comprendre comment étaient agencés les packs et
+quelles fonctionnalitées pouvaient être utiliser depuis le contenu des packs.
+Certains packs possèdent un \gls{linker script} et un \gls{startup code}
+compatible avec GCC mais ce n'est pas le cas de tout les packs. Il fallait dont
+générer ces fichiers à partir des informations contenus dans les packs.
 
 ## Architecture de la chaîne d'outils
 ### Objectifs
-#### Alternatives
+
+Suite à l'accomplissement de la tâche précédente, j'ai organisé une réunion
+avec mes encadrants afin de décider de la prochaine étape à suivre lors du
+stage. Nous avons donc décider d'une architecture décrivant les outils que
+j'allait écrire et leurs responsabilitées.
+
 ### Cadre de la tâche
+
+- devait s'intégrer dans GPS
+- devait pouvoir s'utiliser facilement depuis la command line
+  ou depuis un script python
+- devait être réalisés en python 2.7 ou en Ada
+
 ### Propositions retenues ou pas
-### Difficultes éventuelles
-### Résultats obtenus
 
+Nous avons décider de laisser tomber la génération de runtime. En effet, il
+existait un projet d'AdaCore appellé `bb_runtimes`. Le but de ce projet est de
+fournir des runtimes dépendantes et non dépendantes de la board. Le support de
+la board est dans le BSP à la place. Le but de ce projet est de réduire le
+nombre de runtimes à supporter et de simplifier le processus de création de
+runtimes. J'allais donc me reposer sur les runtimes de ce projet.
 
-## Génération du \gls{startup code} et du \gls{linker script}
-### Objectifs
-#### Alternatives
-### Cadre de la tâche
-### Propositions retenues ou pas
-### Difficultes éventuelles
-### Résultats obtenus
+- séparation du pilotage de la chaîne d'outils et de l'intégration GPS
 
+### Résultats obtenus et impact sur l'avancement du stage
+
+![Architecture des outils](plan.png)
+
+Pour que la chaîne d'outils soit extensible il fallait que chaque outil soit
+clairement défini et qu'il n'accomplisse qu'un rôle, le plus simple possible et
+le plus simplement possible.
+
+Il fallait ensuite écrire un script qui allait piloter la chaîne d'outil et
+enfin intégrer ce script dans GPS. Il fallait que les outils soient utilisables
+depuis la ligne de commande ou importable comme un module Python.
+
+- m'a permit d'avancer clairement sur un outil en particulier
 
 ## Base de données
 ### Objectifs
-#### Alternatives
-### Cadre de la tâche
-### Propositions retenues ou pas
-### Difficultes éventuelles
-### Résultats obtenus
 
+- représenter les informations utiles dans la base de donnée
+    - documentation pour une board
+    - addresse à laquelle télécharger le pack
+    - informations sur la memoire et le CPU de la board
+    - stockage de la hiérachie de famille/sous-famille/device du pack
+    - stockage des interruptions (index + noms)
+
+### Cadre de la tâche
+
+- code en python
+- utilisation de la bibliothèque du standard python utilisant sqlite3
+
+### Difficultés éventuelles
+
+- pas de moyen de configurer la taille des champs TEXT depuis l'API python
+    - vérifier la taille du champ TEXT
+
+- changement du parseur python, à la place du miniDOM parser, etree
+    - 10x the performance
+
+- certains packs ne respectent pas le standard
+    - XML mal formé
+
+- les chemins relatifs sont windows/unix/mac
+     - conversions avec la bibliothèque python
+
+### Propositions retenues ou pas
+
+- redesign des tables
+    - première itération était trop complexe
+    - représentation de la structure en héritage du XML dans la BD
+    - résolu en résolvant l'héritage lors du parsing plutôt que lors du
+      parcours de la base de donnée
+
+### Résultats obtenus et impact sur l'avancement du stage
+
+- base de données fonctionnelle
+    - 3 MO pour tous les packs
+
+## Outil d'interrogation de la base de données
+### Objectifs
+
+- fournir une API simple pour interragir avec la DB
+- il faut qu'elle soit efficace (details ??)
+    - actuellement ajouter les packs prends moins de 3 minutes en comptant
+      l'unzip
+
+### Cadre de la tâche
+
+- module python + executable
+
+### Difficultés éventuelles
+
+- passé un peu de temps sur comment delete
+    - utilisé des triggers SQL pour détruire un pack et tous ce qu'il contenait
+    - pour update un paquet on détruit d'abord l'ancienne version avant
+      d'ajouter la nouvelle version
+
+### Propositions retenues ou pas
+
+- refais la façon dont on faisait les query
+    - un maximum de SQL et un minimum de python
+    - génération des statements SQL
+
+### Résultats obtenus et impact sur l'avancement du stage
+
+- permis de tester que la base de données fonctionnait correctement
+
+
+## Transformation du JSON en fichiers projets
+### Objectifs
+
+- transformer un output JSON en fichier projets
+
+### Alternatives
+
+- ne pas utiliser les fichiers projets et passer par du JSON
+     - downside: pas de moyen d'éditer graphiquement un fichier JSON
+       contrairement aux fichiers projets
+
+### Cadre de la tâche
+
+- executable indépendant
+- module python
+
+### Résultats obtenus et impact sur l'avancement du stage
+
+- permis de tester que tous les outils fonctionnaient ensemble
+- j'ai trouvé des bugs dans la gestion de la DB
+- le fichier projet ressemble à quelquechose comme:
+
+```Ada
+with "interruptions";
+project Spec is
+
+   package CPU is
+      for Name use "cortex-m0plus";
+      for Float_Handling use "soft";
+      for Number_Of_Interrupts use "15";
+   end CPU;
+
+   package Memory_Map is
+
+      --  MEMORY MAP
+      for Memories use ("ROM", "RAM");
+
+      for Boot_Memory use "ROM";
+
+      for Mem_Kind("ROM") use "ROM";
+      for Mem_Kind("RAM") use "RAM";
+
+      --  ROM
+      for Address("ROM") use "0x0";
+      for Size("ROM") use "256K";
+
+      -- RAM
+      for Address("RAM") use "16#20000000#";
+      for Size("RAM")    use "16#8000#";
+
+   end Memory_Map;
+
+end Spec;
+```
+
+- on peut voir le type de CPU et la gestion des flotants (hardware or software)
+- 2 memoires : une ROM et une RAM
+    - leurs tailles
+    - leurs addresses
+
+- par rapport au linker script
+    - on gagne en lisibilité
+
+## Génération du \gls{startup code} et du \gls{linker script}
+### Objectifs
+
+- écrire un programme qui transforme un fichier projet décrivant des régions
+  mémoires, un CPU et des interruptions afin de générer le linker script et le
+  startup code associé
+- doit supporter plusieurs architectures (armv6, armv7, PPC, ...)
+- doit vérifier que le contenu du fichier projet est correct
+- dans le linker script on doit mapper les sections de l'executable vers la
+  bonne région mémoire
+    - pas forcément évident dans certains cas
+    - change selon quel région mémoire est choisie
+
+### Cadre de la tâche
+
+- executable indépendant
+- écrit en Ada
+- utilise 2 fichiers distincts:
+    - cpu + board informations
+    - interruptions
+- rajouts de code samples doit être possible sans avoir à recompiler le code
+
+### Propositions retenues ou pas
+
+- pas de meta-assembleurs qui serait traduit dans l'assembleur de la
+  plate-forme
+     - des code samples à la place
+
+### Difficultés éventuelles
+
+- outil à écrire en Ada, pas si familier que ça avec ce langage
+- utilisation de bibliothèques Ada pour lire les fichiers projets
+    - peu de documentation
+    - demandé des conseils et éclaircissements au responsable
+    - ajouté un exemple à la documentation expliquant comment faire
+
+- on a essayer d'utiliser github (soumission de pull-requests)
+    - c'est pas très utile pour des outils non stables
+    - beaucoup d'overhead
+    - gerrit c'est mieux
+    - impossibilité de faire des PR dépendantes d'autres PRs
+
+- les messages d'erreurs du linker ne sont pas très explicites
+    - si il ne trouve pas le point d'entrée spécifié il prend \_start
+
+### Résultats obtenus et impact sur l'avancement du stage
+
+- outil qui génère un startup code et un linker script depuis des fichiers
+  projets
+- j'ai pu tester les fichiers générés
 
 ## Intégration dans GPS
 ### Objectifs
-#### Alternatives
-### Cadre de la tâche
-### Propositions retenues ou pas
-### Difficultes éventuelles
-### Résultats obtenus
 
+- intégrer les outils dans GPS
+- créer une UI pour que l'utilisateur choisisse la board sur laquelle il veut
+  travailler
+- interraction avec la base de donnée depuis GPS
+    - mettre à jour les packs
+    - installer un pack manuellement
+- permettre à l'utilisateur de consulter la documentation liée à son projet
+- permettre à l'utilisateur de récupérer l'output de SVD2ADA (headers)
+
+### Cadre de la tâche
+
+- langages : Ada et Python
+- revues de code
+
+### Propositions retenues ou pas
+
+- intégrer l'outil de génération comme une étape de compilation en plus
+
+### Difficultés éventuelles
+
+- sqlite3 python module not functional in GPS
+    - créer un ticket pour IT pour fixer ce problème
+    - le module sqlite3 du standard python n'était pas compilé et ajouté à
+      l'environnement python que GPS utilise
+
+- modification de la façon dont on instancie les patrons de projet
+    - on ne peut pas avoir de menu spécifique à un projet
+    - mais on peut executer un script python après l'installation du projet
+    - étendue cette fonctionnalité en permettant de générer des widgets GTK
+      depuis le code python et de les utiliser comme un menu depuis le code Ada
+
+- problèmes de fichiers de configuration
+
+### Résultats obtenus et impact sur l'avancement du stage
+
+- intégration presque finie
+- a pris plus de temps que prévu
+- modification des patrons de projet
+
+[//]: # (TODO: Image pour illustrer l'UI ???)
 
 # Premier bilan
 
@@ -471,11 +741,11 @@ stage permet de faciliter la transition du C vers l'Ada.
 Il permet d'aider au support des runtimes ZFP et pourrait même être utiliser en
 interne pour générer les futures runtimes distribuées aux clients.
 
-Enfin, il est possible d'utiliser la chaîne d'outil actuelle pour d'autres
+Enfin, il est possible d'utiliser la chaîne d'outils actuelle pour d'autres
 architectures qu'ARM et il serait très intéressant à long terme de supporter
 les architectures LEON et PowerPC de cette manière.
 
-## Perspectives pour le futur
+## Perspectives d'amélioration
 
 Toutes les fonctionnalitées que fournie Eclipse sont très intéressantes pour
 l'utilisateur et seraient un atout pour AdaCore de les intégrer dans GPS.
@@ -568,7 +838,7 @@ bloqué à cause d'un problême technique j'ai également tiré les leçons de m
 stage précédent et je n'ai pas hésité à aller poser des questions aux personnes
 qui m'encadraient.
 
-Je pense également avoir été plus TODO que pendant mon stage précédent. Lorsque
+Je pense également avoir été plus consciencieux que pendant mon stage précédent. Lorsque
 je trouvais un problême dans les outils que j'utilisait, je créais un ticket au
 minimum et dans certains cas je cherchais un peu pour essayer de trouver d'ou
 venait le bug et j'ai soumis quelques patchs de cette façon.
@@ -588,4 +858,4 @@ encore très bien cerné mon sujet de stage, ces script n'ont finalement pas ét
 utilisés car le problême qu'ils resolvaient était déjà résolu par d'autres
 outils d'AdaCore.
 
-
+[//]: # (TODO: parler des voitures automatiques comme secteur d'avenir)
