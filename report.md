@@ -386,9 +386,14 @@ python pour rendre mon code asynchrone. J'ai également utilisé les
 J'ai refactorer le code qui servait à lancer l'émulateur afin de permettre
 l'appel des fonctions depuis d'autre modules python.
 
-Ce \gls{plugin} mais possède une limitation. Dans GNATtest, on peut définir des
-listes de tests qui vont contenir plusieurs harnais de test. Une limitation de
-l'implémentation est la gestion de ces listes.
+Ce \gls{plugin} possède neanmoins une limitation.
+Normalement, lorsque des tests echoue, GPS peut afficher le resultat de ces
+tests en permettant a l'utilisateur de voir directement quel test echoue et a
+quelle ligne il est situe. Nous avons ce comportement lorsque l'on lance
+l'emulateur sur un harnais de test. Cependant, lorsque l'on lance l'emulateur
+sur une liste de harnais de test, GPS ne peut pas recuperer les differents
+output et ne peut donc pas les afficher comme decrit precedemment. Nous avons
+donc decider de les afficher dans une console, une par harnais de test.
 
 Ce projet m'a permis de me familiariser avec l'API des \gls{plugin}s Python
 dans GPS. J'ai pu également aussi prendre en main le système de revue de code.
@@ -857,5 +862,17 @@ j'ai commencé par faire plusieurs scripts prototypes. Cependant, n'ayant pas
 encore très bien cerné mon sujet de stage, ces script n'ont finalement pas été
 utilisés car le problême qu'ils resolvaient était déjà résolu par d'autres
 outils d'AdaCore.
+
+Formation:
+- projet Tiger m'a aider a cerner le fonctionnement d'un compilateur
+- projet Ada m'a servi a me familiariser avec l'Ada
+- projet Ada m'a servi a tester l'interfacage C++/Ada
+    - m'a peut etre servi a avoir un job
+- cours d'architectures ont ete utiles pour cerner le role du linker script et
+  du startup code
+- cours de christian garnier d'archi distribues ont ete utiles pour voire les
+  problematiques du temps reel embarque
+      - j'ai pu lire des papiers de recherche sans avoir trop de problemes
+		(sources)
 
 [//]: # (TODO: parler des voitures automatiques comme secteur d'avenir)
