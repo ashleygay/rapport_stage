@@ -8,8 +8,10 @@ fontsize: 11pt
 fontfamily: utopia
 glossary: true
 graphics: true
+biblatex: true
 header-includes:
-    - \usepackage{glossaries}
+    - \usepackage{hyperref}
+    - \usepackage[toc,section=section]{glossaries}
     - \makeglossaries
     - \newglossaryentry{bare-metal}{name=bare-metal,
        description={Un programme dit `bare-metal` (métal nu) est un programme
@@ -128,6 +130,16 @@ création d'un projet.
 
 ## Présentation de l'entreprise
 ### Historique
+
+En 1975, le DoD commence à rédiger un standard décrivant un langage visant à
+remplacer les 450 langages utilisés à l'époque à l'intérieur de l'organisation.
+En 1978, le dernier standard appellé 'Steelman' est finalisé. Le DoD organise
+ensuite un concours visant à trouver le langage remplaçant qui respecte le
+standard. Quatres équipes sont crées et parmis ces quatres, c'est l'équipe
+'Green' qui remporte le concours et qui devient le nouveau langage de
+programmation Ada, nommé en hommage à Ada Lovelace, mathématicienne anglaise du
+19ème siècle.
+
 En 1992, l'université de New York conclut un contrat avec l'`US Air Force` afin
 de créer un compilateur libre afin d'aider a la diffusion du
 nouveau standard Ada, Ada 9X (qui deviendra Ada 95).
@@ -467,7 +479,8 @@ j'allait écrire et leurs responsabilitées.
 ### Propositions retenues ou pas
 
 Nous avons décider de laisser tomber la génération de runtime. En effet, il
-existait un projet d'AdaCore appellé `bb_runtimes`. Le but de ce projet est de
+existait un projet d'AdaCore appellé \href{https://github.com/AdaCore/bb-runtimes}{`bb-runtimes`}.
+Le but de ce projet est de
 fournir des runtimes dépendantes et non dépendantes de la board. Le support de
 la board est dans le BSP à la place. Le but de ce projet est de réduire le
 nombre de runtimes à supporter et de simplifier le processus de création de
@@ -541,11 +554,11 @@ depuis la ligne de commande ou importable comme un module Python.
 
 ### Cadre de la tâche
 
-- module python + executable
+- module python et executable
 
 ### Difficultés éventuelles
 
-- passé un peu de temps sur comment delete
+- passé un peu de temps sur comment supprimer le contenu d'un pack
     - utilisé des triggers SQL pour détruire un pack et tous ce qu'il contenait
     - pour update un paquet on détruit d'abord l'ancienne version avant
       d'ajouter la nouvelle version
@@ -559,7 +572,6 @@ depuis la ligne de commande ou importable comme un module Python.
 ### Résultats obtenus et impact sur l'avancement du stage
 
 - permis de tester que la base de données fonctionnait correctement
-
 
 ## Transformation du JSON en fichiers projets
 ### Objectifs
@@ -580,7 +592,9 @@ depuis la ligne de commande ou importable comme un module Python.
 ### Résultats obtenus et impact sur l'avancement du stage
 
 - permis de tester que tous les outils fonctionnaient ensemble
+
 - j'ai trouvé des bugs dans la gestion de la DB
+
 - le fichier projet ressemble à quelquechose comme:
 
 ```Ada
@@ -623,6 +637,7 @@ end Spec;
 
 - par rapport au linker script
     - on gagne en lisibilité
+    - modification dans GPS aisée
 
 ## Génération du \gls{startup code} et du \gls{linker script}
 ### Objectifs
@@ -630,8 +645,11 @@ end Spec;
 - écrire un programme qui transforme un fichier projet décrivant des régions
   mémoires, un CPU et des interruptions afin de générer le linker script et le
   startup code associé
+
 - doit supporter plusieurs architectures (armv6, armv7, PPC, ...)
+
 - doit vérifier que le contenu du fichier projet est correct
+
 - dans le linker script on doit mapper les sections de l'executable vers la
   bonne région mémoire
     - pas forcément évident dans certains cas
@@ -640,24 +658,28 @@ end Spec;
 ### Cadre de la tâche
 
 - executable indépendant
+
 - écrit en Ada
+
 - utilise 2 fichiers distincts:
     - cpu + board informations
     - interruptions
+
 - rajouts de code samples doit être possible sans avoir à recompiler le code
 
 ### Propositions retenues ou pas
 
 - pas de meta-assembleurs qui serait traduit dans l'assembleur de la
-  plate-forme
-     - des code samples à la place
+  plate-forme, des code samples à la place
 
 ### Difficultés éventuelles
 
 - outil à écrire en Ada, pas si familier que ça avec ce langage
 - utilisation de bibliothèques Ada pour lire les fichiers projets
-    - peu de documentation
-    - demandé des conseils et éclaircissements au responsable
+    - peu de documentation et peu d'exemples
+    - lu le code, code pas explicite
+    - problèmes de typages (tout est une string lol)
+    - demandé des conseils et éclaircissements au responsable des bibliothèques
     - ajouté un exemple à la documentation expliquant comment faire
 
 - on a essayer d'utiliser github (soumission de pull-requests)
@@ -665,6 +687,7 @@ end Spec;
     - beaucoup d'overhead
     - gerrit c'est mieux
     - impossibilité de faire des PR dépendantes d'autres PRs
+    - utilisable pour les projets déjà stables
 
 - les messages d'erreurs du linker ne sont pas très explicites
     - si il ne trouve pas le point d'entrée spécifié il prend \_start
@@ -681,11 +704,16 @@ end Spec;
 - intégrer les outils dans GPS
 - créer une UI pour que l'utilisateur choisisse la board sur laquelle il veut
   travailler
+- l'utilisateur doit pouvoir relancer l'outil si il a modifié les fichiers
+  projets décrivant le matériel
 - interraction avec la base de donnée depuis GPS
-    - mettre à jour les packs
+    - mettre à jour tous les packs ou un seul pack
     - installer un pack manuellement
+
 - permettre à l'utilisateur de consulter la documentation liée à son projet
-- permettre à l'utilisateur de récupérer l'output de SVD2ADA (headers)
+
+- permettre à l'utilisateur de récupérer l'output de SVD2ADA
+  (headers describing the devices from the SVD files)
 
 ### Cadre de la tâche
 
@@ -832,7 +860,7 @@ réussi à rendre l'explication de mon sujet de stage beaucoup plus abordable,
 notamment en situant mieux le contexte des runtimes qui est particulier à Ada.
 Anthony a également revu certaines de mes présentations et m'a aidé à les
 améliorer en les rendants plus pertinentes et plus claires, notamment en
-remplaçant des slides par un schéma.
+expliquant le contenu de slides par un schéma.
 
 ### Intérêt organisationnel
 
@@ -863,16 +891,51 @@ encore très bien cerné mon sujet de stage, ces script n'ont finalement pas ét
 utilisés car le problême qu'ils resolvaient était déjà résolu par d'autres
 outils d'AdaCore.
 
-Formation:
-- projet Tiger m'a aider a cerner le fonctionnement d'un compilateur
-- projet Ada m'a servi a me familiariser avec l'Ada
-- projet Ada m'a servi a tester l'interfacage C++/Ada
-    - m'a peut etre servi a avoir un job
-- cours d'architectures ont ete utiles pour cerner le role du linker script et
-  du startup code
-- cours de christian garnier d'archi distribues ont ete utiles pour voire les
-  problematiques du temps reel embarque
-      - j'ai pu lire des papiers de recherche sans avoir trop de problemes
-		(sources)
+La formation généraliste d'EPITA, notamment le projet TIGER en ING1, m'a permis
+d'appréhender le fonctionnement des compilateurs et me sera très utile dans
+mon futur emploi. Le projet ASM (aussi en ING1) m'a permis de me familiariser
+avec l'assembleur de manière générale, ce qui m'a été très utile pour lire le
+\gls{startup code} de référence et pouvoir l'adapter à de nouvelles plate-formes.
+
+La formation Ada de GISTRE m'a aider à me familiariser avec le langage et m'a
+permis d'avancer plus vite sur l'outil écrit en Ada. Le projet accompli dans le
+contexte de cette matière m'a permis d'étudier comment interfacer de l'Ada et
+du C++ sur une plate-forme embarqué et les difficultés qui s'ensuivaient, par
+exemple lié à l'usage d'intialisation statique.
+
+Grâce à cette formation, j'ai pu me renseigner en cherchant et en lisant des
+papiers de recherche que j'ai pu lire et appréhender moi-même. Notamment des
+articles qui m'ont permis de mieux comprendre le rôle et le fonctionnement de
+la runtime Ada.
+
+Les aspects temps-réels de la formation de GISTRE m'ont été à comprendre les
+enjeux des clients d'AdaCore. Par exemple, le cours d'architecture distribuée
+de Christian Garnier m'a permis de comprendre quels étaient les enjeux et les
+garanties que devaient apporté un système temps réel. Le cours de freeRTOS de
+Thierry Joubert m'a permis de comprendre comment fonctionnait un OS temps réel,
+et les problêmes que le système résolvait. Enfin le cours de José Ruiz sur la
+norme DO-178 était très intéressant car il permettait de comprendre comment le
+processus de certifaction fonctionnait et comment on pouvait tracer les
+exigences de haut-niveau jusqu'au code source.
+
+[//]: # (TODO: paragraphe sur les articles de recherche ????)
+
+Smith says blah [@gnatada9x].
+
+Smith says blah [@bareboardkernelada2005].
+
+Smith says blah [@adarealtimeclock].
+
+Smith says blah [@ptcobjectada].
+
+Smith says blah [@adacompetition].
+
+- papiers de recherche
+     - real time features on a bare board kernel
+     - implementing Ada real time clock and absolute delays in real time kernels
+     - ORK: An open source real-time kernel for on-board software systems.
 
 [//]: # (TODO: parler des voitures automatiques comme secteur d'avenir)
+
+# Bibliographie
+

@@ -4,8 +4,15 @@ ada language competition ref : http://iment.com/maida/computer/redref/index.htm
 
 Pour ObjectAda et Ada2012 :
 	http://www.adaic.org/wp-content/uploads/2018/06/PTC-ObjectAda-for-Windows-V10.pdf
+
 Standard Ada2012: https://en.wikibooks.org/wiki/Ada_Programming/Ada_2012 
 
+bb_runtimes : github link
+
+
 Papers:
-- E .Schonberg, F. Gasperoni, and C. Comar.
+- E .Schonberg, F. Gasperoni and C. Comar.
   The GNAT Project: A GNU-Ada9X Compiler. 
+papers que j'ai lu pour moi
+- real time features on a bare board kernel
+- implementing Ada real time clock and absolute delays in real time kernels
