@@ -49,8 +49,10 @@ header-includes:
     - \newglossaryentry{pull-request}{name=pull-request,
        description={Requète pour qu'un projet incorpore des modifications
        tierces dans le code}}
+    - \newglossaryentry{DoD}{name=DoD,
+       description={'Department of Defense' Département de la Défense des États-Unis}}
+
 ---
-[//]: # (TODO: Add transitionnal comments to all parts)
 # Résumé
 
 J'ai découvert Ada lors des cours à EPITA donnés par Raphaël Amiard. J'ai
@@ -131,11 +133,11 @@ création d'un projet.
 ## Présentation de l'entreprise
 ### Historique
 
-En 1975, le DoD commence à rédiger un standard décrivant un langage visant à
+En 1975, le \gls{DoD} commence à rédiger un standard décrivant un langage visant à
 remplacer les 450 langages utilisés à l'époque à l'intérieur de l'organisation.
-En 1978, le dernier standard appellé 'Steelman' est finalisé. Le DoD organise
-ensuite un concours visant à trouver le langage remplaçant qui respecte le
-standard. Quatres équipes sont crées et parmis ces quatres, c'est l'équipe
+En 1978, le dernier standard appellé 'Steelman' est finalisé. Le \gls{DoD} organise
+ensuite un concours visant à trouver le langage remplaçant avec le standard
+comme modêle à respecter. Quatres équipes sont crées et parmis ces quatres, c'est l'équipe
 'Green' qui remporte le concours et qui devient le nouveau langage de
 programmation Ada, nommé en hommage à Ada Lovelace, mathématicienne anglaise du
 19ème siècle.
@@ -290,7 +292,7 @@ fonctionnement d'Ada dans le domaine de l'embarqué.
 Concernant le sujet du stage, un collègue avait déjà realisé un prototype
 utilisant les CMSIS-Packs, j'ai pu m'en inspirer afin d'avancer plus vite
 dans mon travail. De plus, la haute disponibilité de mes 2 encadrants m'a permis
-d'avancer vite et de ne pas rester bloqué sur des problêmes qu'ils pouvaient
+d'avancer vite et de ne pas rester bloqué sur des problèmes qu'ils pouvaient
 m'aider a resoudre.
 
 Pour comprendre comment fonctionnaient les runtimes j'ai utilisé les papiers
@@ -428,8 +430,15 @@ l'utilisateur quelle board choisir.
 
 ### Propositions retenues ou pas
 
-- pas d'outils traduisant l'assembleur et le linker script ARM vers leurs
-  équivalents GCC
+En découvrant qu'ARM avait son propre compilateur, assembleur et syntaxe de
+linker script (appellés `scatter file` par le l'éditeur de liens ARM), j'ai pensé qu'un
+outil transformant la syntaxe ARM en son équivalent GCC pouvait être
+réalisable. Cependant, après en avoir discuter avec mon maître de stage il
+s'avère que générer les fichiers serait plus simple que les traduire, nous
+n'avont donc pas continué avec cette idée. La difficultée principale venait de
+la transformation du startup code qui demandait une interprétation de certains
+éléments du code assembleur car certaines directives ARM n'avaient pas leur
+équivalent en assembleur GCC et vice-versa.
 
 ### Difficultés éventuelles
 
@@ -443,7 +452,6 @@ pack peut faire la distinction entre le compilateur GCC et le compilateur ARM
 et peut spécifier quels fichiers utiliser pour un compilateur donné. GNAT est
 basé sur GCC, il était donc nécessaire dans notre cas de ne récupérer que les
 informations utilisables avec GCC.
-
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
@@ -471,10 +479,11 @@ j'allait écrire et leurs responsabilitées.
 
 ### Cadre de la tâche
 
-- devait s'intégrer dans GPS
-- devait pouvoir s'utiliser facilement depuis la command line
-  ou depuis un script python
-- devait être réalisés en python 2.7 ou en Ada
+Le cadre de la tâche était de créer des outils le plus portable possible. Il
+fallait donc complêtement décorréler l'intégration dans \gls{GPS} et le
+fonctionnnement des outils. Il fallait pouvoir utiliser ces outils depuis un
+terminal ou bien depuis un script Python. Ces outils devaient utiliser les
+langages Python et/ou Ada.
 
 ### Propositions retenues ou pas
 
@@ -500,36 +509,53 @@ Il fallait ensuite écrire un script qui allait piloter la chaîne d'outil et
 enfin intégrer ce script dans GPS. Il fallait que les outils soient utilisables
 depuis la ligne de commande ou importable comme un module Python.
 
-- m'a permit d'avancer clairement sur un outil en particulier
+Une fois cette architecture définie j'ai pu commencer à travailler sur l'outil
+qui allait générer le startup code et le linker script. Cependant, il est plus
+pertinent de commencer par expliquer le fonctionnement de la base de données.
 
 ## Base de données
 ### Objectifs
 
-- représenter les informations utiles dans la base de donnée
-    - documentation pour une board
-    - addresse à laquelle télécharger le pack
-    - informations sur la memoire et le CPU de la board
-    - stockage de la hiérachie de famille/sous-famille/device du pack
-    - stockage des interruptions (index + noms)
+La base de données doit pouvoir représenter toutes les informations nécessaires
+à la génération du linker script et du startup code. C'est à dire à la fois les
+informations liées au CPU et les informations liées à la board. Il faut
+également stocker la description des interruptions, c'est à dire l'index dans
+le tableau d'interruptions ainsi que son nom (pour que l'utilisateur puisse
+savoir quelle est la fonction de cet interruption).
+
+Elle doit également contenir l'URL à laquelle un pack peut être téléchargé et
+mis à jour. Il est également intéressant de stocker la hiérachie de famille et
+de sous-familles afin de permettre, lors de l'intégration, à l'utilisateur de
+filtrer les résultats de recherche à la sous-famille de son choix.
+
+[//]: # (TODO: database schema here)
+
+Un `device` représente la puce sur une carte. Par exemple, la carte
+STM32F429-Discovery possède un `device` STM32F429IG. Il est important de
+représenter les deux. En effet, deux `boards` peuvent avoir le même device et
+nous ne voulons pas de dupplicata d'information.
+
+Certains paquets ne respectent pas la hiérarchie famille/sous-famille et
+possèdent uniquement des familles de board. C'est pour cela qu'un device peut
+être lié à une famille ou à une sous-famille elle-même liée à une famille.
 
 ### Cadre de la tâche
 
-- code en python
-- utilisation de la bibliothèque du standard python utilisant sqlite3
+La base de données sera développée en python en utilisant le module `sqlite3`
+de la bibliothèque standard
 
 ### Difficultés éventuelles
 
-- pas de moyen de configurer la taille des champs TEXT depuis l'API python
-    - vérifier la taille du champ TEXT
+Lors de la conception de la base de données, j'ai rencontré plusieurs obstacles.
 
-- changement du parseur python, à la place du miniDOM parser, etree
-    - 10x the performance
+SQLite3 ne possède que les types INTEGER, TEXT,
+BLOB, REAL et NUMERIC. Elle convertit les types utilisés vers le type interne
+utilisé (par exemple un champ VARCHAR(10) devient un champ TEXT). Dans le cas
+précédent, cela ralentit la vitesse des requêtes qui récupèrent la valeur
+du champ.
 
-- certains packs ne respectent pas le standard
-    - XML mal formé
-
-- les chemins relatifs sont windows/unix/mac
-     - conversions avec la bibliothèque python
+Certains paquets ne respectaient pas la syntaxe XML et j'ai du modifier
+certains paquets afin de les rendre conforme à la syntaxe XML.
 
 ### Propositions retenues ou pas
 
@@ -539,13 +565,33 @@ depuis la ligne de commande ou importable comme un module Python.
     - résolu en résolvant l'héritage lors du parsing plutôt que lors du
       parcours de la base de donnée
 
+Mon premier schéma de la base de données copiait la façon dont était
+structuré le fichier XML et comportait une table avec des éléments qui
+référençaient le contenu de leurs parents. Par exemple, pour récupérer toutes
+les informations pertinentes à un `device` donné, il fallait récupérer les
+informations du device mais aussi celles de la sous-famille et de la famille
+associée.
+
+Après relecture du code, j'ai décidé de remplacer cette table par 3 tables
+distincts qui représentaient une famille, une sous-famille et un device.
+Toutes les informations nécessaires sont maintenant dans la table représentant
+les devices. En effet, la hiérarchie d'information ne change que lors de
+l'ajout ou le retrait d'un paquet, il n'était donc pas utile de pouvoir
+changer ces information en cours d'éxécution
+
 ### Résultats obtenus et impact sur l'avancement du stage
 
-- base de données fonctionnelle
-    - 3 MO pour tous les packs
+À la fin de cette tâche, j'avais un design de base de données fonctionnel.
+Une fois tous les paquets ajoutés à la base de données, ell faisait une taille
+d'à peu près 3 Mo.
 
 ## Outil d'interrogation de la base de données
 ### Objectifs
+
+Le but de cet outil est de fournir une API de communication avec la base de
+données. Elle doit permettre de récupérer tous les paquets ainsi que leurs
+contenu. Elle doit également permettre de récupérer toutes les informations
+concernant un device donné.
 
 - fournir une API simple pour interragir avec la DB
 - il faut qu'elle soit efficace (details ??)
@@ -554,51 +600,82 @@ depuis la ligne de commande ou importable comme un module Python.
 
 ### Cadre de la tâche
 
-- module python et executable
+Il faut que cet outil soit utilisable depuis un module python ou depuis la
+ligne de commande. Cela permet d'utiliser l'outil depuis un script ou
+depuis le code Python. Les informations concernant un device donné sont
+affichées dans le format JSON, pour permettre facilement leur interprétation.
 
 ### Difficultés éventuelles
 
-- passé un peu de temps sur comment supprimer le contenu d'un pack
-    - utilisé des triggers SQL pour détruire un pack et tous ce qu'il contenait
-    - pour update un paquet on détruit d'abord l'ancienne version avant
-      d'ajouter la nouvelle version
+En testant cet outil, il est apparu clair que les performances n'étaient pas
+suffisantes, en effet, l'outil mettait à peu près trente minutes à rajouter le
+contenu de tous les paquets dans la base de données ce qui était beaucoup trop
+long.
+
+Il y a plusieurs types d'analyseur syntaxique pour le XML dans la bibliothèque
+standard Python. Celui utilisé par l'outil jusqu'a présent par l'outil
+fonctionne en alouant tout le fichier en mémoire pour ensuite pouvoir le
+parcourir via des fonctions associées. Dans le cas de l'ajout des
+interruptions, le fichier XML les décrivant faisant soixante-quinze mille
+lignes, beaucoup de temps était perdu à cause de cette allocation mémoire.
+En changeant de méthode pour le parcours des éléments, on peut utiliser un
+analyseur différent qui permet de n'allouer que le minimum d'espace mémoire
+nécessaire. En spécifiant précisément les éléments de début et de fin de la
+partie du fichier qui nous intéresse, cet analyseur nous permet d'analyser les
+éléments du fichier pendant son parcours et ainsi d'être beaucoup plus
+efficace. En changeant d'analyseur, on passe de trente minutes à un peu en
+dessous de trois minutes pour l'ajout du contenu de tous les paquets.
 
 ### Propositions retenues ou pas
 
-- refais la façon dont on faisait les query
-    - un maximum de SQL et un minimum de python
-    - génération des statements SQL
+J'ai réécris la façon dont les requêtes étaient faites. Dans la première
+version de l'outil, un objet Python faisait des requêtes au fur et à mesure
+pour aggréger les résultats.
+
+Cette méthode posait des problêmes de performances. En effet, récupérer les
+informations de tous les `devices` de la base de données prennait quelques
+secondes. En modifiant le code pour générer des requêtes à la place de les
+faire au fur et à mesure, le code a gagné en efficacité, passant de quelques
+secondes à un résultat quasiment instantané.
+
+Pour pouvoir implémenter la suppression de paquets efficacement, il fallait
+introduire des `triggers` dans la base de données. En effet la structure
+non-triviale des différentes tables rendaient la suppression en cascade
+inefficace.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
-- permis de tester que la base de données fonctionnait correctement
+Une fois cet outil écrit, il a permis de tester la base de données.
+Il a notamment permis de déceler les problêmes de performances liés à l'ajout
+des paquets.
 
 ## Transformation du JSON en fichiers projets
 ### Objectifs
 
-- transformer un output JSON en fichier projets
+Le but de cet outil est de traduire le JSON en syntaxe de fichier projet. Cela
+permet de transformer la sortie de l'outil précédent en fichiers projet
+représentant le matériel sélectionné.
 
 ### Alternatives
 
-- ne pas utiliser les fichiers projets et passer par du JSON
-     - downside: pas de moyen d'éditer graphiquement un fichier JSON
-       contrairement aux fichiers projets
+Il y avait une alternative qui consistait à ne pas utiliser du tout les
+fichiers projet et de passer uniquement par du JSON. Cependant, cette
+alternative n'a pas été retenue car cela ne permettait pas la modification des
+fichiers projets simplement depuis GPS.
 
 ### Cadre de la tâche
 
-- executable indépendant
-- module python
+Comme les autres outils, ce programme doit pouvoir être appellé depuis la ligne
+de commande ou depuis un script Python.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
-- permis de tester que tous les outils fonctionnaient ensemble
+Une fois cet outil terminé, j'ai pu tester que la chaîne d'outils fonctionnait
+correctement.
 
-- j'ai trouvé des bugs dans la gestion de la DB
-
-- le fichier projet ressemble à quelquechose comme:
+Voici un exemple de fichier projet décrivant la carte SAMD20 Xplained Pro:
 
 ```Ada
-with "interruptions";
 project Spec is
 
    package CPU is
@@ -702,10 +779,13 @@ end Spec;
 ### Objectifs
 
 - intégrer les outils dans GPS
+
 - créer une UI pour que l'utilisateur choisisse la board sur laquelle il veut
   travailler
+
 - l'utilisateur doit pouvoir relancer l'outil si il a modifié les fichiers
   projets décrivant le matériel
+
 - interraction avec la base de donnée depuis GPS
     - mettre à jour tous les packs ou un seul pack
     - installer un pack manuellement
@@ -722,7 +802,15 @@ end Spec;
 
 ### Propositions retenues ou pas
 
-- intégrer l'outil de génération comme une étape de compilation en plus
+Il serait très intéressant de pouvoir intégrer la génération des différents
+fichiers à la plate-forme comme une étape de compilation supplémentaire.
+Cela éviterait à l'utilisateur d'avoir à relancer l'outil lui-même lorsqu'il a
+modifié la description du matériel.
+
+Cependant, des limitations techniques ne permettent pas d'intégrer la
+re-génération des fichiers de manière générique. L'outil utilisé pour piloter
+les étapes de compilation ne permet pas de rajouter l'execution d'un outil
+lors de la compilation.
 
 ### Difficultés éventuelles
 
@@ -742,10 +830,8 @@ end Spec;
 ### Résultats obtenus et impact sur l'avancement du stage
 
 - intégration presque finie
-- a pris plus de temps que prévu
+    - a pris plus de temps que prévu
 - modification des patrons de projet
-
-[//]: # (TODO: Image pour illustrer l'UI ???)
 
 # Premier bilan
 
@@ -826,7 +912,7 @@ l'architecture du code. Les diverses revues de code m'ont permis également de
 rendre mon code plus clair notamment en limitant la taille des fonctions et en
 choisissant des noms de fonction appropriées.
 
-J'ai égalment beaucoup progressé dans mon apprentissage du Python. Beaucoup de
+J'ai également beaucoup progressé dans mon apprentissage du Python. Beaucoup de
 mes outils était développé sont en Python, ce qui m'a permis de mieux
 comprendre certains idiomes du langage et d'avoir appris à mieux utiliser la
 bibliothèque standard du langage.
@@ -853,7 +939,7 @@ j'ai du donc aller lire le code.
 
 AdaCore organise des `Monthly Interns Commits`. Ce sont des séances d'une heure
 ou chaqun des stagiaires d'AdaCore présente son travail, son avancement et les
-problêmes qu'il a rencontré. Les retours suite aux présentations m'ont vraiment
+problèmes qu'il a rencontré. Les retours suite aux présentations m'ont vraiment
 aidé à rendre mes diapositives plus claires ainsi qu'à les rendre plus
 synthétiques. J'ai passé un peu de temps à améliorer ma présentation et j'ai
 réussi à rendre l'explication de mon sujet de stage beaucoup plus abordable,
@@ -867,12 +953,12 @@ expliquant le contenu de slides par un schéma.
 J'ai appliqué ce que j'avais appris lors de mon stage précédent, c'est à dire
 de ne pas hésiter à demander des éclaircissements quand les spécifications de
 ce que je devais développer n'étaient pas claires. Dans le cas où je suis
-bloqué à cause d'un problême technique j'ai également tiré les leçons de mon
+bloqué à cause d'un problème technique j'ai également tiré les leçons de mon
 stage précédent et je n'ai pas hésité à aller poser des questions aux personnes
 qui m'encadraient.
 
 Je pense également avoir été plus consciencieux que pendant mon stage précédent. Lorsque
-je trouvais un problême dans les outils que j'utilisait, je créais un ticket au
+je trouvais un problème dans les outils que j'utilisait, je créais un ticket au
 minimum et dans certains cas je cherchais un peu pour essayer de trouver d'ou
 venait le bug et j'ai soumis quelques patchs de cette façon.
 
@@ -888,7 +974,7 @@ En ce qui concerne les points perfectibles du stage, je pense que j'aurais dû
 commencer à penser au design des outils depuis le début du stage. En effet,
 j'ai commencé par faire plusieurs scripts prototypes. Cependant, n'ayant pas
 encore très bien cerné mon sujet de stage, ces script n'ont finalement pas été
-utilisés car le problême qu'ils resolvaient était déjà résolu par d'autres
+utilisés car le problème qu'ils resolvaient était déjà résolu par d'autres
 outils d'AdaCore.
 
 La formation généraliste d'EPITA, notamment le projet TIGER en ING1, m'a permis
@@ -913,29 +999,25 @@ enjeux des clients d'AdaCore. Par exemple, le cours d'architecture distribuée
 de Christian Garnier m'a permis de comprendre quels étaient les enjeux et les
 garanties que devaient apporté un système temps réel. Le cours de freeRTOS de
 Thierry Joubert m'a permis de comprendre comment fonctionnait un OS temps réel,
-et les problêmes que le système résolvait. Enfin le cours de José Ruiz sur la
+et les problèmes que le système résolvait. Enfin le cours de José Ruiz sur la
 norme DO-178 était très intéressant car il permettait de comprendre comment le
 processus de certifaction fonctionnait et comment on pouvait tracer les
 exigences de haut-niveau jusqu'au code source.
 
-[//]: # (TODO: paragraphe sur les articles de recherche ????)
+[@gnatada9x].
 
-Smith says blah [@gnatada9x].
+[@bareboardkernelada2005].
 
-Smith says blah [@bareboardkernelada2005].
+[@adarealtimeclock].
 
-Smith says blah [@adarealtimeclock].
+[@ptcobjectada].
 
-Smith says blah [@ptcobjectada].
-
-Smith says blah [@adacompetition].
+[@adacompetition].
 
 - papiers de recherche
      - real time features on a bare board kernel
      - implementing Ada real time clock and absolute delays in real time kernels
      - ORK: An open source real-time kernel for on-board software systems.
-
-[//]: # (TODO: parler des voitures automatiques comme secteur d'avenir)
 
 # Bibliographie
 
