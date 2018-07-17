@@ -42,7 +42,7 @@ header-includes:
     - \newglossaryentry{boilerplate}{name=boilerplate,
        description={Se dit d'une fonctionnalité ou d'un programme dont le code
        source est quasiment le même quel que soit le programme}}
-    - \newglossaryentry{fonctions génératrices}{name=fonctions génératrices,
+    - \newglossaryentry{generator functions}{name=fonctions génératrices,
        description={Fonction qui sauvegarde son état interne pour pouvoir
        reprendre l'execution lors d'un prochain appel}}
     - \newglossaryentry{pull-request}{name=pull-request,
@@ -57,7 +57,11 @@ header-includes:
 	   tandis que le système de divertissement des passagers serait DAL E}}
     - \newglossaryentry{ISS}{name=ISS,
        description={Station Spatiale Internationale}}
-
+    - \newglossaryentry{RAM}{name=RAM,
+       description={(Random Access Memory) mémoire vive accessible en écriture
+	   et en lecture}}
+    - \newglossaryentry{ROM}{name=ROM,
+       description={(Read Only Memory) mémoire accessible uniquement en lecture}}
 ---
 # Résumé
 
@@ -402,7 +406,7 @@ GPS utilise des \gls{plugin}s en Python.
 Le plugin GPS a été modifié pour tenir compte de la cible et permet de lancer
 la suite de test sur l'émulateur. J'ai utilisé les bibliothèques de workflows
 python pour rendre mon code asynchrone. J'ai également utilisé les
-\gls{fonctions génératrices} pour rendre mon code plus efficace.
+\gls{generator functions} pour rendre mon code plus efficace.
 
 J'ai refactorer le code qui servait à lancer l'émulateur afin de permettre
 l'appel des fonctions depuis d'autre modules python.
@@ -566,12 +570,6 @@ certains paquets afin de les rendre conforme à la syntaxe XML.
 
 ### Propositions retenues ou pas
 
-- redesign des tables
-    - première itération était trop complexe
-    - représentation de la structure en héritage du XML dans la BD
-    - résolu en résolvant l'héritage lors du parsing plutôt que lors du
-      parcours de la base de donnée
-
 Mon premier schéma de la base de données copiait la façon dont était
 structuré le fichier XML et comportait une table avec des éléments qui
 référençaient le contenu de leurs parents. Par exemple, pour récupérer toutes
@@ -600,17 +598,13 @@ données. Elle doit permettre de récupérer tous les paquets ainsi que leurs
 contenu. Elle doit également permettre de récupérer toutes les informations
 concernant un device donné.
 
-- fournir une API simple pour interragir avec la DB
-- il faut qu'elle soit efficace (details ??)
-    - actuellement ajouter les packs prends moins de 3 minutes en comptant
-      l'unzip
-
 ### Cadre de la tâche
 
 Il faut que cet outil soit utilisable depuis un module python ou depuis la
 ligne de commande. Cela permet d'utiliser l'outil depuis un script ou
 depuis le code Python. Les informations concernant un device donné sont
 affichées dans le format JSON, pour permettre facilement leur interprétation.
+Cet outil ne doit pas avoir à gérer la base de données.
 
 ### Difficultés éventuelles
 
@@ -714,51 +708,64 @@ project Spec is
 end Spec;
 ```
 
-- on peut voir le type de CPU et la gestion des flotants (hardware or software)
-- 2 memoires : une ROM et une RAM
-    - leurs tailles
-    - leurs addresses
+Sur l'exemple ci-dessus on peut voir que le CPU gère les nombres à virgules
+flottantes avec du software (certaines plate-formes ont des co-processeurs
+spécifiques à ce genre d'opérations). Dans l'exemple ci-dessus, la carte
+possède deux régions mémoires une \gls{ROM} et une \gls{RAM}. La mémoire de
+démarage sélectionnée est la mémoire \gls{ROM}. Le mémoire ROM commence à
+l'addresse `0` (en hexadécimal) et a 256 kilo octets de capacité.
+La mémoire RAM commence à l'addresse `16#20000000#` (syntaxe Ada pour 20000000
+en hexadécimal) et a une taille de 8000 (en hexadécimal) octets.
 
-- par rapport au linker script
-    - on gagne en lisibilité
-    - modification dans GPS aisée
+Le formalisme précédent permet de gagner fortement en clarté par rapport à un
+\gls{linker script}. L'utilisation de la syntaxe des fichiers projets permet
+également de profiter des outils utilisant ce format. Par exemple, cela rend la
+modification dans \gls{GPS} plus aisée et permettrait de représenter
+graphiquement les différentes mémoires.
 
-## Génération du \gls{startup code} et du \gls{linker script}
+## Génération du startup code et du linker script
 ### Objectifs
 
-- écrire un programme qui transforme un fichier projet décrivant des régions
-  mémoires, un CPU et des interruptions afin de générer le linker script et le
-  startup code associé
+Le but de cet outil est de générer un \gls{linker script} et un \gls{startup code}
+depuis un fichier projet utilisant le formalisme de la section précédente.
+On doit pouvoir rajouter des architectures supportées juste en ajoutant des
+fichiers de configuration.
 
-- doit supporter plusieurs architectures (armv6, armv7, PPC, ...)
+Cet outil doit également s'assurer que le fichier projet est correct. Par
+exemple, l'outil doit pouvoir détecter et refuser le fichier projet dans le cas
+ou deux sections mémoires sont supperposées.
 
-- doit vérifier que le contenu du fichier projet est correct
-
-- dans le linker script on doit mapper les sections de l'executable vers la
-  bonne région mémoire
-    - pas forcément évident dans certains cas
-    - change selon quel région mémoire est choisie
+Dans le \gls{linker script}, chaque section de l'exécutable doit être
+mise dans une section mémoire spécifique. Par exemple, la section `.text`
+contenant le code doit être mise dans la région mémoire de démarrage afin
+d'être exécuté.
 
 ### Cadre de la tâche
 
-- executable indépendant
+Cet outil doit être un exécutable indépendant écrit en Ada. Il doit se reposer
+sur deux fichiers distincts: un fichier décrivant la mémoire et le CPU et un
+autre décrivant le vecteur d'interruptions.
 
-- écrit en Ada
-
-- utilise 2 fichiers distincts:
-    - cpu + board informations
-    - interruptions
-
-- ajouts de code samples doit être possible sans avoir à recompiler le code
+L'outil utilise des patrons de code assembleur afin de générer le code associé
+à chaque section. Il doit être possible de rajouter des patrons de code avec
+des architectures différentes sans avoir à recompiler l'outil.
 
 ### Propositions retenues ou pas
 
-- pas de meta-assembleurs qui serait traduit dans l'assembleur de la
-  plate-forme, des code samples à la place
+Actuellement, l'outil utilise des patrons de code assembleur afin de générer du
+code. Une proposition qui n'a pas été retenue était d'écrire un langage de
+description d'assembleur qui serait ensuite traduits dans l'assembleur cible.
+
+Cette idée n'a pas été retenue car beaucoup trop complexe à mettre en place, à
+la place on utilise des patrons de code assembleurs.
 
 ### Difficultés éventuelles
 
+Avant ce projet, j'avais écris un court projet en Ada. J'ai donc passé un peu
+de temps au début du développement à apprendre le langage.
+
 - outil à écrire en Ada, pas si familier que ça avec ce langage
+
 - utilisation de bibliothèques Ada pour lire les fichiers projets
     - peu de documentation et peu d'exemples
     - lu le code, code pas explicite
