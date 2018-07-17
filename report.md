@@ -26,24 +26,23 @@ header-includes:
        description={Bibliothèque nécessaire pour faire tourner du code Ada sur
        une cible, elle fournit certaines fonctionnalitées du langage}}
     - \newglossaryentry{GNATCOLL}{name=GNATCOLL,
-       description={(GNAT Components Collection) Bibliotèque Ada fournissant
+       description={(GNAT Components Collection) Bibliothèque Ada fournissant
        du code permettant d'utiliser des bibliothèques externes. Par
-       exemple, GNATCOLL fournie une API pour interragir avec une base de
+       exemple, GNATCOLL fournit une API pour interragir avec une base de
        données.}}
     - \newglossaryentry{linker script}{name=linker script,
        description={Fichier décrivant à l'éditeur de lien comment arranger la
-       cartographie mémoire dans l'éxécutable final.}}
+       cartographie mémoire dans l'exécutable final.}}
     - \newglossaryentry{startup code}{name=startup code,
-       description={Aussi appellé 'crt0', c'est le bout de code qui est
-       responsable d'initialiser la mémoire ainsi que d'appeller le point
-       d'entrée du programme}}
+       description={Aussi appellé 'crt0', c'est le bout de code qui initialise
+	   la mémoire et qui appelle le point d'entrée du programme}}
     - \newglossaryentry{plugin}{name=plugin,
        description={Logiciel qui se greffe à un logiciel hôte et qui permet
        d'étendre les fonctionnalités de ce dernier}}
     - \newglossaryentry{boilerplate}{name=boilerplate,
        description={Se dit d'une fonctionnalité ou d'un programme dont le code
        source est quasiment le même quel que soit le programme}}
-    - \newglossaryentry{generator function}{name=fonction génératrice,
+    - \newglossaryentry{fonctions génératrices}{name=fonctions génératrices,
        description={Fonction qui sauvegarde son état interne pour pouvoir
        reprendre l'execution lors d'un prochain appel}}
     - \newglossaryentry{pull-request}{name=pull-request,
@@ -51,6 +50,13 @@ header-includes:
        tierces dans le code}}
     - \newglossaryentry{DoD}{name=DoD,
        description={'Department of Defense' Département de la Défense des États-Unis}}
+    - \newglossaryentry{DAL}{name=DAL,
+       description={Niveau d'Assurance de Développement, c'est le niveau de
+	   criticité d'un sous-système allant de A (le plus critique) à E (le moins
+	   critique). Par exemple, le système de pilotage d'un avion serait DAL A
+	   tandis que le système de divertissement des passagers serait DAL E}}
+    - \newglossaryentry{ISS}{name=ISS,
+       description={Station Spatiale Internationale}}
 
 ---
 # Résumé
@@ -67,7 +73,7 @@ sera utilisé mon travail. Le second point est le sujet qui me permet de toucher
 a plusieurs technologies tout en restant dans mon domaine de prédilection, le
 développement embarqué. Par exemple, en apprendre plus sur les différents
 processeurs ARM et leurs assembleurs me paraissait être une bonne
-expérience a avoir.
+expérience à avoir.
 
 C'est donc pour ces différentes raisons que j'ai candidaté chez AdaCore.
 
@@ -78,9 +84,9 @@ de revue de code ainsi qu'avec le code de \gls{GPS}. J'ai ensuite commencé à �
 mon sujet de stage et comment pouvions nous améliorer le support du
 \gls{bare-metal} dans \gls{GPS}.
 
-Apres deux prototypes explorant le sujet, nous avons fait une réunion avec
+Après deux prototypes explorant le sujet, nous avons fait une réunion avec
 mes encadrants afin de décider de la suite du stage et nous avons ainsi
-décidé d'une architecture pour les outils que j'allait développer.
+décidé d'une architecture pour les outils que j'allais développer.
 
 # Introduction
 
@@ -90,42 +96,41 @@ Mon sujet de stage s'intitulait 'Improve baremetal support in \gls{GPS}' et
 comportait les axes suivants:
 
 - améliorer la `stack view`
-- développer une register view
-- explorer la possibilité d'intégrer les CMSIS-Packs dans \gls{GPS}
+- développer une `register view`
+- explorer comment utiliser les CMSIS-Packs dans \gls{GPS}
 
-J'ai choisi de m'attaquer à ce dernier sujet. L'idée etait de fournir les outils à
-l'utilisateur fin qu'il puisse choisir sa cible de développement et que \gls{GPS}
-génère les fichiers nécessaires afin de pouvoir commencer a développer apres la
-création du projet.
+J'ai choisi de m'attaquer à ce dernier sujet. L'idée était d'investiguer ce
+qu'il était de faire grâce aux CMSIS-Packs pour rendre la programmation
+embarquée en Ada plus simple.
 
-Cependant pour pouvoir exécuter du code Ada sur une cible donnée, il faut
+Pour pouvoir exécuter du code Ada sur une cible donnée, il faut
 avoir un logiciel appellé une `runtime`. Ce logiciel implémente des
-fonctionnalitées du langage qui sont utilisée par le programme comme le support
+fonctionnalités du langage qui sont utilisée par le programme comme le support
 multi-tâches, la propagation des exceptions ou un allocateur mémoire.
 
 Etant donné que le code étant dans la runtime doit tourner sur la cible, il
 faut adapter la runtime à chaque cible. Actuellement, c'est une étape qui est
 faite manuellement. Il faut également savoir qu'il y a plusieurs types de
 runtime qui ne fournissent pas toutes les mêmes fonctionnatlités. Dans le cas
-de mon stage je me suis attaqué a la question des `runtimes` dites `ZFP` pour
-`zero footprint`. Ce type de runtime est le minimum pour pouvoir faire tourner
+de mon stage je me suis attaqué à la question des `runtimes` dites `\gls{ZFP}`.
+Ce type de runtime est le minimum pour pouvoir faire tourner
 du code Ada. Par exemple, elle n'a pas de propagation d'exception, pas de
-support multi-tâches et ne possède qu'un allocateur memoire naif.
+support multi-tâches et ne possède qu'un allocateur mémoire naif.
 
 Dans le cas décrit ci-dessus, les modifications à effectuer dans le code de la
 runtime elle-même sont nulles. Cependant, il faut tout de même modifier le
-`startup-code` qui permet de préparer le matériel à l'execution du programme et
-appelle la fonction `main`. Il faut également modifier le `linker script`, le fichier
-responsable de la cartographie mémoire, afin de spécifier les zones memoires et
-quelles portions du code y mettre.
+`startup-code`. Ce bout de code permet d'initialiser la mémoire et se charge
+d'appeller le point d'entrée du programme. Il faut également modifier le
+`linker script`. Ce fichier permet de spécifier les zones mémoires et quelles
+portions du code y mettre.
 
 Ces modifications dépendent de la cible et nécessite actuellement de lire la
-documentation afin de récuperer les informations nécessaires. Dans le cas où on travaille
+documentation afin de récupérer les informations nécessaires. Dans le cas où on travaille
 avec un processeur cortex-m, ARM a créé un standard qui permet de décrire
-le materiel d'une `board` ou d'un `device` et `packageant` ces infos dans une
+le matériel d'une `board` ou d'un `device`. Ces infos dans une
 archive zip. On appelle ces archives des CMSIS-Packs.
 
-La solution est donc d'utiliser ces packs pour automatiser le processus de
+La solution est donc d'utiliser les CMSIS-Packs pour automatiser le processus de
 modification du `startup code` et du `linker script`. Cette automatisation
 permet a l'utilisateur de choisir sa `board` de dévelopement lors de la
 création d'un projet.
@@ -143,42 +148,44 @@ programmation Ada, nommé en hommage à Ada Lovelace, mathématicienne anglaise 
 19ème siècle.
 
 En 1992, l'université de New York conclut un contrat avec l'`US Air Force` afin
-de créer un compilateur libre afin d'aider a la diffusion du
-nouveau standard Ada, Ada 9X (qui deviendra Ada 95).
-Suite a ce projet, la société Ada Core Technologies est crée a New York et la
-sociétée sœur ACT-Europe est crée deux années plus tard. Ce n'est qu'en 2012
+de créer un compilateur libre afin d'aider à la diffusion du
+nouveau standard Ada 9X (qui deviendra Ada 95).
+Suite a ce projet, la société Ada Core Technologies est créée à New York et la
+sociétée sœur ACT-Europe est créée deux années plus tard. Ce n'est qu'en 2012
 que les deux sociétés sont unifiées.
 
-AdaCore fournit un compilateur Ada appellé GNAT en plusieurs versions avec des
-licenses différentes. Chaque version possède des fonctionnalite differentes,
-par exemple la version `Community` ne supporte que la dernière version du
-standard Ada, Ada 2012, alors que la version `Assurance` destinée aux projets
-de certifications ou a des projets de longues durees supporte jusqu'à Ada 83.
-De plus, avec la version `Community`, tout le code écrit est soumis à la
-license GPL ce qui n'est pas le cas avec la version commerciale
+AdaCore fournit un compilateur Ada appellé GNAT. Ce compilateur est distribué
+en plusieurs versions, chaqune visant un public différent.
+Par exemple la version `Community` ne supporte que la dernière version du
+standard Ada, Ada 2012, et vise principalement les développeurs amateurs.
+
+La version `Assurance` destinée aux projets de certifications ou à des
+projets de longues durées supporte jusqu'à Ada 83. Elle permet aussi de ne pas
+avoir à soumettre le code produit à la license GPL, qui obligerait
+l'utilisateur à rendre le code public.
 
 Pour aller avec le compilateur, AdaCore peut également aider les clients avec
 des projets de certifications. En effet,
 une partie des outils fournis par AdaCore, comme GNATcoverage, est qualifié
-pour le développement d'outil en DO-178B en DAL A. C'est à dire le niveau de
+pour le développement d'outil en DO-178B en \gls{DAL} A. C'est à dire le niveau de
 criticité le plus élevé pour le standard avionique. GNATcoverage aide à
 l'analyse de couverture de code ce qui permet de garantir qu'il n'y a pas de
 code qui n'est jamais exécuté.
 
 AdaCore a beaucoup de clients dans des domaines ou la présence d'erreurs dans
-un logiciel n'est pas acceptable. Par exemple, les deux domaines ou
-AdaCore le plus de clients sont l'avionique de le secteur de la défense.
+un logiciel n'est pas acceptable, comme l'avionique ou le secteur de la
+défense.
 
 Cependant AdaCore n'est pas présente que dans ces domaines, voici deux exemples
 de projets menés par des clients d'AdaCore dans des domaines très distincts.
 
 - MDA, une division de Maxar Technologies, va utiliser Ada ainsi que le produit
   GNAT Pro Assurance afin de remplacer le logiciel en charge de la
-  communication espace-terre a bord de l'ISS.
+  communication espace-terre à bord de l'\gls{ISS}.
 
-- Real Heart AB est une entreprise suedoise qui travaille sur un coeur totalement
+- Real Heart AB est une entreprise suédoise qui travaille sur un coeur totalement
   artificiel. Afin de garantir le bon fonctionnement du logiciel qui pilote le
-  moteur de la pompe du coeur artificiel, elle a choisi d'utiliser Ada ainsi
+  moteur de la pompe du coeur, elle a choisi d'utiliser Ada ainsi
   que le compilateur GNAT Pro fourni par AdaCore.
 
 ### Contexte concurentiel
@@ -186,26 +193,24 @@ de projets menés par des clients d'AdaCore dans des domaines très distincts.
 AdaCore n'est pas la seule entreprise  dans le domaine des compilateurs Ada.
 Voici un rapide aperçu des principaux compilateurs concurrents.
 
-                        Green Hills Ada Compilers
----------------------   -----------------------------------------
-Entreprise              Greens Hills Software
-Standards               Ada95
-Plates-formes cibles    Power, ARM/Thumb, 68k, MIPS, x86, SPARC
-Runtime                 Ravenscar (non multitâche)
----------------------   -----------------------------------------
-: Aperçu des compilateurs Ada concurrents
+                          Green Hills Ada Compilers
+---------------------     -----------------------------------------------------
+Entreprise                Greens Hills Software
+Standards                 Ada95
+Plates-formes cibles      Power, ARM/Thumb, 68k, MIPS, x86, SPARC
+Runtime                   Ravenscar (non multitâche)
+---------------------     -----------------------------------------------------
 
                           ObjectAda
 ---------------------     -----------------------------------------------------
 Entreprise                PTC
-Standards                 Ada95
-                          Ada2012 (partiel, seulement pour Windows 10 natif)
+Standards                 Ada95 Ada2012 (seulement windows 10 natif)
 Plates-formes cibles      PPC, x86
 Runtime                   Ravenscar
 ---------------------     -----------------------------------------------------
 
 Par rapport a ses concurrents, GNAT Pro a l'avantage de supporter la dernière
-version du standard Ada (Ada2012) ainsi que toutes les versions antèrieures, et
+version du standard Ada (Ada2012) ainsi que toutes les versions antérieures, et
 ce tout aussi bien sur des plate-formes natives qu'en compilation croisée.
 GNAT Pro supporte également bien plus de plate-formes 64bits et supporte
 également plus d'OS temps-réels comme PikeOS ou LynxOS. On peut donc en
@@ -228,7 +233,9 @@ l'\gls{IDE} (\gls{GPS}) ainsi que des bibliothèques périphériques. Par exempl
 équipe s'occupe de l'intégration de GNAT dans l'\gls{IDE} de WindRiver (Workbench)
 afin de pouvoir facilement faire tourner des applications en Ada sur les
 différentes versions de VxWorks, un OS propriétaire très utilisé dans le
-domaine du temps-réel embarqué.
+domaine du temps-réel embarqué. J'ai également beaucoup interragi avec l'équipe
+CROSS. Cette équipe s'occupe de porter la suite d'outils GNAT vers de nouvelles
+plate-formes et de régler les problêmes trouvés dans ces produits.
 
 Dans ce contexte j'ai surtout interagi avec l'équipe \gls{GPS} dont mon maître de
 stage fait partie. Comme je devait intégrer mon travail dans \gls{GPS}, cela a été
@@ -239,20 +246,20 @@ j'avais des questions techniques vis-a-vis des `runtimes` Ada.
 
 ## État des connaissances sur le sujet
 
-J'avais déjà utilisé les runtimes Ada pour un projet embarque sur une STM32F729
+J'avais déjà utilisé les runtimes Ada pour un projet embarqué sur une STM32F729
 dont le but était d'interfacer du code C++ avec du code Ada. Mon expérience
 avec l'Ada était donc plutôt limitée et je voulais profiter de ce stage pour en
 apprendre plus sur ce langage.
 
-Au cours de mon cursus, je n'ai pas beaucoup utilisé Python, cependant je
+Au cours de mon cursus, je n'ai pas beaucoup utilisé Python. Cependant, je
 l'utilise sur mon temps libre pour personnaliser certains aspects de ma
 distribution Linux, je n'étais donc pas complètement novice sur ce sujet.
 
-J'ai l'expérience de plusieurs projets à EPITA concernant l'assembleur, le
-premier projet est le projet assembleur en ING1 qui touchait surtout
-l'assembleur x86. En GISTRE, j'ai touché un peu à de l'assembleur ARM grâce au
+J'ai l'expérience de plusieurs projets à l'EPITA concernant l'assembleur, mon
+premier projet ayant été le projet assembleur en ING1 qui touchait surtout
+l'assembleur x86. En GISTRE, j'ai fait un peu d'assembleur ARM grâce au
 projet ARM. Enfin, lors de mon projet de fin d'études, j'ai dû lire de
-l'assembleur 8080 afin de débugguer notre émulateur Gameboy. Je voulais
+l'assembleur 8080 afin de déboguer notre émulateur Gameboy. Je voulais
 profiter de mon stage pour en apprendre plus sur les différentes architectures
 ARM et leurs différents assembleurs.
 
@@ -266,17 +273,17 @@ L'\gls{IDE} d'AdaCore (\gls{GPS}) permet de faciliter le développement embarqu�
 fournissant une interface de connection à la `board` facile d'utilisation.
 Cependant, \gls{GPS} ne supporte pas les CMSIS-Packs dans son état actuel, ce qui
 rend difficile le développement embarqué sur une carte non supportée.
-L'intérêt du stage est donc clair pour AdaCore, la simplification du processus
+L'intérêt du stage est donc clair pour AdaCore : la simplification du processus
 de développement permet d'enlever une barrière à l'adoption de l'\gls{IDE} \gls{GPS}.
 
-Aucun outil Ada ne posséde actuellement d'intégration des CMSIS-Packs,
-contrairement aux outils pour le C ou il y a déjà un écosystème bien installé.
-Cela permet donc de faciliter la diffusion du langage en levant une autre
-barrière au développement.
+Aucun outil Ada ne possède actuellement d'intégration des CMSIS-Packs,
+contrairement aux outils pour le C où il y a déjà un écosystème bien installé.
+Cette intégration permettrait donc de faciliter la diffusion du langage en
+levant une autre barrière au développement.
 
 ## Contexte de travail
 
-J'ai pu rapidement me mettre à travailler efficacement grâce a la
+J'ai pu rapidement me mettre à travailler efficacement grâce à la
 documentation interne. De plus, la disposition physique des locaux m'a permis,
 lorsque j'avais des questions complexes, d'aller voir directement la personne
 concernée afin d'obtenir une réponse claire.
@@ -284,14 +291,14 @@ concernée afin d'obtenir une réponse claire.
 J'était encadré par deux anciens épitéens, Anthony Leonardo Gracio et Fabien
 Chouteau. Anthony fait partie de l'équipe \gls{GPS} et m'a
 aidé à intégrer mon code dans \gls{GPS} et à écrire du meilleur code en faisant les
-revues sur le code que j'écrivait. Fabien fait partie de l'équipe Bare-Board et
+revues sur le code que j'écrivais. Fabien fait partie de l'équipe Bare-Board et
 c'est lui qui est à l'origine de mon sujet de stage. Il m'a aidé lorsque
 j'avais des questions vis à vis de certaines technologies ou du
 fonctionnement d'Ada dans le domaine de l'embarqué.
 
-Concernant le sujet du stage, un collègue avait déjà realisé un prototype
+Concernant le sujet du stage, un collègue avait déjà réalisé un prototype
 utilisant les CMSIS-Packs, j'ai pu m'en inspirer afin d'avancer plus vite
-dans mon travail. De plus, la haute disponibilité de mes 2 encadrants m'a permis
+dans mon travail. De plus, la haute disponibilité de mes deux encadrants m'a permis
 d'avancer vite et de ne pas rester bloqué sur des problèmes qu'ils pouvaient
 m'aider a resoudre.
 
@@ -299,19 +306,19 @@ Pour comprendre comment fonctionnaient les runtimes j'ai utilisé les papiers
 suivants (Papers related to runtimes HERE). + DETAILS
 LINK TO DESCRIPTION of those boards in the appendix
 
-Lorsque j'ai commencé à tester mon travail, j'avait 3 cartes
-différentes a ma disposition. Une STM32F429 et deux cartes Atmel, une SAMD20
+Lorsque j'ai commencé à tester mon travail, j'avais trois cartes
+différentes à ma disposition. Une STM32F429 et deux cartes Atmel, une SAMD20
 et une SAM4E. Toutes ces cartes avaient des moyens de communication ou des
-CPUS différents afin de me permettre de tester le code que je produisait sur le
+CPUS différents afin de me permettre de tester le code que je produisais sur le
 plus de cibles variées.
 
 En termes de logiciels utilisés, j'ai principalement utilisé la bibliothèque
 standard Python 2.7, ainsi qu'une bibliothèque Ada nommée \gls{GNATCOLL}.
-Cette bibliothèque fournie beaucoup de
-fonctionnalitées, mais je l'ai principalement utilisé pour modifier et lire les
+Cette bibliothèque fournit beaucoup de
+fonctionnalités, mais je l'ai principalement utilisée pour modifier et lire les
 fichiers dits `projets`. Ces fichiers servent à décrire la structure d'un
 projet Ada et j'ai utilisé le même formalisme afin de décrire les informations
-nécessaires pour décrire une board.
+nécessaires pour décrire une `board`.
 
 # Aspects organisationnels
 ## Découpage du stage
@@ -342,7 +349,7 @@ Livrables:
 - points réguliers avec mon maître de stage
 - pull requests sur github
 
-## Gestions des problèmes
+## Gestion des problèmes
 Liste:
 
 - mauvais analyseur syntaxique pour le python XML
@@ -379,7 +386,7 @@ GNATemu est utilisé pour tester des projets plus facilement que sur une carte
 physique. Il permet également d'émuler des devices sur un bus (AMBA ou PCI)
 via l'outil GNATbus.
 
-L'objectif de cette tâche étaient de pouvoir lancer le harnais de test sur
+L'objectif de cette tâche étaient de pouvoir exécuter le harnais de test sur
 l'émulateur dans le cas d'un projet embarqué.
 
 GNATtest était déjà intégré dans GPS avec un \gls{plugin}. Il fallait modifier
@@ -395,18 +402,17 @@ GPS utilise des \gls{plugin}s en Python.
 Le plugin GPS a été modifié pour tenir compte de la cible et permet de lancer
 la suite de test sur l'émulateur. J'ai utilisé les bibliothèques de workflows
 python pour rendre mon code asynchrone. J'ai également utilisé les
-\gls{generator function} pour rendre mon code plus efficace.
+\gls{fonctions génératrices} pour rendre mon code plus efficace.
 
 J'ai refactorer le code qui servait à lancer l'émulateur afin de permettre
 l'appel des fonctions depuis d'autre modules python.
 
-Ce \gls{plugin} possède neanmoins une limitation.
-Normalement, lorsque des tests echoue, GPS peut afficher le resultat de ces
-tests en permettant a l'utilisateur de voir directement quel test echoue et a
-quelle ligne il est situe. Nous avons ce comportement lorsque l'on lance
-l'emulateur sur un harnais de test. Cependant, lorsque l'on lance l'emulateur
-sur une liste de harnais de test, GPS ne peut pas recuperer les differents
-output et ne peut donc pas les afficher comme decrit precedemment. Nous avons
+Ce \gls{plugin} possède néanmoins une limitation.
+Normalement, lorsque des tests échouent, GPS peut afficher directement quel test
+échoue et à quelle ligne il se situe. Nous avons ce comportement lorsque l'on lance
+l'émulateur sur un harnais de test. Cependant, lorsque l'on lance l'émulateur
+sur une liste de harnais de test, \gls{GPS} ne peut pas récupérer les différentes
+sorties et ne peut donc pas les afficher correctement. Nous avons
 donc decider de les afficher dans une console, une par harnais de test.
 
 Ce projet m'a permis de me familiariser avec l'API des \gls{plugin}s Python
@@ -417,7 +423,7 @@ dans GPS. J'ai pu également aussi prendre en main le système de revue de code.
 
 L'objectif principal était de me familiariser avec le comportement des runtimes
 Ada et comment elle fonctionnaient. Je devais également explorer ce qu'il était
-possible de faire avec les CMSIS-Packs et comment nous pourrions les utiliser
+possible de faire avec les CMSIS-Packs et comment nous pouvions les utiliser
 dans le contexte de la programmation embarqué Ada.
 
 Le rôle du script est de générer une runtime ZFP pour une board spécifique.
@@ -442,7 +448,7 @@ la transformation du startup code qui demandait une interprétation de certains
 
 ### Difficultés éventuelles
 
-Je n'était pas très familier avec le parsing XML en Python. J'ai donc passé un
+Je n'était pas très familier du parsing XML en Python. J'ai donc passé un
 peu de temps à comprendre comment récupérer les informations intéressantes dans
 le fichier XML.
 
@@ -475,7 +481,7 @@ générer ces fichiers à partir des informations contenus dans les packs.
 Suite à l'accomplissement de la tâche précédente, j'ai organisé une réunion
 avec mes encadrants afin de décider de la prochaine étape à suivre lors du
 stage. Nous avons donc décider d'une architecture décrivant les outils que
-j'allait écrire et leurs responsabilitées.
+j'allait écrire et leurs responsabilités.
 
 ### Cadre de la tâche
 
@@ -487,13 +493,13 @@ langages Python et/ou Ada.
 
 ### Propositions retenues ou pas
 
-Nous avons décider de laisser tomber la génération de runtime. En effet, il
-existait un projet d'AdaCore appellé \href{https://github.com/AdaCore/bb-runtimes}{`bb-runtimes`}.
+Nous avons décidé de laisser tomber la génération de runtime. En effet, il
+existe un projet d'AdaCore appellé \href{https://github.com/AdaCore/bb-runtimes}{`bb-runtimes`}.
 Le but de ce projet est de
-fournir des runtimes dépendantes et non dépendantes de la board. Le support de
+fournir des `runtime`s dépendantes et non dépendantes de la board. Le support de
 la board est dans le BSP à la place. Le but de ce projet est de réduire le
-nombre de runtimes à supporter et de simplifier le processus de création de
-runtimes. J'allais donc me reposer sur les runtimes de ce projet.
+nombre de `runtime`s à supporter et de simplifier le processus de création de
+`runtime`s. J'allais donc me reposer sur les runtimes de ce projet.
 
 - séparation du pilotage de la chaîne d'outils et de l'intégration GPS
 
@@ -509,16 +515,17 @@ Il fallait ensuite écrire un script qui allait piloter la chaîne d'outil et
 enfin intégrer ce script dans GPS. Il fallait que les outils soient utilisables
 depuis la ligne de commande ou importable comme un module Python.
 
-Une fois cette architecture définie j'ai pu commencer à travailler sur l'outil
-qui allait générer le startup code et le linker script. Cependant, il est plus
-pertinent de commencer par expliquer le fonctionnement de la base de données.
+Une fois cette architecture définie j'ai pu commencer à travailler sur le
+programme qui allait générer le \gls{startup code} et le \gls{linker script}.
+Cependant, il est plus pertinent de commencer par expliquer le fonctionnement de
+la base de données.
 
 ## Base de données
 ### Objectifs
 
 La base de données doit pouvoir représenter toutes les informations nécessaires
-à la génération du linker script et du startup code. C'est à dire à la fois les
-informations liées au CPU et les informations liées à la board. Il faut
+à la génération du \gls{linker script} et du \gls{startup code}. C'est à dire à la fois les
+informations liées au CPU et les informations liées à la `board`. Il faut
 également stocker la description des interruptions, c'est à dire l'index dans
 le tableau d'interruptions ainsi que son nom (pour que l'utilisateur puisse
 savoir quelle est la fonction de cet interruption).
@@ -742,7 +749,7 @@ end Spec;
     - cpu + board informations
     - interruptions
 
-- rajouts de code samples doit être possible sans avoir à recompiler le code
+- ajouts de code samples doit être possible sans avoir à recompiler le code
 
 ### Propositions retenues ou pas
 
@@ -762,7 +769,7 @@ end Spec;
 - on a essayer d'utiliser github (soumission de pull-requests)
     - c'est pas très utile pour des outils non stables
     - beaucoup d'overhead
-    - gerrit c'est mieux
+    - gerrit est meilleur
     - impossibilité de faire des PR dépendantes d'autres PRs
     - utilisable pour les projets déjà stables
 
@@ -822,7 +829,7 @@ lors de la compilation.
 - modification de la façon dont on instancie les patrons de projet
     - on ne peut pas avoir de menu spécifique à un projet
     - mais on peut executer un script python après l'installation du projet
-    - étendue cette fonctionnalité en permettant de générer des widgets GTK
+    - étendu cette fonctionnalité en permettant de générer des widgets GTK
       depuis le code python et de les utiliser comme un menu depuis le code Ada
 
 - problèmes de fichiers de configuration
@@ -844,8 +851,7 @@ au Scala.
 ARM a réalisé un plugin permettant de sélectionner quel pack utiliser et de
 sélectionner précisément quels éléments (pilotes, exemples) du pack l'utilisateur
 veut utiliser dans son projet. Le plugin permet également à l'utilisateur
-d'accéder à toute la documentation concernant les éléments que l'utilisateur a
-choisi.
+d'accéder à toute la documentation concernant les éléments qu'il a choisi.
 
 Le plugin est également capable de générer des \gls{linker script}s.
 Cependant, le plugin génère un type de \gls{linker script} spécifique à l'éditeur de
@@ -866,34 +872,34 @@ les architectures LEON et PowerPC de cette manière.
 
 ## Perspectives d'amélioration
 
-Toutes les fonctionnalitées que fournie Eclipse sont très intéressantes pour
-l'utilisateur et seraient un atout pour AdaCore de les intégrer dans GPS.
+Toutes les fonctionnalitées que fournit Eclipse sont très intéressantes pour
+l'utilisateur et seraient un atout pour AdaCore si elles étaient intégrées dans GPS.
 Elles pourraient vraiment améliorer le développement en C dans GPS. On pourrait
-également imaginer le cas où l'utilisateur veut utiliser certains pilotes du
-pack depuis le code Ada, il pourrait être intéressant de fournir cette
+également imaginer le cas où l'utilisateur pourrait utiliser certains pilotes du
+paquet depuis le code Ada, il pourrait être intéressant de fournir cette
 fonctionnalité 'out-of-the-box'. On pourrait utiliser l'option '-fdump-ada-spec'
-du compilateur qui permet de générer des fichiers .ads qui permetteraient au code
-Ada d'appeller le code C.
+du compilateur qui génére des fichiers .ads qui permettent au code Ada
+d'appeller le code C.
 
 La dernière étape de l'intégration dans GPS serait la re-génération du
 \gls{linker script} et du \gls{startup code} dans le cas où l'utilisateur
-changerait la description du matériel, par exemple, dans le cas où
-l'utilisateur voudrait faire démarrer son code en RAM plutôt qu'en ROM.
+changerait la description du matériel ou dans le cas où
+l'utilisateur voudrait changer la mémoire de démarage.
 Actuellement, il faut relancer l'outil qui génère ces fichiers.
 
-Concernant la base de donnée stockant le contenu des packs, il serait
-intéressant de pouvoir la synchronizer avec une version distante.
-En effet, certains CMSIS-Packs, sont non-fonctionnels ou mal-formatés et il
+Concernant la base de données stockant le contenu des packs, il serait
+intéressant de pouvoir la synchroniser avec une version distante.
+En effet, certains CMSIS-Packs, sont non-fonctionnels ou mal formatés et il
 pourrait être intéressant pour AdaCore de fournir des versions corrigées de ces
 packs. Cela permet également à AdaCore de corriger des bogues trouvés dans le
 contenu des packs et de propager rapidement le patch.
 
-Certaines architectures possède une cartographie mémoire particulière (deux
+Certaines architectures possèdent une cartographie mémoire particulière (deux
 sections de RAM et pas de ROM par exemple). Il serait intéressant de pouvoir
 gérer ces cas en permettant à l'utilisateur de choisir précisément où il va
 mettre une section de l'executable.
 
-Il serait intéressant de se pencher sur la question de génération de runtime
+Il serait intéressant de se pencher sur la question de génération de runtimes
 plus complexes, comme les runtimes Ravenscar. Ces runtimes implémentent toutes
 les fonctionnalitées du langage.
 
@@ -901,13 +907,13 @@ les fonctionnalitées du langage.
 
 ### Intérêt technique
 
-J'avais seulement fait un projet en Ada lors de mon cursus à EPITA et je
+J'avais seulement fait un projet en Ada lors de mon cursus à l'EPITA et je
 voulais profiter de mon expérience à AdaCore pour en apprendre plus. En
 travaillant sur un des outils que j'ai fait en Ada j'ai beaucoup appris sur la
-manière de travailler avec ce langage. Ada est un langage ou la phase de
-design est particulièrement importante car le langage se veut résilient au
+manière de travailler avec ce langage. Ada est un langage où la phase de
+design est particulièrement importante car ce langage se veut résilient au
 changement. J'ai pu donc m'améliorer sur ce que je considère être une de mes
-faiblesse, la propention a commencer à coder sans avoir une vision claire de
+faiblesses, la propention à commencer à coder sans avoir une vision claire de
 l'architecture du code. Les diverses revues de code m'ont permis également de
 rendre mon code plus clair notamment en limitant la taille des fonctions et en
 choisissant des noms de fonction appropriées.
@@ -922,27 +928,27 @@ En arrivant à AdaCore j'ai du configurer mon éditeur (Vim) afin de pouvoir
 de générer du code \gls{boilerplate} et d'appliquer la coding-style
 automatiquement en tappant du code. J'ai également écrit des scripts me
 permettant d'écrire ce rapport en français de manière plus efficace, notamment
-pour ce qui touche aux charactères accentués.
+pour ce qui touche aux caractères accentués.
 
-Lors de mon stage j'ai dû écrire des patrons de générations de code Assembleur
-pour plusieurs architectures différentes (ARMV6 et ARMV7). J'ai du traduire du
+Lors de mon stage j'ai dû écrire des patrons de générations de code assembleur
+pour plusieurs architectures différentes (ARMV6 et ARMV7). J'ai dû traduire du
 code tournant sur ARMV7 vers l'architecture ARMV6. Comme j'ai dû écrire un
 patron de linker script à générer, j'ai également approfondi ma connaissance des
 différentes sections du linker et de leurs rôles.
 
-A certains moments de mon stage, j'ai dû aller lire du code, soit parceque
+A certains moments de mon stage, j'ai dû aller lire du code, soit parce que
 j'avais des interrogations et que personne ne connaissait le réponse, soit
 parceque j'avais un doute sur la façon dont certaines fonctions étaient
 implémentées. Notamment, je n'ai pas trouvé de documentation qui expliquait
 clairement quelles unitées de mesure de mémoire utilisait l'éditeur de liens,
-j'ai du donc aller lire le code.
+j'ai dû donc aller lire le code.
 
 AdaCore organise des `Monthly Interns Commits`. Ce sont des séances d'une heure
-ou chaqun des stagiaires d'AdaCore présente son travail, son avancement et les
-problèmes qu'il a rencontré. Les retours suite aux présentations m'ont vraiment
-aidé à rendre mes diapositives plus claires ainsi qu'à les rendre plus
-synthétiques. J'ai passé un peu de temps à améliorer ma présentation et j'ai
-réussi à rendre l'explication de mon sujet de stage beaucoup plus abordable,
+ou chacun des stagiaires d'AdaCore présente son travail, son avancement et les
+problèmes qu'il a rencontrés. Les retours suite aux présentations m'ont vraiment
+aidé à rendre mes diapositives plus claires et plus synthétiques.
+J'ai passé un peu de temps à améliorer ma présentation et j'ai
+rendant l'explication de mon sujet de stage beaucoup plus abordable,
 notamment en situant mieux le contexte des runtimes qui est particulier à Ada.
 Anthony a également revu certaines de mes présentations et m'a aidé à les
 améliorer en les rendants plus pertinentes et plus claires, notamment en
@@ -950,23 +956,22 @@ expliquant le contenu de slides par un schéma.
 
 ### Intérêt organisationnel
 
-J'ai appliqué ce que j'avais appris lors de mon stage précédent, c'est à dire
-de ne pas hésiter à demander des éclaircissements quand les spécifications de
+J'ai appliqué ce que j'avais appris lors de mon stage précédent, c'est-à-dire
+ne pas hésiter à demander des éclaircissements quand les spécifications de
 ce que je devais développer n'étaient pas claires. Dans le cas où je suis
-bloqué à cause d'un problème technique j'ai également tiré les leçons de mon
-stage précédent et je n'ai pas hésité à aller poser des questions aux personnes
-qui m'encadraient.
+bloqué à cause d'un problème technique je n'ai pas hésité à aller poser des
+questions aux personnes qui m'encadraient.
 
 Je pense également avoir été plus consciencieux que pendant mon stage précédent. Lorsque
-je trouvais un problème dans les outils que j'utilisait, je créais un ticket au
-minimum et dans certains cas je cherchais un peu pour essayer de trouver d'ou
-venait le bug et j'ai soumis quelques patchs de cette façon.
+je trouvais un problème dans les outils que j'utilisais, je créais au minumum
+un ticket et dans certains cas je cherchais un peu pour essayer de trouver d'où
+venait le bug et j'ai même soumis quelques patchs de cette façon.
 
 Je me suis également beaucoup mieux organisé puisque je gardais une trace de
-mes tâches à réaliser dans mon cahier. Cela m'a permis d'être beaucoup mieux
-organisé, de prioriser mon travail et de me donner des buts à accomplir chaque
-jour. Si j'avais quelquechose à changer dans cette organisation ce serait
-d'utiliser un programme plutôt qu'un cahier pour organiser mes tâches.
+mes tâches à réaliser dans mon cahier. Cela m'a permis de prioriser mon travail
+et de me donner des buts à accomplir chaque jour. Si j'avais quelquechose à
+changer dans cette organisation ce serait d'utiliser un programme plutôt qu'un
+cahier pour organiser mes tâches.
 
 ## Retours sur le stage et pertinence de la formation
 
