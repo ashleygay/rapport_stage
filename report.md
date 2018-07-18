@@ -399,7 +399,8 @@ non-native.
 
 ### Cadre de la tâche
 
-GPS utilise des \gls{plugin}s en Python.
+GPS utilise des \gls{plugin}s en Python, ce \gls{plugin} doit donc être développé en
+Python. Nous avons utiliser Gerrit pour faire les revues de code.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
@@ -499,8 +500,9 @@ langages Python et/ou Ada.
 
 Nous avons décidé de laisser tomber la génération de runtime. En effet, il
 existe un projet d'AdaCore appellé \href{https://github.com/AdaCore/bb-runtimes}{`bb-runtimes`}.
+
 Le but de ce projet est de
-fournir des `runtime`s dépendantes et non dépendantes de la board. Le support de
+fournir des `runtime`s spécifiques à un CPU et non à une `board`. Le support de
 la board est dans le BSP à la place. Le but de ce projet est de réduire le
 nombre de `runtime`s à supporter et de simplifier le processus de création de
 `runtime`s. J'allais donc me reposer sur les runtimes de ce projet.
@@ -762,57 +764,77 @@ la place on utilise des patrons de code assembleurs.
 ### Difficultés éventuelles
 
 Avant ce projet, j'avais écris un court projet en Ada. J'ai donc passé un peu
-de temps au début du développement à apprendre le langage.
+de temps au début du développement à apprendre le langage. J'ai du utiliser des
+bibliothèques Ada pour lire les fichiers projets. La bibliothèque
+\gls{GNATCOLL} fourni une interface pour lire des projets et les valider. J'ai
+passé du temps à comprendre comment utiliser l'API fournie car elle est très
+peu documentée. De plus, les noms de fonction du code étaient mal choisis, ce
+qui a ralenti mon travail.
+J'ai demandé de l'aide au mainteneur du projet qui
+m'a aiguillé sur les bonnes fonctions et qui m'a expliqué certains concepts de
+l'API que j'avais mal compris. J'ai pu avancer dans mon travail et j'ai rajouté
+un exemple dans la documentation expliquant comment faire ce que je voulais.
 
-- outil à écrire en Ada, pas si familier que ça avec ce langage
+Pendant le développement, nous avons d'essayer un développement en utilisant
+le site GitHub. Mon maître de stage devait revoir mes modifications et
+les incorporer au dépôt Git. Git est un outil qui permet de versionner le
+code afin de garder une trace des changements effectués. Cependant, après avoir
+essayé, nous avons décidé de ne pas utiliser le système de \gls{pull-request}
+de GitHub. En effet, lorsqu'un projet n'est pas encore stable et est en
+développement constant, les \gls{pull-request}s ajoutent un coût en temps au
+développement. Combiné au fait qu'il n'est pas possible de soumettre des
+changements dépendant d'autres changement sur GitHub, cela rendait le travail
+de revues très lourd pour mon maître de stage. Nous avons donc décidé de mettre
+en pause les revues de code et d'attendre d'avoir un projet stable pour revoir
+le code.
 
-- utilisation de bibliothèques Ada pour lire les fichiers projets
-    - peu de documentation et peu d'exemples
-    - lu le code, code pas explicite
-    - problèmes de typages (tout est une string lol)
-    - demandé des conseils et éclaircissements au responsable des bibliothèques
-    - ajouté un exemple à la documentation expliquant comment faire
+Nous n'avions pas de tests pour ce projet ce qui a posé problême quand un
+collègue à rajouter des fonctionnalités au projet. Grâce à son aide pour créer
+la testsuite, j'ai pu rajouter des tests basiques mais qui permettent de
+vérifier que les modification n'ont pas de problêmes graves.
 
-- on a essayer d'utiliser github (soumission de pull-requests)
-    - c'est pas très utile pour des outils non stables
-    - beaucoup d'overhead
-    - gerrit est meilleur
-    - impossibilité de faire des PR dépendantes d'autres PRs
-    - utilisable pour les projets déjà stables
-
-- les messages d'erreurs du linker ne sont pas très explicites
-    - si il ne trouve pas le point d'entrée spécifié il prend \_start
+Enfin, lorsque je testais les linkerscript qui étaient générés, j'ai passé du
+temps à trouver d'oû venaient certains problêmes car les message d'erreurs de
+l'éditeur de liens n'étaient pas explicites ce qui compliquait le déboguage.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
-- outil qui génère un startup code et un linker script depuis des fichiers
-  projets
-- j'ai pu tester les fichiers générés
+Une fois cet outil terminé j'ai pu tester les fichiers générés. J'ai trouvé
+quelques problèmes dans la création du \gls{linker script} liés à l'allocation
+de certains symboles (stack and heap). Une fois cet outil terminé j'ai pu
+commencé à travailler sur l'intégration des outils dans \gls{GPS}.
 
 ## Intégration dans GPS
 ### Objectifs
 
-- intégrer les outils dans GPS
+Le but de cette tâche est d'intégrer les outils que j'ai développés dans \gls{GPS}.
+Il faut que lors de la création d'un projet embarqué, l'utilisateur puisse
+choisir la carte sur laquelle il va développer pour que GPS puisse générer les
+fichiers. L'utilisateur doit pouvoir relancer la génération si les fichiers décrivant
+la carte ont été modifiés. L'utilisateur doit pouvoir interagir avec la base de
+données depuis \gls{GPS}. Il doit pouvoir la mettre à jour et y rajouter des paquets
+manuellement depuis \gls{GPS}. L'utilisateur doit également pouvoir consulter
+toute la documentation liée à la carte sélectionnée. Cette documentation doit
+cependant être téléchargée ne sera donc consultable que si l'utilisateur veut
+télécharger le paquet associé à la carte sélectionnée.
 
-- créer une UI pour que l'utilisateur choisisse la board sur laquelle il veut
-  travailler
-
-- l'utilisateur doit pouvoir relancer l'outil si il a modifié les fichiers
-  projets décrivant le matériel
-
-- interraction avec la base de donnée depuis GPS
-    - mettre à jour tous les packs ou un seul pack
-    - installer un pack manuellement
-
-- permettre à l'utilisateur de consulter la documentation liée à son projet
-
-- permettre à l'utilisateur de récupérer l'output de SVD2ADA
-  (headers describing the devices from the SVD files)
+Dans les CMSIS-Packs se trouvent des fichiers .svd. Ces fichiers décrivent
+comment les périphériques de la carte sont représentées en mémoire.
+C'est à dire à quelles addresses et comment sont arrangés les périphériques.
+Un outil existe pour générer des en-têtes Ada depuis ces fichiers. Cela permet
+de simplifier le code et de pouvoir utiliser les périphériques sans
+avoir à écrire son propre code décrivant le périphérique. Le typage fort d'Ada
+permet de contrôler comment les champs sont utilisés. Par exemple, il permet
+d'utiliser un entier comme un tableau de bits et vice-versa tout en vérifiant les
+bornes du tableau et la valeur de l'entier. Ada permet également de créer un
+objet de ce type tout en spécifiant son addresse mémoire. Cela permet
+d'utiliser l'objet pour interragir avec le périphérique sans avoir à passer par
+des macros faisant des conversions de type (comme en C).
 
 ### Cadre de la tâche
 
-- langages : Ada et Python
-- revues de code
+Le plugin \gls{GPS} sera développé en Python tandis que les éventuelles modifications
+à \gls{GPS} seront faites en Ada.
 
 ### Propositions retenues ou pas
 
@@ -828,24 +850,44 @@ lors de la compilation.
 
 ### Difficultés éventuelles
 
-- sqlite3 python module not functional in GPS
-    - créer un ticket pour IT pour fixer ce problème
-    - le module sqlite3 du standard python n'était pas compilé et ajouté à
-      l'environnement python que GPS utilise
+GPS utilise un environnement Python spécifique et cet environnement ne
+contenait pas le module sqlite3 nécessaire au foncionnement de mes outils.
+Cet environnement utilise un outil appellé ANOD pour déployer des paquets
+simplement, cependant le module dont j'avais besoins n'était pas déployé.
+J'ai du créer un ticket pour résoudre ce problème, il fallait rajouter le
+module sqlite3 dans la compilation de l'environnement.
 
-- modification de la façon dont on instancie les patrons de projet
-    - on ne peut pas avoir de menu spécifique à un projet
-    - mais on peut executer un script python après l'installation du projet
-    - étendu cette fonctionnalité en permettant de générer des widgets GTK
-      depuis le code python et de les utiliser comme un menu depuis le code Ada
+J'ai dû modifier la façon dont les projets étaient créés. L'implémentation
+actuelle ne permettait pas de créer une interface graphique pour un projet
+spécifique. Elle permettait seulement d'exécuter du code après la création du
+projet. J'ai donc dû rajouter une fonctionnalité pour pouvoir exécuter du code
+pendant la création de projet et permettre de construire une interface
+graphique personnalisable. Pour cela, \gls{GPS} va appeller une fonction du script
+Python. Cette fonction peut renvoyer des éléments qui vont constituer les pages
+successives correspondant au projet en question.
 
-- problèmes de fichiers de configuration
+J'ai mis un peu de temps à implémenter cette fonctionalité. En effet, le code
+que je devais modifier m'a pris un peu de temps à comprendre car le code
+n'était pas très clair. Le code fait un usage intensif des variables globales,
+ce qui rend le flux d'exécution compliquer à suivre car on ne sait pas à
+l'avance si on modifie une variable globale ou non.
+
+J'ai également eu des problèmes liés à des fichiers de configuration. L'outil
+de génération de \gls{linker script} à besoin de fichier de configuration qui
+décrivent les architectures supportées en fournissant les patrons d'assembleur
+correspondants. Il fallait donc trouver une solution pour installer ces
+fichiers de configuration.
+
+[//]: # (TODO: Come back when it is fixed)
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
-- intégration presque finie
-    - a pris plus de temps que prévu
-- modification des patrons de projet
+L'intégration a bien avancée, je suis en train de travailler dessus.
+Il reste plusieurs problèmes à régler, notamment regardant les fichiers de
+configuration et l'installation de la base de données.
+
+Avoir une interface graphique m'a permis de faire une démo et de mettre les
+outils bout à bout afin de tester la chaîne d'outils.
 
 # Premier bilan
 
