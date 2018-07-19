@@ -1,6 +1,4 @@
 digraph Plan {
-
-	compound=true;
 	graph [dpi = 100];
 
 	database;
@@ -12,30 +10,30 @@ digraph Plan {
 		label="Toolchain"
 		labelloc="t";
 		{rank = same; gpr2ld; json2gpr; querytool;}
-
-		querytool -> json2gpr;
-		json2gpr -> gpr2ld;
+		json2gpr -> gpr2ld
+		querytool -> json2gpr
 	}
 
 	subgraph cluster_compilation {
 		style=filled;
     		fillcolor=grey;
 		penwidth=0;
-		graph [concentrate=true]
 		label="Compilation"
 		labelloc="t";
 		{rank = same; program; files;}
-		i [shape=point];
-		program -> i -> gcc;
-		files -> i -> gcc;
-		gcc -> exec;
-		exec -> dev;
+		program -> gcc
+		files -> gcc
+		gcc -> exec
+		exec -> dev [label=" Flashing executable"]
 	}
 
 	gcc [shape=box; style=dotted; label="GCC"];
 	exec [shape=box; label="Exécutable"];
 	program [label="Programme\nutilisateur"];
 	files [label="LDSCRIPT"];
+	dev [penwidth=0 width=1 height=1 fixedsize=true image="embedded.png" label=""]
 
-	gpr2ld -> files [constraint=false, concentrate=true];
+	querytool -> database [constraint = false]
+	database -> querytool [constraint = false]
+	gpr2ld -> files [constraint = false]
 }
