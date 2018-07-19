@@ -1,0 +1,34 @@
+digraph Plan {
+
+	compound=true;
+	graph [dpi = 100];
+
+	database;
+
+	subgraph cluster_tool {
+		style=filled;
+    		fillcolor=red;
+		penwidth=0;
+		label="Toolchain"
+		labelloc="t";
+		{rank = same; gpr2ld; json2gpr; querytool;}
+	}
+
+	subgraph cluster_compilation {
+		style=filled;
+    		fillcolor=grey;
+		penwidth=0;
+		label="Compilation"
+		labelloc="t";
+		{rank = same; program; files;}
+		program -> gcc;
+		files -> gcc;
+		gcc -> exec;
+		exec -> dev;
+	}
+
+	gcc [style=dotted; label="GCC"];
+	exec [shape=box; label="Exécutable"];
+	program [label="Programme\nutilisateur"];
+	files [label="LDSCRIPT"];
+}

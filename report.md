@@ -357,9 +357,9 @@ Livrables:
 Liste:
 
 - mauvais analyseur syntaxique pour le python XML
-    - problemes d'efficacite (malloc tout le fichier en memoire)
+    - problèmes d'efficacité (malloc tout le fichier en memoire)
 
-- probleme du schéma de la base de donnée
+- problème du schéma de la base de donnée
     - refait le schéma en simplifiant les données (no more héritage)
 
 - intégration a pris plus de temps que prévu, j'ai du ajouter une
@@ -437,7 +437,8 @@ l'utilisateur quelle board choisir.
 
 ### Cadre de la tâche
 
-- intégration dans GPS et bonne utilisation de gnatemu
+Le cadre de cette tâche était plutôt libre, j'ai utilisé Python pour parcourir
+le contenu des paquets et générer les fichiers nécessaires.
 
 ### Propositions retenues ou pas
 
@@ -507,17 +508,20 @@ la board est dans le BSP à la place. Le but de ce projet est de réduire le
 nombre de `runtime`s à supporter et de simplifier le processus de création de
 `runtime`s. J'allais donc me reposer sur les runtimes de ce projet.
 
-- séparation du pilotage de la chaîne d'outils et de l'intégration GPS
+Une partie importante de l'organisation était la séparation du pilotage de la
+chaîne d'outils et de l'intégration dans GPS. En effet, on devait pouvoir
+intégrer facilement mon travail dans d'autres IDE où AdaCore s'occupe du
+support du langage Ada.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
-![Architecture des outils](plan.png)
+![Architecture des outils](newplan.png)
 
 Pour que la chaîne d'outils soit extensible il fallait que chaque outil soit
 clairement défini et qu'il n'accomplisse qu'un rôle, le plus simple possible et
 le plus simplement possible.
 
-Il fallait ensuite écrire un script qui allait piloter la chaîne d'outil et
+Il fallait ensuite écrire un script qui allait piloter la chaîne d'outils et
 enfin intégrer ce script dans GPS. Il fallait que les outils soient utilisables
 depuis la ligne de commande ou importable comme un module Python.
 
@@ -541,7 +545,7 @@ mis à jour. Il est également intéressant de stocker la hiérachie de famille 
 de sous-familles afin de permettre, lors de l'intégration, à l'utilisateur de
 filtrer les résultats de recherche à la sous-famille de son choix.
 
-[//]: # (TODO: database schema here)
+![Architecture de la base de données](database.png)
 
 Un `device` représente la puce sur une carte. Par exemple, la carte
 STM32F429-Discovery possède un `device` STM32F429IG. Il est important de

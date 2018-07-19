@@ -1,0 +1,36 @@
+digraph Plan {
+compound=true;
+graph [dpi = 100];
+
+{ rank = same; DB; JSON; GPRFILES; artifacts;}
+{ rank = same; QUERYTOOL; SOMETHING2GPR; GPR2LD; COMPILATION;}
+
+DB -> QUERYTOOL -> JSON -> SOMETHING2GPR -> GPRFILES -> GPR2LD -> artifacts
+artifacts -> COMPILATION -> executable
+QUERYTOOL -> DB
+
+        subgraph undir {
+                edge [dir=none;style=dotted;]
+	        PILOT -> QUERYTOOL [weight=0];
+	        PILOT -> SOMETHING2GPR [weight=0];
+	        PILOT -> GPR2LD [weight=0];
+        }
+
+	subgraph clusterGPS {
+		PILOT
+		label="GPS plugin"
+		labelloc="b";
+		DUMMY -> QUERYTOOL [weight=1];
+		{rank = same; DUMMY; executable;}
+	}
+
+	QUERYTOOL [shape=box]
+	SOMETHING2GPR [shape=box; label="JSON2GPR"]
+	GPR2LD [shape=box]
+	COMPILATION [style=dotted]
+
+	PILOT [shape=box; label="Project generation"]
+        GPRFILES [label="GPR files"]
+        DB [label="Board database"]
+        artifacts [label="linker script and startup code"]
+}

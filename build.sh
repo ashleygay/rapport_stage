@@ -3,7 +3,14 @@
 STYLE=zenburn
 # In the case where we include code, we have nice syntax highlighting.
 
-dot -Tpng graph.dot -o plan.png
+build_image () {
+	dot -Tpng $1.dot -o $1.png
+	convert $1.png -fuzz 1% -transparent white $1.png
+}
+
+build_image plan
+build_image newplan
+build_image database
 
 convert plan.png -fuzz 1% -transparent white plan.png
 
