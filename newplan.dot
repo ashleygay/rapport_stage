@@ -12,23 +12,30 @@ digraph Plan {
 		label="Toolchain"
 		labelloc="t";
 		{rank = same; gpr2ld; json2gpr; querytool;}
+
+		querytool -> json2gpr;
+		json2gpr -> gpr2ld;
 	}
 
 	subgraph cluster_compilation {
 		style=filled;
     		fillcolor=grey;
 		penwidth=0;
+		graph [concentrate=true]
 		label="Compilation"
 		labelloc="t";
 		{rank = same; program; files;}
-		program -> gcc;
-		files -> gcc;
+		i [shape=point];
+		program -> i -> gcc;
+		files -> i -> gcc;
 		gcc -> exec;
 		exec -> dev;
 	}
 
-	gcc [style=dotted; label="GCC"];
+	gcc [shape=box; style=dotted; label="GCC"];
 	exec [shape=box; label="Exécutable"];
 	program [label="Programme\nutilisateur"];
 	files [label="LDSCRIPT"];
+
+	gpr2ld -> files [constraint=false, concentrate=true];
 }
