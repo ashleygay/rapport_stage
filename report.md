@@ -4,7 +4,7 @@
 % Du 19/02/2018 au 24/08/2018
 
 ---
-fontsize: 11pt
+fontsize: 12pt
 fontfamily: utopia
 glossary: true
 graphics: true
@@ -14,8 +14,8 @@ header-includes:
     - \usepackage[toc,section=section]{glossaries}
     - \makeglossaries
     - \newglossaryentry{bare-metal}{name=bare-metal,
-       description={Un programme dit `bare-metal` (métal nu) est un programme
-       qui tourne sur du matériel sans système d'exploitation}}
+       description={Un programme dit `bare-metal` (littéralement `métal nu`)
+	   est un programme qui tourne sur du matériel sans système d'exploitation}}
     - \newglossaryentry{IDE}{name=IDE,
        description={(Integrated Development Environment) Programme qui facilite
        le développement informatique en intégrant plusieurs outils dans le même
@@ -50,25 +50,51 @@ header-includes:
        tierces dans le code}}
     - \newglossaryentry{DoD}{name=DoD,
        description={'Department of Defense' Département de la Défense des États-Unis}}
+    - \newglossaryentry{DO-178}{name=DO-178,
+       description={Standard fixant les règles s'appliquant aux logiciels
+	   critiques dans l'aviation commerciale et générale. Ce standard fixe des
+	   niveaux de criticité en fonctions des conséquences lié au
+	   dysfonctionnement d'un sous-système. Chaque niveau de criticité est
+	   ensuite lié à des contraintes dans le processus de développement}}
     - \newglossaryentry{DAL}{name=DAL,
        description={Niveau d'Assurance de Développement, c'est le niveau de
 	   criticité d'un sous-système allant de A (le plus critique) à E (le moins
 	   critique). Par exemple, le système de pilotage d'un avion serait DAL A
 	   tandis que le système de divertissement des passagers serait DAL E}}
     - \newglossaryentry{ISS}{name=ISS,
-       description={Station Spatiale Internationale}}
+       description={(International Space Station) Station Spatiale Internationale}}
     - \newglossaryentry{RAM}{name=RAM,
        description={(Random Access Memory) mémoire vive accessible en écriture
 	   et en lecture}}
     - \newglossaryentry{ROM}{name=ROM,
        description={(Read Only Memory) mémoire accessible uniquement en lecture}}
+    - \newglossaryentry{PE}{name=PE,
+       description={(Product Engineering) C'est le cercle responsable de la
+	   maintenance et de l'amélioration technique des produits d'AdaCore}}
+    - \newglossaryentry{ZFP}{name=ZFP,
+       description={(Zero FootPrint) C'est la runtime la plus minimale (en
+	   termes de taille et de fonctionnalités) pour faire tourner du code Ada}}
+    - \newglossaryentry{stack}{name=stack,
+       description={Zone mémoire utilisée pour l'allocation mémoire statique}}
+    - \newglossaryentry{heap}{name=heap,
+       description={Zone mémoire utilisée pour l'allocation mémoire dynamique}}
+    - \newglossaryentry{SVD}{name=SVD,
+       description={Fichier XML décrivant les périphériques d'une carte et leur
+	   agencement mémoire}}
 ---
 # Résumé
 
+[//]: # (TODO: rewrite it a lot)
+
 J'ai découvert Ada lors des cours à EPITA donnés par Raphaël Amiard. J'ai
 trouvé le langage très intéressant car les concepts (notamment l'orienté objet)
-étaient assez différents de leurs équivalents en C++. De plus, grâce à la
-programmation par contrat, Ada simplifie la vérification de l'exactitude d'un programme.
+étaient assez différents de leurs équivalents en C++. De plus, l'emphase placée
+sur la lisibilité et la validité du programme tout en gardant des bonnes
+performances m'intéressent grandement. Ada est beaucoup utilisé dans le domaine
+spatial qui me passionne.
+
+- parler du processeur LEON qui est utilise dans ce domaine et des portages des
+  runtimes Ada
 
 Plusieurs facteurs ont affectés mon choix pour ce stage. Le premier est
 l'opportunité d'intégrer mon travail dans un outil pré-éxistant. Ce point me
@@ -79,7 +105,7 @@ développement embarqué. Par exemple, en apprendre plus sur les différents
 processeurs ARM et leurs assembleurs me paraissait être une bonne
 expérience à avoir.
 
-C'est donc pour ces différentes raisons que j'ai candidaté chez AdaCore.
+C'est pour ces différentes raisons que j'ai candidaté chez AdaCore.
 
 J'ai commencé mon stage le 19 février, j'ai d'abord été accueilli par mes
 collègues et ma première tâche a été d'écrire un plugin Python pour l'\gls{IDE}
@@ -96,27 +122,44 @@ décidé d'une architecture pour les outils que j'allais développer.
 
 ## Rappel du sujet de stage
 
-Mon sujet de stage s'intitulait 'Improve baremetal support in \gls{GPS}' et
-comportait les axes suivants:
+Mon sujet de stage s'intitulait 'Améliorer le support du \gls{bare-metal} dans
+\gls{GPS}' et comportait les axes potentiels suivants:
 
-- améliorer la `stack view`
-- développer une `register view`
-- explorer comment utiliser les CMSIS-Packs dans \gls{GPS}
+1. Améliorer la vue de la \gls{stack} dans \gls{GPS}
+ \gls{GPS} permet d'afficher le contenu et la taille de la \gls{stack}. Une
+ piste de ce stage était d'améliorer cette fonctionnalité. DETAILS
+
+2. Créer une `view` des registres matériels
+ On peut décrire les périphériques d'une `board` avec des fichiers \gls{SVD}.
+ Depuis ces fichiers, on peut générer des en-têtes Ada décrivant les
+ périphériques et leur agencement mémoire avec des structures associés.
+ L'idée de ce sujet est de créer une `view` dans GPS qui serait capable
+ d'afficher les valeurs des différents champs des périphériques. L'ajout
+ de cette fonctionnalité permettrait de grandement simplifier le débuguage
+ sur les plate-formes embarqués.
+
+3. Intégrer les CMSIS-Packs dans \gls{GPS}
+ ARM standard for describing a target with cortex-m processor and
+ packaging programs that run on it (contains documentation, drivers, code
+ examples, hardware descriptions and peripheral descriptions)
+
+ use those packs to simplify bare board development in \gls{GPS}
 
 J'ai choisi de m'attaquer à ce dernier sujet. L'idée était d'investiguer ce
-qu'il était de faire grâce aux CMSIS-Packs pour rendre la programmation
-embarquée en Ada plus simple.
+qu'il était possible de faire grâce aux CMSIS-Packs pour rendre la programmation
+embarquée en Ada plus facile d'accès.
 
 Pour pouvoir exécuter du code Ada sur une cible donnée, il faut
 avoir un logiciel appellé une `runtime`. Ce logiciel implémente des
 fonctionnalités du langage qui sont utilisée par le programme comme le support
-multi-tâches, la propagation des exceptions ou un allocateur mémoire.
+multi-tâches, la propagation des exceptions ou les allocation mémoires
+dynamiques.
 
-Etant donné que le code étant dans la runtime doit tourner sur la cible, il
+Étant donné que la runtime doit tourner sur la cible, il
 faut adapter la runtime à chaque cible. Actuellement, c'est une étape qui est
 faite manuellement. Il faut également savoir qu'il y a plusieurs types de
 runtime qui ne fournissent pas toutes les mêmes fonctionnatlités. Dans le cas
-de mon stage je me suis attaqué à la question des `runtimes` dites `\gls{ZFP}`.
+de mon stage je me suis attaqué à la question des `runtimes` dites \gls{ZFP}.
 Ce type de runtime est le minimum pour pouvoir faire tourner
 du code Ada. Par exemple, elle n'a pas de propagation d'exception, pas de
 support multi-tâches et ne possède qu'un allocateur mémoire naif.
@@ -163,16 +206,16 @@ en plusieurs versions, chaqune visant un public différent.
 Par exemple la version `Community` ne supporte que la dernière version du
 standard Ada, Ada 2012, et vise principalement les développeurs amateurs.
 
-La version `Assurance` destinée aux projets de certifications ou à des
-projets de longues durées supporte jusqu'à Ada 83. Elle permet aussi de ne pas
+La version `Assurance` est destinée aux projets de certifications ou à des
+projets de longues durées et supporte jusqu'à Ada 83. Elle permet aussi de ne pas
 avoir à soumettre le code produit à la license GPL, qui obligerait
 l'utilisateur à rendre le code public.
 
 Pour aller avec le compilateur, AdaCore peut également aider les clients avec
 des projets de certifications. En effet,
 une partie des outils fournis par AdaCore, comme GNATcoverage, est qualifié
-pour le développement d'outil en DO-178B en \gls{DAL} A. C'est à dire le niveau de
-criticité le plus élevé pour le standard avionique. GNATcoverage aide à
+pour le développement d'outil en \gls{DO-178}B en \gls{DAL} A. C'est à dire le niveau de
+criticité le plus élevé du standard avionique. GNATcoverage aide à
 l'analyse de couverture de code ce qui permet de garantir qu'il n'y a pas de
 code qui n'est jamais exécuté.
 
@@ -208,15 +251,15 @@ Runtime                   Ravenscar (non multitâche)
                           ObjectAda
 ---------------------     -----------------------------------------------------
 Entreprise                PTC
-Standards                 Ada95 Ada2012 (seulement windows 10 natif)
+Standards                 Ada95 Ada2012 (windows 10 natif)
 Plates-formes cibles      PPC, x86
 Runtime                   Ravenscar
 ---------------------     -----------------------------------------------------
 
-Par rapport a ses concurrents, GNAT Pro a l'avantage de supporter la dernière
-version du standard Ada (Ada2012) ainsi que toutes les versions antérieures, et
-ce tout aussi bien sur des plate-formes natives qu'en compilation croisée.
-GNAT Pro supporte également bien plus de plate-formes 64bits et supporte
+Par rapport à ses concurrents, GNAT Pro a l'avantage de supporter la dernière
+version du standard Ada (Ada 2012) ainsi que toutes les versions antérieures, et
+ce tout aussi bien sur des plates-formes natives qu'en compilation croisée.
+GNAT Pro supporte également bien plus de plates-formes 64bits et supporte
 également plus d'OS temps-réels comme PikeOS ou LynxOS. On peut donc en
 conclure que même si AdaCore a de la compétition, elle reste première dans
 son domaine.
@@ -224,7 +267,7 @@ son domaine.
 ### Organisation
 
 AdaCore est organisée en cercles. Chaque cercle a une responsabilité bien
-particulière. Dans mon cas, j'ai intégré le cercle PE (Product Engineering).
+particulière. Dans mon cas, j'ai intégré le cercle \gls{PE} (Product Engineering).
 Ce cercle est responsable de créer, de faire évoluer et de maintenir les
 produits d'AdaCore. Il est également responsable du support client pour les outils qu'il
 maintient. C'est la force du support offert d'AdaCore, de pouvoir contacter
@@ -239,7 +282,9 @@ afin de pouvoir facilement faire tourner des applications en Ada sur les
 différentes versions de VxWorks, un OS propriétaire très utilisé dans le
 domaine du temps-réel embarqué. J'ai également beaucoup interragi avec l'équipe
 CROSS. Cette équipe s'occupe de porter la suite d'outils GNAT vers de nouvelles
-plate-formes et de régler les problêmes trouvés dans ces produits.
+plates-formes et de régler les problêmes trouvés dans ces produits.
+
+[//]: # (TODO: schema about the compny organisation)
 
 Dans ce contexte j'ai surtout interagi avec l'équipe \gls{GPS} dont mon maître de
 stage fait partie. Comme je devait intégrer mon travail dans \gls{GPS}, cela a été
@@ -326,6 +371,24 @@ nécessaires pour décrire une `board`.
 
 # Aspects organisationnels
 ## Découpage du stage
+### Périodes du stage
+
+Pour m'organiser, je notais mes tâches à faire dans un cahier. Lorsque je trouvais un
+bug ou une fonctionnalité à implémenter, je demandais l'avis de mon maître de
+stage. Dans le cas où la tâche était en lien avec mon stage ou simple, je
+l'ajoutais à ma liste de tâches en cours. Sinon, je créais un ticket pour
+l'équipe qui était concernée.
+
+Voici un schéma présentant les tâches que j'ai réalisé et dans quel ordre. Ces
+tâches sont composés de plusieurs sous-tâches qui ne sont pas représentées ici.
+
+[//]: # (TODO: Schema ici)
+
+#### Plugin GPS
+#### Scripts de génération de runtimes
+#### Suite d'outils utilisant les CMSIS-Packs
+#### Intégration dans GPS
+
 Périodes:
 
 - plugin \gls{GPS} au début
@@ -335,47 +398,109 @@ Périodes:
     - architecture des outils
     - travail sur les differents outils
         - gpr2ld
-	- database
-	- json2gpr
-	- integration dans \gls{GPS}
-	- tests
-Livrables:
+	    - database
+	    - json2gpr
+	    - intégration dans \gls{GPS}
 
-- différents outils
+#### Procédures qualité
 
-## Diagramme de Gantt, Kanban ??
+Voici une présentation des différentes procédures qualité que j'ai suivi, la
+plupart étant communes au cercle \gls{PE}.
 
-- schéma des tâches successives a réaliser
+Tout code écrit doit suivre plusieurs règles.
+
+En premier lieu, chaque patch doit avoir un numéro de ticket associé. Cela
+permet de facilement tracer les bugs et de comprendre pourquoi un patch a été
+fait. Par exemple, dans le cas d'un bug introduit dans un patch, avoir le
+numéro de ticket permet de savoir quel était le but du patch et quel
+comportement adopter face au problème, que ce soit le retrait du patch ou la
+modification de ce dernier.
+
+Le code doit suivre les règles de codage d'AdaCore. Ces règles permettent de
+standardiser le code et le rendant plus facile à lire. Dans l'équipe où j'étais,
+les rêgles de codage pour le langage Python étaient vérifiées
+automatiquement par un outil appellé autopep8 (de la règle de codage PEP 8).
+Cet outil vérifie automatiquement que le code est conforme à cette règle et
+refuse le patch si ce n'est pas le cas.
+
+Une fois que le patch est prèt, il faut l'envoyer sur Gerrit. Cet outil permet
+faire des revues de code et lance la suite de teste du projet associé au patch.
+La revue de code est faite par un pair qui connait le sujet de patch. Cette
+revue permet de s'assurer que le code est facilement lisible par un humain.
+L'examinateur peut anoté le code afin de spécifier les endroits manquants de
+documentation ou les endroits ou un bug pourrait arriver.
+
+Lorsqu'un patch est envoyé sur Gerrit, des tests automatiques sont lancés. Le
+résultats des tests est ensuite reporté sur la page des test, ce qui permet au
+développeur de trouver les problèmes dans son patch.
+
+- parler des cas tricky ??
+
+- tests manuels
+- écriture des tests
+
+## Critique de ce découpage
+
+- découpage fait à posteriori
+
+- problèmes de direction pas claire au début
 
 ## Points de contrôle
 
-- Parler des monthly internship commits
-- points réguliers avec mon maître de stage
-- pull requests sur github
+J'ai eu plusieurs points de contrôles pour faire le point sur mon avancement et
+m'aider à prioriser mes tâches.
 
-## Gestion des problèmes
-Liste:
+Avec mon maître de stage, nous avons fait des points réguliers sur mon
+avancement. Au début de mon stage, nous en faisions toutes les semaines pour me
+permettre d'avancer vite et ne pas rester bloqué. Ces points m'ont permis de
+prioriser mes tâches afin de me concentrer sur celles qui étaient importantes
+pour mon stage et déléguer les autres problèmes que je trouvais.
+Lorsque j'ai commencé à
+travailler sur les différents outils, nous avons fait un point toutes les deux
+semaines, ce qui m'a permis d'avancer plus vite qu'en faisant un point toutes
+les semaines.
+
+L'équipe GPS fait une réunion d'avancement chaque semaine. Pendant cette
+réunion chaque membre parle de ses tâches en cours de leur avancement. L'équipe
+Bare-Board fait la même chose chaque semaine. Participer à ces réunions m'a
+permis de discuter de mon avancement et de récupérer des suggestions et des
+conseils concernant mes tâches en cours. Par exemple, cela a permis à certains
+de mes collègues de contribuer du code aux différents outils sur lesquels je
+travaillais.
+
+Tous les mois, AdaCore organise des "Monthly Interns Commits". Ce sont des
+présentations durant lesquelles les stagiaires d'AdaCore présentent leur
+avancement et les problèmes qu'ils ont rencontrés. Ces séances m'ont permis de
+présenter mon travail et situer le contexte de mon stage. Le retours des
+différents employés m'a permis d'améliorer ma présentation et comment je
+présentais mon sujet de stage.
+
+Enfin les revues de code sur GitHub et Gerrit m'ont permis de corriger mes
+erreurs et d'améliorer mon code.
+
+## Gestion des problèmes et des deadlines
 
 - mauvais analyseur syntaxique pour le python XML
     - problèmes d'efficacité (malloc tout le fichier en memoire)
 
 - problème du schéma de la base de donnée
-    - refait le schéma en simplifiant les données (no more héritage)
+    - refait le schéma en simplifiant les données (no more botched inheritance)
 
-- intégration a pris plus de temps que prévu, j'ai du ajouter une
-  fonctionnalité à \gls{GPS} afin de pouvoir y intégrer mon travail.
+- démo que pendant le dernier internship commit
+	- intégration a pris plus de temps que prévu, j'ai du ajouter une
+	  fonctionnalité à \gls{GPS} afin de pouvoir y intégrer mon travail.
+
+- intégration dans GPS as an extra compilation step,
+    - main idea is to use the tool that generates files as a compiler
+	- heavily limited by the current build tool
+	- we cant have multiple build directories
+	    - so we can generate the startup code but it will be in the obj
+		  directory
+		- then the build tool will not find them
 
 # Aspects techniques
 
-expliquer le concept de runtime dans un des outils
-
-Liste:
-
-- schéma de l'architecture du code
-- géneration du startup code et du linker script
-- base de données représentant les packs
-- intégration dans \gls{GPS}
-- fix des bugs
+[//]: # (TODO: lister les bugs que j'ai réglé et comment)
 
 ## Faire fonctionner les harnais de test avec GNATemu
 ### Objectifs
@@ -715,7 +840,7 @@ end Spec;
 ```
 
 Sur l'exemple ci-dessus on peut voir que le CPU gère les nombres à virgules
-flottantes avec du software (certaines plate-formes ont des co-processeurs
+flottantes avec du software (certaines plates-formes ont des co-processeurs
 spécifiques à ce genre d'opérations). Dans l'exemple ci-dessus, la carte
 possède deux régions mémoires une \gls{ROM} et une \gls{RAM}. La mémoire de
 démarage sélectionnée est la mémoire \gls{ROM}. Le mémoire ROM commence à
@@ -1024,7 +1149,9 @@ Je me suis également beaucoup mieux organisé puisque je gardais une trace de
 mes tâches à réaliser dans mon cahier. Cela m'a permis de prioriser mon travail
 et de me donner des buts à accomplir chaque jour. Si j'avais quelquechose à
 changer dans cette organisation ce serait d'utiliser un programme plutôt qu'un
-cahier pour organiser mes tâches.
+cahier pour organiser mes tâches. Il existe des outils permettant de gérer un
+tableau de tâches Kanban et cela semble être le meilleur choix pour s'organiser
+efficacement.
 
 ## Retours sur le stage et pertinence de la formation
 
@@ -1061,6 +1188,10 @@ et les problèmes que le système résolvait. Enfin le cours de José Ruiz sur l
 norme DO-178 était très intéressant car il permettait de comprendre comment le
 processus de certifaction fonctionnait et comment on pouvait tracer les
 exigences de haut-niveau jusqu'au code source.
+
+- mentionner l'offre d'emploi
+	- pendant mon stage j'ai pu candidater pour une offre  GNAT Cross Engineer
+	- j'ai eu une réponse positive et j'ai accepté l'offre
 
 [@gnatada9x].
 

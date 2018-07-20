@@ -24,7 +24,7 @@ digraph Plan {
 		program -> gcc
 		files -> gcc
 		gcc -> exec
-		exec -> dev [label=" Flashing executable"]
+		exec -> dev [label=" Flash on board"]
 	}
 
 	gcc [shape=box; style=dotted; label="GCC"];
