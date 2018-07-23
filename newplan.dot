@@ -1,39 +1,59 @@
 digraph Plan {
 	graph [dpi = 100];
 
-	database;
+	json projectfiles database
+
+	gpr2ld json2gpr querytool
+
+	program files
+	runtime gcc
+	exec
+	dev
 
 	subgraph cluster_tool {
 		style=filled;
-    		fillcolor=red;
+    		fillcolor=grey;
 		penwidth=0;
-		label="Toolchain"
+		label="Chaine d'outils"
 		labelloc="t";
-		{rank = same; gpr2ld; json2gpr; querytool;}
-		json2gpr -> gpr2ld
-		querytool -> json2gpr
+
+		{rank = same; querytool; json2gpr; gpr2ld;}
+		{rank = same; database; projectfiles; json;}
+
+		database -> querytool
+		querytool -> database
+		querytool -> json
+		json -> json2gpr
+		json2gpr -> projectfiles
+		projectfiles -> gpr2ld
+
 	}
 
 	subgraph cluster_compilation {
 		style=filled;
     		fillcolor=grey;
 		penwidth=0;
-		label="Compilation"
+		label="Phase de compilation"
 		labelloc="t";
-		{rank = same; program; files;}
+
+		{rank = same; files; program;}
+		{rank = same; runtime; gcc;}
+
 		program -> gcc
-		files -> gcc
-		gcc -> exec
-		exec -> dev [label=" Flash on board"]
+		files -> gcc -> exec
+		exec -> dev [label=" Chargement\nsur la cible"]
 	}
 
+
 	gcc [shape=box; style=dotted; label="GCC"];
-	exec [shape=box; label="Exécutable"];
+	exec [label="Exécutable"];
 	program [label="Programme\nutilisateur"];
-	files [label="LDSCRIPT"];
+	files [label="Fichiers"];
 	dev [penwidth=0 width=1 height=1 fixedsize=true image="embedded.png" label=""]
 
-	querytool -> database [constraint = false]
-	database -> querytool [constraint = false]
-	gpr2ld -> files [constraint = false]
+	gpr2ld -> files [weight = 1, constraint = false]
+
+	querytool [shape = box]
+	gpr2ld [shape = box]
+	json2gpr [shape = box]
 }

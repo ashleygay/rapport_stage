@@ -2,29 +2,24 @@ digraph Plan {
 
 graph [dpi = 100];
 
-{ rank = same; DB; GPRFILES; JSON; artifacts;}
-{ rank = same; QUERYTOOL; SOMETHING2GPR; GPR2LD; COMPILATION;}
-{ rank = same; PILOT; executable;}
+	package
+	family
+	subfamily
+	device
+	documentation
 
-//GPS -> PILOT
-DB -> QUERYTOOL -> JSON -> SOMETHING2GPR -> GPRFILES -> GPR2LD -> artifacts
-artifacts -> COMPILATION -> executable
-QUERYTOOL -> DB
+	cpu
+	memory
+	interrupt
+	svd
 
-        subgraph undir {
-                edge [dir=none;style=dotted;]
-                PILOT -> QUERYTOOL
-                PILOT -> SOMETHING2GPR
-                PILOT -> GPR2LD
-        }
-
-	QUERYTOOL [shape=box]
-	SOMETHING2GPR [shape=box; label="JSON2GPR"]
-	GPR2LD [shape=box]
-	COMPILATION [style=dotted]
-
-	PILOT [shape=box; label="Project generation"]
-        GPRFILES [label="GPR files"]
-        DB [label="Board database"]
-        artifacts [label="linker script and startup code"]
+	package -> family
+	family -> subfamily
+	subfamily -> device
+	family -> device
+	device -> cpu
+	device -> memory
+	device -> svd
+	device -> documentation
+	svd -> interrupt
 }

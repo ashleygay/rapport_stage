@@ -81,25 +81,29 @@ header-includes:
     - \newglossaryentry{SVD}{name=SVD,
        description={Fichier XML décrivant les périphériques d'une carte et leur
 	   agencement mémoire}}
+    - \newglossaryentry{patch}{name=patch,
+       description={Code qui est rajoute a logiciel pre-existant}}
+    - \newglossaryentry{gprbuild}{name=gprbuild,
+       description={Outil d'AdaCore qui permet de decrire un projet et de le
+	   compiler avec les options specifiees}}
 ---
 # Résumé
-
-[//]: # (TODO: rewrite it a lot)
 
 J'ai découvert Ada lors des cours à EPITA donnés par Raphaël Amiard. J'ai
 trouvé le langage très intéressant car les concepts (notamment l'orienté objet)
 étaient assez différents de leurs équivalents en C++. De plus, l'emphase placée
 sur la lisibilité et la validité du programme tout en gardant des bonnes
-performances m'intéressent grandement. Ada est beaucoup utilisé dans le domaine
-spatial qui me passionne.
+performances m'intéressent grandement.
 
-- parler du processeur LEON qui est utilise dans ce domaine et des portages des
-  runtimes Ada
+J'ai decouvert le domaine des applications critiques pendant ma scolarite a
+EPITA. Etant donne que beaucoup de clients d'AdaCore sont dans ce secteur,
+j'ai pense que c'etait une superbe opportunite de pouvoir en apprendre plus sur
+ce secteur.
 
-Plusieurs facteurs ont affectés mon choix pour ce stage. Le premier est
-l'opportunité d'intégrer mon travail dans un outil pré-éxistant. Ce point me
+De plus, le fait d'avoir a integrer mon travail dans une base de code
+preexistance me paraissait etre une bonne experience. Ce point me
 semble important car il permet de comprendre le contexte technique dans lequel
-sera utilisé mon travail. Le second point est le sujet qui me permet de toucher
+sera utilisé mon travail. Le sujet de stage me permet de toucher
 a plusieurs technologies tout en restant dans mon domaine de prédilection, le
 développement embarqué. Par exemple, en apprendre plus sur les différents
 processeurs ARM et leurs assembleurs me paraissait être une bonne
@@ -125,12 +129,7 @@ décidé d'une architecture pour les outils que j'allais développer.
 Mon sujet de stage s'intitulait 'Améliorer le support du \gls{bare-metal} dans
 \gls{GPS}' et comportait les axes potentiels suivants:
 
-1. Améliorer la vue de la \gls{stack} dans \gls{GPS}
- \gls{GPS} permet d'afficher le contenu et la taille de la \gls{stack}. Une
- piste de ce stage était d'améliorer cette fonctionnalité. DETAILS
-
-2. Créer une `view` des registres matériels
- On peut décrire les périphériques d'une `board` avec des fichiers \gls{SVD}.
+1. On peut décrire les périphériques d'une `board` avec des fichiers \gls{SVD}.
  Depuis ces fichiers, on peut générer des en-têtes Ada décrivant les
  périphériques et leur agencement mémoire avec des structures associés.
  L'idée de ce sujet est de créer une `view` dans GPS qui serait capable
@@ -138,14 +137,19 @@ Mon sujet de stage s'intitulait 'Améliorer le support du \gls{bare-metal} dans
  de cette fonctionnalité permettrait de grandement simplifier le débuguage
  sur les plate-formes embarqués.
 
-3. Intégrer les CMSIS-Packs dans \gls{GPS}
- ARM standard for describing a target with cortex-m processor and
- packaging programs that run on it (contains documentation, drivers, code
- examples, hardware descriptions and peripheral descriptions)
+2. Les CMSIS-Packs sont un standard permettant de decrire le materiel d'une
+ plate-forme ainsi que des logiciels l'accompagnant. Par exemple,
+ STMicroelectronics distribue un paquet decrivant la famille STM32. Dans ce
+ paquet on trouve des exemples de code, des pilotes, des description de
+ hardware et de la documentation. Cet axe visait a investiguer comment on
+ pourrait utiliser les CMSIS-Packs pour ameliorer l'experience de developpement
+ \gls{bare-metal} dans GPS.
 
- use those packs to simplify bare board development in \gls{GPS}
+3. \gls{GPS} permet d'afficher le contenu et la taille de la \gls{stack}. Une
+ piste de ce stage était d'améliorer cette fonctionnalité afin de donner plus
+ de details sur le contenu de la stack.
 
-J'ai choisi de m'attaquer à ce dernier sujet. L'idée était d'investiguer ce
+J'ai choisi de m'attaquer à la deuxieme option. L'idée était d'investiguer ce
 qu'il était possible de faire grâce aux CMSIS-Packs pour rendre la programmation
 embarquée en Ada plus facile d'accès.
 
@@ -284,7 +288,7 @@ domaine du temps-réel embarqué. J'ai également beaucoup interragi avec l'équ
 CROSS. Cette équipe s'occupe de porter la suite d'outils GNAT vers de nouvelles
 plates-formes et de régler les problêmes trouvés dans ces produits.
 
-[//]: # (TODO: schema about the compny organisation)
+[//]: # (TODO: schema about the company organisation)
 
 Dans ce contexte j'ai surtout interagi avec l'équipe \gls{GPS} dont mon maître de
 stage fait partie. Comme je devait intégrer mon travail dans \gls{GPS}, cela a été
@@ -407,9 +411,7 @@ Périodes:
 Voici une présentation des différentes procédures qualité que j'ai suivi, la
 plupart étant communes au cercle \gls{PE}.
 
-Tout code écrit doit suivre plusieurs règles.
-
-En premier lieu, chaque patch doit avoir un numéro de ticket associé. Cela
+En premier lieu, chaque \gls{patch} doit avoir un numéro de ticket associé. Cela
 permet de facilement tracer les bugs et de comprendre pourquoi un patch a été
 fait. Par exemple, dans le cas d'un bug introduit dans un patch, avoir le
 numéro de ticket permet de savoir quel était le but du patch et quel
@@ -433,11 +435,6 @@ documentation ou les endroits ou un bug pourrait arriver.
 Lorsqu'un patch est envoyé sur Gerrit, des tests automatiques sont lancés. Le
 résultats des tests est ensuite reporté sur la page des test, ce qui permet au
 développeur de trouver les problèmes dans son patch.
-
-- parler des cas tricky ??
-
-- tests manuels
-- écriture des tests
 
 ## Critique de ce découpage
 
@@ -480,23 +477,15 @@ erreurs et d'améliorer mon code.
 
 ## Gestion des problèmes et des deadlines
 
-- mauvais analyseur syntaxique pour le python XML
-    - problèmes d'efficacité (malloc tout le fichier en memoire)
+Dans le cas de mon stage, nous generions du code a partis de fichiers de
+configurations. Lors de l'integration de mon travail dans \gls{GPS}, nous aurions
+aime pouvoir relancer la generation de code automatiquement si l'utilisateur
+modifiait les fichiers de configuration.
 
-- problème du schéma de la base de donnée
-    - refait le schéma en simplifiant les données (no more botched inheritance)
-
-- démo que pendant le dernier internship commit
-	- intégration a pris plus de temps que prévu, j'ai du ajouter une
-	  fonctionnalité à \gls{GPS} afin de pouvoir y intégrer mon travail.
-
-- intégration dans GPS as an extra compilation step,
-    - main idea is to use the tool that generates files as a compiler
-	- heavily limited by the current build tool
-	- we cant have multiple build directories
-	    - so we can generate the startup code but it will be in the obj
-		  directory
-		- then the build tool will not find them
+Nous avons donc discute de cette idee avec les personnes s'occupant de l'outil
+de compilation (\gls{gprbuild}). Cependant, du aux limitations de l'outil de compilation,
+nous ne pouvions pas lancer l'outil automatiquement en cas des modifications
+des fichiers de configuration par l'utilisateur.
 
 # Aspects techniques
 
