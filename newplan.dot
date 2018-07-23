@@ -1,6 +1,8 @@
 digraph Plan {
 	graph [dpi = 100];
 
+	edge[arrowhead="vee"];
+
 	json projectfiles database
 
 	gpr2ld json2gpr querytool
@@ -14,7 +16,7 @@ digraph Plan {
 		style=filled;
     		fillcolor=grey;
 		penwidth=0;
-		label="Chaine d'outils"
+		label="Chaîne d'outils"
 		labelloc="t";
 
 		{rank = same; querytool; json2gpr; gpr2ld;}

@@ -383,28 +383,39 @@ stage. Dans le cas où la tâche était en lien avec mon stage ou simple, je
 l'ajoutais à ma liste de tâches en cours. Sinon, je créais un ticket pour
 l'équipe qui était concernée.
 
-Voici un schéma présentant les tâches que j'ai réalisé et dans quel ordre. Ces
-tâches sont composés de plusieurs sous-tâches qui ne sont pas représentées ici.
+Voici un schéma présentant les tâches que j'ai réalisé et dans quel ordre.
+
+(SCHEMA IS MISSSING)
 
 [//]: # (TODO: Schema ici)
 
-#### Plugin GPS
 #### Scripts de génération de runtimes
+
+Livrables:
+	- script Python permettant de choisir une board dans un pack et de generer
+	  une runtime pour cette board
+
+#### Architecture
+
+Livrables:
+	- document de design
+
 #### Suite d'outils utilisant les CMSIS-Packs
+
+Livrables:
+	- outils permettant de generer le code
+	- outils pour interagir avec la base de donnees
+
 #### Intégration dans GPS
 
-Périodes:
+Livrables:
+	- script d'installation dans GPS
+	- patch modifiant la creation des projets
 
-- plugin \gls{GPS} au début
-- fais 2-3 scripts pour explorer les possibilités des packs
-- phase principale
-    - point sur le stage
-    - architecture des outils
-    - travail sur les differents outils
-        - gpr2ld
-	    - database
-	    - json2gpr
-	    - intégration dans \gls{GPS}
+- bugs
+	- passait 30 minutes sur le bug
+	- si je ne trouvait pas je demandais a Anthony
+	- en general creation d'un ticket
 
 #### Procédures qualité
 
@@ -418,7 +429,7 @@ numéro de ticket permet de savoir quel était le but du patch et quel
 comportement adopter face au problème, que ce soit le retrait du patch ou la
 modification de ce dernier.
 
-Le code doit suivre les règles de codage d'AdaCore. Ces règles permettent de
+Le code écrit doit suivre les règles de codage d'AdaCore. Ces règles permettent de
 standardiser le code et le rendant plus facile à lire. Dans l'équipe où j'étais,
 les rêgles de codage pour le langage Python étaient vérifiées
 automatiquement par un outil appellé autopep8 (de la règle de codage PEP 8).
@@ -659,16 +670,22 @@ mis à jour. Il est également intéressant de stocker la hiérachie de famille 
 de sous-familles afin de permettre, lors de l'intégration, à l'utilisateur de
 filtrer les résultats de recherche à la sous-famille de son choix.
 
-![Architecture de la base de données](database.png)
-
 Un `device` représente la puce sur une carte. Par exemple, la carte
 STM32F429-Discovery possède un `device` STM32F429IG. Il est important de
 représenter les deux. En effet, deux `boards` peuvent avoir le même device et
 nous ne voulons pas de dupplicata d'information.
 
+Un device possède plusieurs régions mémoires et plusieurs fichier de documentation.
+Un device possède un seul CPU et un seul fichier SVD. Un fichier SVD possède
+toutes les interruptions du device lié au device.
+
 Certains paquets ne respectent pas la hiérarchie famille/sous-famille et
-possèdent uniquement des familles de board. C'est pour cela qu'un device peut
-être lié à une famille ou à une sous-famille elle-même liée à une famille.
+possèdent uniquement des familles. C'est pour cela qu'une famille peut
+posséder des sous-familles ou directement des `devices`.
+
+### Architecture
+
+![Architecture de la base de données](database.png)
 
 ### Cadre de la tâche
 

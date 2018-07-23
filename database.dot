@@ -1,43 +1,41 @@
 digraph Plan {
 
-graph [dpi = 100];
+	graph [dpi = 100];
+	node [shape = box];
 
-	package [label = "Paquet", shape = box;]
-	family [label = "famille",shape = box;]
-	subfamily [label = "sous-famille",shape = box;]
-	device [label = "`Device`",shape = box;]
-	documentation [label = "Fichier de\ndocumentation",shape = box;]
+	package [label = "Paquet"]
+	family [label = "Famille"]
+	subfamily [label = "Sous-famille"]
+	device [label = "`Device`"]
+	board [label = "Carte"]
+	documentation [label = "Fichier de\ndocumentation"]
 
-	dev_cpu [label = ""]
-	dev_svd [label = ""]
-	dev_doc [label = ""]
-	dev_mem [label = ""]
-	svd_interrupt [label = ""]
+	cpu [label = "CPU"]
+	memory [label = "Région mémoire"]
+	interrupt [label = "Interruption"]
+	svd [label = "Fichier SVD"]
 
-	cpu [label = "CPU",shape = box;]
-	memory [label = "Region memoire",shape = box;]
-	interrupt [label = "Interruption",shape = box;]
-	svd [label = "Fichier SVD",shape = box;]
+	package -> board [headlabel = "1 ", taillabel = "N", tailport = "e"]
+	
+	board -> device [headlabel = "N", taillabel = "1  ", headport = "ne"]
 
-	package -> family [label = "1 -> N"]
-	family -> subfamily [label = "1 -> N"]
-	subfamily -> device [label = "1 -> N"]
-	family -> device [label = "1 -> N"]
+	package -> family [headlabel = "1 ", taillabel = "N "]
 
-	device -> dev_cpu [label = " 1", dir = none]
-	dev_cpu -> cpu [label = " 1"]
+	family -> device [headlabel = "N ", taillabel = "1"]
+	
+	family -> subfamily [headlabel = "N", taillabel = "1   "]
 
-	device -> dev_mem [label = " 1", dir = none]
-	dev_mem -> memory [label = " N"]
+	subfamily -> device [headlabel ="N    ", taillabel = "1", headport = "nw"]
 
-	// Hardcoded spaces for horizontal edge
-	device -> svd [label = "1                  1"]
+	device -> cpu [headlabel = "1", taillabel = "1  "]
 
-	device -> dev_doc [label = " 1", dir = none]
-	dev_doc -> documentation [label = " N"]
+	device -> memory [headlabel = "N   ", taillabel = "1"]
 
-	svd -> svd_interrupt [label = " 1", dir = none, weight = 0]
-	svd_interrupt -> interrupt [label = " N"]
+	device -> svd [headlabel = "1  ", taillabel = "1", headport = "n"]
 
-	{rank = same; device; svd}
+	device -> documentation [headlabel = "N ", taillabel = "1", headport = "n"]
+
+	svd -> interrupt [headlabel = "N  ", taillabel = "1"]
+
+	//{rank = same; device; svd}
 }
