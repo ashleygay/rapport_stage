@@ -12,7 +12,7 @@ build_image newplan
 build_image database
 
 pandoc \
-	--latex-engine=pdflatex\
+	--pdf-engine=pdflatex\
 	--bibliography=biblio.bib\
 	--number-sections\
 	--from=markdown+grid_tables+pipe_tables\
