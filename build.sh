@@ -8,11 +8,8 @@ build_image () {
 	convert $1.png -fuzz 1% -transparent white $1.png
 }
 
-build_image plan
 build_image newplan
 build_image database
-
-convert plan.png -fuzz 1% -transparent white plan.png
 
 pandoc \
 	--latex-engine=pdflatex\
