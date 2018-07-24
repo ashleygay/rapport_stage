@@ -15,7 +15,7 @@ digraph Plan {
 	interrupt [label = "Interruption"]
 	svd [label = "Fichier SVD"]
 
-	package -> board [headlabel = "1 ", taillabel = "N", tailport = "e"]
+	package -> board [headlabel = "1  ", taillabel = "N"]
 	
 	board -> device [headlabel = "N", taillabel = "1  ", headport = "ne"]
 

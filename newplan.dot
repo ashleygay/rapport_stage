@@ -13,8 +13,6 @@ digraph Plan {
 	dev
 
 	subgraph cluster_tool {
-		style=filled;
-    		fillcolor=grey;
 		penwidth=0;
 		label="Chaîne d'outils"
 		labelloc="t";
@@ -32,8 +30,6 @@ digraph Plan {
 	}
 
 	subgraph cluster_compilation {
-		style=filled;
-    		fillcolor=grey;
 		penwidth=0;
 		label="Phase de compilation"
 		labelloc="t";
@@ -53,7 +49,7 @@ digraph Plan {
 	files [label="Fichiers"];
 	dev [penwidth=0 width=1 height=1 fixedsize=true image="embedded.png" label=""]
 
-	gpr2ld -> files [weight = 1, constraint = false]
+	gpr2ld -> files [constraint = false, headport="sw"]
 
 	querytool [shape = box]
 	gpr2ld [shape = box]

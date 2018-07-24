@@ -385,24 +385,28 @@ l'équipe qui était concernée.
 
 Voici un schéma présentant les tâches que j'ai réalisé et dans quel ordre.
 
-(SCHEMA IS MISSSING)
-
 [//]: # (TODO: Schema ici)
 
 #### Scripts de génération de runtimes
 
-Livrables:
-	- script Python permettant de choisir une board dans un pack et de generer
-	  une runtime pour cette board
+Les livrables associes a cette etape sont :
+
+- un script permettant de generer un projet en C pour une carte contenue
+  dans un paquet
+
+- un script permettant de generer une \gls{runtime} ciblant une carte contenue
+  dans un paquet
 
 #### Architecture
 
 Livrables:
+
 	- document de design
 
 #### Suite d'outils utilisant les CMSIS-Packs
 
 Livrables:
+
 	- outils permettant de generer le code
 	- outils pour interagir avec la base de donnees
 
@@ -449,9 +453,13 @@ développeur de trouver les problèmes dans son patch.
 
 ## Critique de ce découpage
 
-- découpage fait à posteriori
+Ce decoupage des taches a ete fait a posteriori. Il ne m'a donc pas aide a
+organiser le plan de mon stage sur le long terme.
 
-- problèmes de direction pas claire au début
+Au debut de mon stage, j'aurais du aussi me concentrer sur l'organisation de
+mon stage. En effet, la generation de runtime n'a finalement pas ete dans le
+cadre de mon stage. Je pense que j'aurais pu mieux m'organiser au debut de
+mon stage pour gagner du temps sur cette partie.
 
 ## Points de contrôle
 
