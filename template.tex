@@ -391,7 +391,6 @@ $endif$
 \addtocontents{toc}{\protect\thispagestyle{empty}}
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
-\thispagestyle{empty}
 \clearpage
 }
 $endif$
@@ -421,7 +420,6 @@ $endif$
 $endif$
 $if(beamer)$
 \begin{frame}[allowframebreaks]{$biblio-title$}
-\bibliographytrue
 $endif$
 \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
 $if(beamer)$

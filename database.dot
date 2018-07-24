@@ -37,5 +37,4 @@ digraph Plan {
 
 	svd -> interrupt [headlabel = "N  ", taillabel = "1"]
 
-	//{rank = same; device; svd}
 }

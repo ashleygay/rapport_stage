@@ -1,0 +1,51 @@
+digraph org {
+
+	graph [dpi = 100];
+	graph [ranksep = "0.1"]
+	graph [nodesep = "0.1"]
+
+	year [shape = box, label = <<font color="blue"><B>2018</B></font>>,
+		width = 8, style=filled,fillcolor="#61BAFF", penwidth = 0]
+
+	node [shape = cds, style = filled, fillcolor="#0080FF",
+		width = 1, height = 0.6,  penwidth = 0]
+
+	february [label = <<font color="white">Février</font>>]
+
+	march [label = <<font color="white">Mars</font>>]
+
+	april [label = <<font color="white">Avril</font>>]
+
+	may [label = <<font color="white">Mai</font>>]
+
+	june [label = <<font color="white">Juin</font>>]
+
+	july [label = <<font color="white">Juillet</font>>]
+
+	august [label = <<font color="white">Août</font>>]
+
+	year -> february [style = invis]
+	year -> march [style = invis]
+	year -> april [style = invis]
+	year -> may [style = invis, weight = 1]
+	year -> june [style = invis]
+	year -> july [style = invis]
+	year -> august [style = invis]
+
+	{ rank = same; year }
+
+	{ rank = same; february; march; april; may; june; july; august}
+
+	node [shape = box, height = 2]
+
+//	feb_text -> february [style = invis]
+//	feb_text -> march [style = invis, constraint = false, weight = 0]
+//	feb_text -> april [style = invis, constraint = false, weight = 0]
+//	feb_text -> may [style = invis, constraint = false, weight = 0]
+//	feb_text -> june [style = invis, constraint = false, weight = 0]
+//	feb_text -> july [style = invis, constraint = false, weight = 0]
+//	feb_text -> august [style = invis, constraint = false, weight = 0]
+
+//	march_text -> march [style = invis, constraint = false]
+
+}

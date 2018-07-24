@@ -42,6 +42,7 @@ digraph Plan {
 		exec -> dev [label=" Chargement\nsur la cible"]
 	}
 
+	runtime -> gcc [weight = 0]
 
 	gcc [shape=box; style=dotted; label="GCC"];
 	exec [label="Exécutable"];

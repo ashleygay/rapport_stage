@@ -1,7 +1,7 @@
 % Rapport de stage de fin d'études
-% Corentin Gay
-  GISTRE 2018
-% Du 19/02/2018 au 24/08/2018
+% Corentin Gay GISTRE 2018
+  Maître de stage : Anthony Leonardo Gracio
+% Du 19/02/2018 au 24/08/2018 (stage de 6 mois)
 
 ---
 fontsize: 12pt
@@ -86,6 +86,12 @@ header-includes:
     - \newglossaryentry{gprbuild}{name=gprbuild,
        description={Outil d'AdaCore qui permet de decrire un projet et de le
 	   compiler avec les options specifiees}}
+    - \newglossaryentry{gerrit}{name=Gerrit,
+	  description={gerrit est un outil permettant de gérer des dépôts Git et de
+	  faire des revues de code depuis une interface web}}
+    - \newglossaryentry{realtime}{name=temps-réel,
+	  description={Dans l'informatique, se dit de systèmes qui doivent respecter
+	  des contraintes temporelles}}
 ---
 # Résumé
 
@@ -95,16 +101,16 @@ trouvé le langage très intéressant car les concepts (notamment l'orienté obj
 sur la lisibilité et la validité du programme tout en gardant des bonnes
 performances m'intéressent grandement.
 
-J'ai decouvert le domaine des applications critiques pendant ma scolarite a
-EPITA. Etant donne que beaucoup de clients d'AdaCore sont dans ce secteur,
-j'ai pense que c'etait une superbe opportunite de pouvoir en apprendre plus sur
+J'ai découvert le domaine des applications critiques pendant ma scolarité à
+EPITA. Étant donné que beaucoup de clients d'AdaCore sont dans ce secteur,
+j'ai pensé que c'était une superbe opportunité de pouvoir en apprendre plus sur
 ce secteur.
 
-De plus, le fait d'avoir a integrer mon travail dans une base de code
-preexistance me paraissait etre une bonne experience. Ce point me
+De plus, le fait d'avoir à intégrer mon travail dans une base de code
+préexistante me paraissait être une bonne experience. Ce point me
 semble important car il permet de comprendre le contexte technique dans lequel
 sera utilisé mon travail. Le sujet de stage me permet de toucher
-a plusieurs technologies tout en restant dans mon domaine de prédilection, le
+à plusieurs technologies tout en restant dans mon domaine de prédilection, le
 développement embarqué. Par exemple, en apprendre plus sur les différents
 processeurs ARM et leurs assembleurs me paraissait être une bonne
 expérience à avoir.
@@ -264,9 +270,9 @@ Par rapport à ses concurrents, GNAT Pro a l'avantage de supporter la dernière
 version du standard Ada (Ada 2012) ainsi que toutes les versions antérieures, et
 ce tout aussi bien sur des plates-formes natives qu'en compilation croisée.
 GNAT Pro supporte également bien plus de plates-formes 64bits et supporte
-également plus d'OS temps-réels comme PikeOS ou LynxOS. On peut donc en
-conclure que même si AdaCore a de la compétition, elle reste première dans
-son domaine.
+également plus de systèmes d'exploitation \gls{realtime}s comme PikeOS ou LynxOS.
+On peut donc en conclure que même si AdaCore a de la compétition, elle reste
+première dans son domaine.
 
 ### Organisation
 
@@ -284,7 +290,7 @@ l'\gls{IDE} (\gls{GPS}) ainsi que des bibliothèques périphériques. Par exempl
 équipe s'occupe de l'intégration de GNAT dans l'\gls{IDE} de WindRiver (Workbench)
 afin de pouvoir facilement faire tourner des applications en Ada sur les
 différentes versions de VxWorks, un OS propriétaire très utilisé dans le
-domaine du temps-réel embarqué. J'ai également beaucoup interragi avec l'équipe
+domaine du \gls{realtime} embarqué. J'ai également beaucoup interragi avec l'équipe
 CROSS. Cette équipe s'occupe de porter la suite d'outils GNAT vers de nouvelles
 plates-formes et de régler les problêmes trouvés dans ces produits.
 
@@ -319,7 +325,7 @@ ARM et leurs différents assembleurs.
 ## Maturité et intérêt du stage pour l'entreprise
 
 Côté embarqué, AdaCore possède beaucoup de ports différents. GNAT Pro
-supporte des OS dits temps-réels comme VxWorks ou LynxOS et supporte
+supporte des OS dits \gls{realtime} comme VxWorks ou LynxOS et supporte
 également des cibles \gls{bare-metal}, c'est à dire des cibles sans OS.
 
 L'\gls{IDE} d'AdaCore (\gls{GPS}) permet de faciliter le développement embarqué en
@@ -385,41 +391,42 @@ l'équipe qui était concernée.
 
 Voici un schéma présentant les tâches que j'ai réalisé et dans quel ordre.
 
-[//]: # (TODO: Schema ici)
+![Étapes et organisation du stage](organisation.png)
+
+#### Écriture d'un plugin GPS
+
+Le livrable de cette étape est un patch permettant de lancer l'émulateur avec
+les harnais de tests. Il doit être revu et testé en utilisant \gls{gerrit}.
 
 #### Scripts de génération de runtimes
 
-Les livrables associes a cette etape sont :
+Les livrables de cette étape sont :
 
-- un script permettant de generer un projet en C pour une carte contenue
+- un script permettant de générer un projet en C pour une carte contenue
   dans un paquet
-
-- un script permettant de generer une \gls{runtime} ciblant une carte contenue
+- un script permettant de générer une \gls{runtime} ciblant une carte contenue
   dans un paquet
 
 #### Architecture
 
-Livrables:
-
-	- document de design
+Le livrable de cette étape est un document de designe décrivant les différents
+outils et comment ils interagissent entre eux.
 
 #### Suite d'outils utilisant les CMSIS-Packs
 
-Livrables:
+Les livrables de cette étape sont :
 
-	- outils permettant de generer le code
-	- outils pour interagir avec la base de donnees
+- un outil permettant de générer le \gls{startup code} et le \gls{linker script}
+- un outil permettant d'interagir avec la base de données
+- un plan de base de données représentant les informations nécessaires à le
+  génération de code
 
 #### Intégration dans GPS
 
-Livrables:
-	- script d'installation dans GPS
-	- patch modifiant la creation des projets
+Les livrables de cette étape sont :
 
-- bugs
-	- passait 30 minutes sur le bug
-	- si je ne trouvait pas je demandais a Anthony
-	- en general creation d'un ticket
+- un script d'installation pour les outils
+- un patch modifiant la façon dont les projets sont créés dans \gls{GPS}
 
 #### Procédures qualité
 
@@ -436,18 +443,24 @@ modification de ce dernier.
 Le code écrit doit suivre les règles de codage d'AdaCore. Ces règles permettent de
 standardiser le code et le rendant plus facile à lire. Dans l'équipe où j'étais,
 les rêgles de codage pour le langage Python étaient vérifiées
-automatiquement par un outil appellé autopep8 (de la règle de codage PEP 8).
-Cet outil vérifie automatiquement que le code est conforme à cette règle et
-refuse le patch si ce n'est pas le cas.
+automatiquement par un outil appellé pep8 (de la règle de codage PEP 8).
+Cependant pep8 ne permet pas de vérifier toutes les règles. Pour le reste de
+ces règles, l'équipe utilise un autre outil appelé pyflake.
+Dans le cas où le code n'est pas conforme à cette règle, le serveur distant
+refuse le patch.
 
-Une fois que le patch est prèt, il faut l'envoyer sur Gerrit. Cet outil permet
+[//]: # (TODO: le standard est pep8, c'est l'outil pep8 qui modifie le code
+		autopep8 n'est pas utilisé directement.
+		lookup pyflakes that is used too)
+
+Une fois que le patch est prèt, il faut l'envoyer sur \gls{gerrit}. Cet outil permet
 faire des revues de code et lance la suite de teste du projet associé au patch.
 La revue de code est faite par un pair qui connait le sujet de patch. Cette
 revue permet de s'assurer que le code est facilement lisible par un humain.
 L'examinateur peut anoté le code afin de spécifier les endroits manquants de
 documentation ou les endroits ou un bug pourrait arriver.
 
-Lorsqu'un patch est envoyé sur Gerrit, des tests automatiques sont lancés. Le
+Lorsqu'un patch est envoyé sur \gls{gerrit}, des tests automatiques sont lancés. Le
 résultats des tests est ensuite reporté sur la page des test, ce qui permet au
 développeur de trouver les problèmes dans son patch.
 
@@ -491,10 +504,10 @@ présenter mon travail et situer le contexte de mon stage. Le retours des
 différents employés m'a permis d'améliorer ma présentation et comment je
 présentais mon sujet de stage.
 
-Enfin les revues de code sur GitHub et Gerrit m'ont permis de corriger mes
+Enfin les revues de code sur GitHub et \gls{gerrit} m'ont permis de corriger mes
 erreurs et d'améliorer mon code.
 
-## Gestion des problèmes et des deadlines
+## Gestion des problèmes
 
 Dans le cas de mon stage, nous generions du code a partis de fichiers de
 configurations. Lors de l'integration de mon travail dans \gls{GPS}, nous aurions
@@ -509,6 +522,9 @@ des fichiers de configuration par l'utilisateur.
 # Aspects techniques
 
 [//]: # (TODO: lister les bugs que j'ai réglé et comment)
+
+La première tâche à faire était de faire un \gls{plugin} \gls{GPS} afin de
+pouver intégrer l'émulateur avec les harnais de test.
 
 ## Faire fonctionner les harnais de test avec GNATemu
 ### Objectifs
@@ -533,7 +549,7 @@ non-native.
 ### Cadre de la tâche
 
 GPS utilise des \gls{plugin}s en Python, ce \gls{plugin} doit donc être développé en
-Python. Nous avons utiliser Gerrit pour faire les revues de code.
+Python. Nous avons utiliser \gls{gerrit} pour faire les revues de code.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
@@ -585,7 +601,7 @@ la transformation du startup code qui demandait une interprétation de certains
 éléments du code assembleur car certaines directives ARM n'avaient pas leur
 équivalent en assembleur GCC et vice-versa.
 
-### Difficultés éventuelles
+### Difficultés rencontrés
 
 Je n'était pas très familier du parsing XML en Python. J'ai donc passé un
 peu de temps à comprendre comment récupérer les informations intéressantes dans
@@ -700,7 +716,7 @@ posséder des sous-familles ou directement des `devices`.
 La base de données sera développée en python en utilisant le module `sqlite3`
 de la bibliothèque standard
 
-### Difficultés éventuelles
+### Difficultés rencontrés
 
 Lors de la conception de la base de données, j'ai rencontré plusieurs obstacles.
 
@@ -751,7 +767,7 @@ depuis le code Python. Les informations concernant un device donné sont
 affichées dans le format JSON, pour permettre facilement leur interprétation.
 Cet outil ne doit pas avoir à gérer la base de données.
 
-### Difficultés éventuelles
+### Difficultés rencontrés
 
 En testant cet outil, il est apparu clair que les performances n'étaient pas
 suffisantes, en effet, l'outil mettait à peu près trente minutes à rajouter le
@@ -904,7 +920,7 @@ description d'assembleur qui serait ensuite traduits dans l'assembleur cible.
 Cette idée n'a pas été retenue car beaucoup trop complexe à mettre en place, à
 la place on utilise des patrons de code assembleurs.
 
-### Difficultés éventuelles
+### Difficultés rencontrés
 
 Avant ce projet, j'avais écris un court projet en Ada. J'ai donc passé un peu
 de temps au début du développement à apprendre le langage. J'ai du utiliser des
@@ -991,7 +1007,7 @@ re-génération des fichiers de manière générique. L'outil utilisé pour pilo
 les étapes de compilation ne permet pas de rajouter l'execution d'un outil
 lors de la compilation.
 
-### Difficultés éventuelles
+### Difficultés rencontrés
 
 GPS utilise un environnement Python spécifique et cet environnement ne
 contenait pas le module sqlite3 nécessaire au foncionnement de mes outils.
@@ -1032,7 +1048,7 @@ configuration et l'installation de la base de données.
 Avoir une interface graphique m'a permis de faire une démo et de mettre les
 outils bout à bout afin de tester la chaîne d'outils.
 
-# Premier bilan
+# Bilan actuel
 
 ## État de l'art sur l'intégration des CMSIS-Packs
 
@@ -1193,7 +1209,7 @@ papiers de recherche que j'ai pu lire et appréhender moi-même. Notamment des
 articles qui m'ont permis de mieux comprendre le rôle et le fonctionnement de
 la runtime Ada.
 
-Les aspects temps-réels de la formation de GISTRE m'ont été à comprendre les
+Les aspects \gls{realtime} de la formation de GISTRE m'ont été à comprendre les
 enjeux des clients d'AdaCore. Par exemple, le cours d'architecture distribuée
 de Christian Garnier m'a permis de comprendre quels étaient les enjeux et les
 garanties que devaient apporté un système temps réel. Le cours de freeRTOS de
@@ -1203,24 +1219,11 @@ norme DO-178 était très intéressant car il permettait de comprendre comment l
 processus de certifaction fonctionnait et comment on pouvait tracer les
 exigences de haut-niveau jusqu'au code source.
 
-- mentionner l'offre d'emploi
-	- pendant mon stage j'ai pu candidater pour une offre  GNAT Cross Engineer
-	- j'ai eu une réponse positive et j'ai accepté l'offre
-
-[@gnatada9x].
-
-[@bareboardkernelada2005].
-
-[@adarealtimeclock].
-
-[@ptcobjectada].
-
-[@adacompetition].
-
-- papiers de recherche
-     - real time features on a bare board kernel
-     - implementing Ada real time clock and absolute delays in real time kernels
-     - ORK: An open source real-time kernel for on-board software systems.
-
-# Bibliographie
+J'aimerait remercier AdaCore pour mon maître de stage, Anthony Leonardo Gracio,
+pour ses précieux précieux et les bonnes directions qu'il a pu me donner.
+J'aimerais également remercier Fabien Chouteau qui a été d'une grande aide
+lorsque j'avait des questions techniques et qui a pu me pointer vers des
+ressources qui m'ont aidés à comprendre certains points de technique.
+Je remercie également mon collègue Adrien Boulanger qui a relu ce rapport et a
+permis de l'améliorer.
 
