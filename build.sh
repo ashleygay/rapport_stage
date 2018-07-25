@@ -1,6 +1,6 @@
 # Compile the markdown to a pdf
 
-STYLE=zenburn
+STYLE=pygments
 DOT_FONT=Helvetica
 # In the case where we include code, we have nice syntax highlighting.
 
