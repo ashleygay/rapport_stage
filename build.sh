@@ -1,15 +1,17 @@
 # Compile the markdown to a pdf
 
 STYLE=zenburn
+DOT_FONT=Helvetica
 # In the case where we include code, we have nice syntax highlighting.
 
 build_image () {
-	dot -Tpng $1.dot -o $1.png
+	dot -Tpng $1.dot -Gfontname=$DOT_FONT -Nfontname=$DOT_FONT -Efontname=$DOT_FONT -o $1.png
 	convert $1.png -fuzz 1% -transparent white $1.png
 }
 
 build_image newplan
 build_image database
+build_image organisation
 
 pandoc \
 	--latex-engine=pdflatex\
