@@ -444,8 +444,8 @@ Le code écrit doit suivre les règles de codage d'AdaCore. Ces règles permette
 standardiser le code et le rendant plus facile à lire. Dans l'équipe où j'étais,
 les rêgles de codage pour le langage Python étaient vérifiées
 automatiquement par un outil appellé pep8 (de la règle de codage PEP 8).
-Cependant pep8 ne permet pas de vérifier toutes les règles. Pour le reste de
-ces règles, l'équipe utilise un autre outil appelé pyflake.
+Cependant pep8 ne permet pas de vérifier toutes les règles de codage.
+Pour le reste de ces règles, l'équipe utilise un autre outil appelé pyflake.
 Dans le cas où le code n'est pas conforme à cette règle, le serveur distant
 refuse le patch.
 
@@ -1225,5 +1225,9 @@ J'aimerais également remercier Fabien Chouteau qui a été d'une grande aide
 lorsque j'avait des questions techniques et qui a pu me pointer vers des
 ressources qui m'ont aidés à comprendre certains points de technique.
 Je remercie également mon collègue Adrien Boulanger qui a relu ce rapport et a
-permis de l'améliorer.
+permis de l'améliorer. Enfin, j'aimerais remercier AdaCore qui m'a permis
+de travailler sur un sujet de stage tres interessant. Pendant mon stage, j'ai
+appris qu'AdaCore cherchait a recruter un ingenieur pour l'equipe qui
+s'occupait de la compilation croisee. J'ai candidate pour ce poste et j'ai
+recu une offre d'AdaCore que j'ai accepte.
 
