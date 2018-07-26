@@ -21,8 +21,6 @@ header-includes:
        description={(Integrated Development Environment) Programme qui facilite
        le développement informatique en intégrant plusieurs outils dans le même
        environnement}}
-    - \newglossaryentry{GPS}{name=GPS,
-       description={GNAT Programming Studio, l'IDE phare d'AdaCore}}
     - \newglossaryentry{runtime}{name=runtime,
        description={Bibliothèque nécessaire pour faire tourner du code Ada sur
        une cible, elle fournit certaines fonctionnalitées du langage}}
@@ -82,8 +80,6 @@ header-includes:
     - \newglossaryentry{SVD}{name=SVD,
        description={Fichier XML décrivant les périphériques d'une carte et leur
 	   agencement mémoire}}
-    - \newglossaryentry{patch}{name=patch,
-       description={Code qui est rajoute a logiciel pre-existant}}
     - \newglossaryentry{GPRbuild}{name=GPRbuild,
        description={Outil d'AdaCore qui permet de decrire un projet et de le
 	   compiler avec les options specifiees}}
@@ -99,25 +95,21 @@ header-includes:
     - \newglossaryentry{BSP}{name=BSP,
 	  description={(Board Support Package) Collection de bibliothèques qui
 	  permettent d'utiliser les fonctionnalités de la carte ciblée}}
+    - \newglossaryentry{Kanban}{name=Kanban,
+	  description={Méthode d'organisation qui trie les taches à faire en trois
+	  catégories 'A faire', 'En cours' et 'Terminée'}}
+    - \newglossaryentry{Ravenscar}{name=Ravenscar,
+	  description={Runtime Ada implémentant plus les fonctionnalités du
+	  langage. Plus complète que les runtimes ZFP}}
 ---
-[//]: # (TODO: add CMSIS pack to glossary)
-[//]: # (TODO: add 'libre' as in freedom to glossary)
-[//]: # (TODO: add 'patch' to glossary)
-[//]: # (TODO: add 'CPU' to glossary)
 
-[//]: # (TODO: remove GPS from the glossary, describe it in the report once and
-for all)
-
-[//]: # (TODO: table des images/figures)
-[//]: # (TODO: remplacer 'Figure' par l'equivalent francais dans les images)
+\listoffigures
 
 # Résumé
 
 J'ai découvert Ada lors des cours à l'EPITA donnés par Raphaël Amiard. J'ai
-trouvé le langage très intéressant car les concepts (notamment l'orienté objet)
-étaient assez différents de leurs équivalents en C++. De plus, l'emphase placée
-sur la lisibilité et la validité du programme tout en gardant des bonnes
-performances m'intéressent grandement.
+trouvé le langage très intéressant car l'emphase placée sur la lisibilité et la
+validité du programme tout en gardant des bonnes performances m'intéressent grandement.
 
 J'ai découvert le domaine des applications critiques pendant ma scolarité à
 l'EPITA. Étant donné que beaucoup de clients d'AdaCore sont dans ce secteur,
@@ -137,10 +129,10 @@ C'est pour ces différentes raisons que j'ai candidaté chez AdaCore.
 
 J'ai commencé mon stage le 19 février, j'ai d'abord été accueilli par mes
 collègues et ma première tâche a été d'écrire un plugin Python pour l'\gls{IDE}
-d'AdaCore, \gls{GPS} (GNAT Programming Studio). Le but de cette tâche était de
+d'AdaCore, GPS (GNAT Programming Studio). Le but de cette tâche était de
 me familiariser avec le système de revue de code ainsi qu'avec le code de
-\gls{GPS}. J'ai ensuite commencé à étudier mon sujet de stage et comment
-nous pourrions améliorer le support du \gls{bare-metal} dans \gls{GPS}.
+GPS. J'ai ensuite commencé à étudier mon sujet de stage et comment
+nous pourrions améliorer le support du \gls{bare-metal} dans GPS.
 
 Beaucoup de programmation Ada se fait dans le domaine du \gls{bare-metal}.
 L'absence de système d'exploitation permet de simplifier le processus de
@@ -153,18 +145,22 @@ ainsi décidé d'une architecture pour les outils que j'allais développer.
 
 J'ai commencé à travailler les différents outils de l'architecture. Une fois
 que les outils étaient assez avancés pour fonctionner ensemble nous avons
-commencer à travailler sur l'intégration de mon travail dans \gls{GPS}.
+commencer à travailler sur l'intégration de mon travail dans GPS.
 
-[//]: # (TODO: développer)
+Mon stage s'est très bien déroulé et j'ai pu présenter une démonstration de mon
+projet durant l'avant dernier mois de mon stage.
 
 # Introduction
 
 ## Rappel du sujet de stage
 
-[//]: # (TODO: détailler le dev bare metal)
-
 Mon sujet de stage s'intitulait 'Améliorer le support du \gls{bare-metal} dans
-\gls{GPS}' et comportait les axes potentiels suivants:
+GPS'. Le développement \gls{bare-metal} se réfere a du développement logiciel
+visant des plates-formes sans systemes d'exploitation. Ce genre de logiciel est
+surtout trouve dans les domaines critiques ou la presence de systeme
+d'exploitation est un frein a la certification.
+
+Mon stage comportait les axes potentiels suivants:
 
 1. On peut décrire les périphériques d'une carte avec des fichiers \gls{SVD}.
  Depuis ces fichiers, on peut générer des en-têtes Ada décrivant les
@@ -183,12 +179,11 @@ Mon sujet de stage s'intitulait 'Améliorer le support du \gls{bare-metal} dans
  pourrait utiliser les CMSIS-Packs pour ameliorer l'experience de developpement
  \gls{bare-metal} dans GPS.
 
-3. \gls{GPS} permet d'afficher le contenu et la taille de la \gls{stack}. Une
+3. GPS permet d'afficher le contenu et la taille de la \gls{stack}. Une
  piste de ce stage était d'améliorer cette fonctionnalité afin de donner plus
  de details sur le contenu de la stack.
 
-[//]: # (TODO: MAL DIT)
-J'ai choisi de m'attaquer à la deuxième option. L'idée était d'investiguer ce
+J'ai choisi de m'intéresser à la deuxième option. L'idée était d'investiguer ce
 qu'il était possible de faire grâce aux CMSIS-Packs pour rendre la programmation
 embarquée en Ada plus facile d'accès.
 
@@ -226,8 +221,6 @@ avec un processeur cortex-m, ARM a créé un standard qui permet de décrire
 le matériel d'une carte ou d'un `device`. Ces infos dans une sont stockées
 archive zip. On appelle ces archives des CMSIS-Packs.
 
-[//]: # (TODO: expliquer les devices/cartes)
-
 La solution est donc d'utiliser les CMSIS-Packs pour automatiser le processus de
 modification du \gls{startup code} et du \gls{linker script}. Cette automatisation
 permet à l'utilisateur de choisir sa carte de dévelopement lors de la
@@ -257,9 +250,8 @@ de créer un compilateur libre afin d'aider à la diffusion du
 nouveau standard Ada 9X (qui deviendra Ada 95).
 Suite a ce projet, la société Ada Core Technologies est créée à New York et la
 sociétée sœur ACT-Europe est créée deux années plus tard. Ce n'est qu'en 2012
-que les deux sociétés sont unifiées.
-
-[//]: # (TODO : ACT europe rachète les US)
+que ACT-Europe rachète Ada Core Technologies pour ne former plus qu'une seule
+entreprise, AdaCore.
 
 AdaCore vend un compilateur Ada appellé GNAT. Ce compilateur est distribué
 en plusieurs versions, chaqune visant un public différent.
@@ -277,7 +269,11 @@ travaille sur les outils qu'utilisent le client. Cela permet de réduire le
 nombre d'intermédiaires et permet aux clients d'avoir des réponses rapides et
 claires à leurs interrogations ou à leurs problèmes.
 
-[//]: # (TODO: parler de l'open source)
+Une partie importante d'AdaCore est le support des logiciels open-source. C'est
+a dire les logiciels dont le code source est ouvert au public. Cette demarche
+garantie aux clients une transparence dans les modifications apporteés par
+AdaCore au compilateur. Régulierement, les patchs et les bugs trouvés dans GCC
+sont communiqués a la FSF (Free Software Foundation) qui maintient GCC.
 
 Pour aller avec le compilateur, AdaCore peut également aider les clients avec
 des projets de certifications. En effet,
@@ -307,14 +303,12 @@ Voici deux exemples de projets menés par des clients d'AdaCore :
 AdaCore n'est pas la seule entreprise  dans le domaine des compilateurs Ada.
 Voici un rapide aperçu des principaux compilateurs concurrents.
 
-[//]: # (TODO: expliquer le profile de runtime Ravenscar)
-
                           Green Hills Ada Compilers
 ---------------------     -----------------------------------------------------
 Entreprise                Greens Hills Software
 Standards                 Ada95
 Plates-formes cibles      Power, ARM/Thumb, 68k, MIPS, x86, SPARC
-Runtime                   Ravenscar (non multitâche)
+Runtime                   \gls{Ravenscar} (non multitâche)
 ---------------------     -----------------------------------------------------
 
                           ObjectAda
@@ -322,7 +316,7 @@ Runtime                   Ravenscar (non multitâche)
 Entreprise                PTC
 Standards                 Ada95 Ada2012 (windows 10 natif) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 Plates-formes cibles      PPC, x86
-Runtime                   Ravenscar
+Runtime                   \gls{Ravenscar}
 ---------------------     -----------------------------------------------------
 
 Par rapport à ses concurrents, GNAT Pro a l'avantage de supporter la dernière
@@ -345,7 +339,7 @@ maintiennent. Ce cercle s'occupe aussi
 de la QA (Quality Assurance) et des partenariats de contrats de recherche.
 
 Au sein de ce cercle j'ai intégrer le sous-cercle \gls{IDE}. Son rôle est de s'occuper de
-l'\gls{IDE} (\gls{GPS}) ainsi que des bibliothèques périphériques. Par exemple, cette
+l'\gls{IDE} (GPS) ainsi que des bibliothèques périphériques. Par exemple, cette
 équipe s'occupe de l'intégration de GNAT dans l'\gls{IDE} de WindRiver (Workbench)
 afin de pouvoir facilement faire tourner des applications en Ada sur les
 différentes versions de VxWorks, un OS propriétaire très utilisé dans le
@@ -354,8 +348,8 @@ CROSS. Cette équipe s'occupe de porter la suite d'outils GNAT vers de nouvelles
 plates-formes. Ces plates-formes ont parfois des spécificitées qui demandent la
 modification des outils.
 
-Dans ce contexte j'ai surtout interagi avec l'équipe \gls{GPS} dont mon maître de
-stage fait partie. Comme je devait intégrer mon travail dans \gls{GPS}, cela a été
+Dans ce contexte j'ai surtout interagi avec l'équipe GPS dont mon maître de
+stage fait partie. Comme je devait intégrer mon travail dans GPS, cela a été
 très utile de pouvoir communiquer facilement avec les personnes qui
 travaillent sur l'outil. J'ai également beaucoup travaillé avec un membre de l'équipe
 CROSS qui a été à l'origine de mon sujet de stage. Il a pu me guider lorsque
@@ -386,9 +380,9 @@ Côté embarqué, AdaCore possède beaucoup de ports différents. GNAT Pro
 supporte des OS dits \gls{realtime} comme VxWorks ou LynxOS et supporte
 également des cibles \gls{bare-metal}, c'est à dire des cibles sans OS.
 
-L'\gls{IDE} d'AdaCore (\gls{GPS}) permet de faciliter le développement embarqué en
+L'\gls{IDE} d'AdaCore (GPS) permet de faciliter le développement embarqué en
 fournissant une interface de connection à la carte facile d'utilisation.
-Cependant, \gls{GPS} ne supporte pas les CMSIS-Packs dans son état actuel, ce qui
+Cependant, GPS ne supporte pas les CMSIS-Packs dans son état actuel, ce qui
 rend difficile le développement embarqué sur une carte non supportée.
 
 En effet, dans le cas précédent, l'utilisateur doit compiler sa propre runtime,
@@ -399,7 +393,7 @@ Contrairement au C/C++ qui sont supportés par beaucoup d'outils, le support de
 l'Ada est inexistant dans le cadre des CMSIS-Packs.
 
 L'intérêt du stage est donc clair pour AdaCore : la simplification du processus
-de développement permet d'enlever une barrière à l'adoption de \gls{GPS} et à
+de développement permet d'enlever une barrière à l'adoption de GPS et à
 l'adoption d'Ada.
 
 ## Contexte de travail
@@ -410,8 +404,8 @@ lorsque j'avais des questions complexes, d'aller voir directement la personne
 concernée afin d'obtenir une réponse claire.
 
 J'était encadré par deux anciens épitéens, Anthony Leonardo Gracio et Fabien
-Chouteau. Anthony fait partie de l'équipe \gls{GPS} et m'a
-aidé à intégrer mon code dans \gls{GPS} et à écrire du meilleur code en faisant les
+Chouteau. Anthony fait partie de l'équipe GPS et m'a
+aidé à intégrer mon code dans GPS et à écrire du meilleur code en faisant les
 revues sur le code que j'écrivais. Fabien fait partie de l'équipe \gls{bare-metal} et
 c'est lui qui est à l'origine de mon sujet de stage. Il m'a aidé lorsque
 j'avais des questions vis à vis de certaines technologies ou du
@@ -491,8 +485,6 @@ Les livrables de cette étape sont :
 Le livrable de cette étape est un document d'architecture décrivant les différents
 outils et comment ils interagissent entre eux.
 
-[//]: # (TODO: nom de section pas clair)
-
 #### Développement des outils de génération de code
 
 Les livrables de cette étape sont :
@@ -507,21 +499,19 @@ Les livrables de cette étape sont :
 Les livrables de cette étape sont :
 
 - un script d'installation pour les outils
-- un patch modifiant la façon dont les projets sont créés dans \gls{GPS}
+- un patch modifiant la façon dont les projets sont créés dans GPS
 
 ### Procédures qualité
 
 Voici une présentation des différentes procédures qualité que j'ai suivi, la
 plupart étant communes au cercle \gls{PE}.
 
-En premier lieu, chaque \gls{patch} doit avoir un numéro de ticket associé. Cela
+En premier lieu, chaque patch doit avoir un numéro de ticket associé. Cela
 permet de facilement tracer les bugs et de comprendre pourquoi un patch a été
 fait. Par exemple, dans le cas d'un bug introduit dans un patch, avoir le
 numéro de ticket permet de savoir quel était le but du patch et quel
 comportement adopter face au problème, que ce soit le retrait du patch ou la
 modification de ce dernier.
-
-[//]: # (TODO: permet de documenter les know problems)
 
 Le code écrit doit suivre les règles de codage d'AdaCore. Ces règles permettent de
 standardiser le code et le rendant plus facile à maintenir. Dans l'équipe où j'étais,
@@ -541,9 +531,9 @@ documentation ou les endroits ou un bug pourrait arriver.
 
 Lorsqu'un patch est envoyé sur \gls{gerrit}, des tests automatiques sont lancés. Le
 résultats des tests est ensuite reporté sur la page des test, ce qui permet au
-développeur de trouver les problèmes dans son patch.
-
-[//]: # (TODO: parler du système de +2 humain et +1 machine)
+développeur de trouver les problèmes dans son patch. Pour qu'un patch soit
+accepté dans le code il faut que les tests automatiques soient validés
+et qu'une personne ait revue le code.
 
 ## Points de contrôle
 
@@ -557,9 +547,9 @@ prioriser mes tâches afin de me concentrer sur celles qui étaient importantes.
 Lorsque j'ai commencé à
 travailler sur les différents outils, nous avons fait un point toutes les deux
 semaines, ce qui m'a permis d'avancer plus vite qu'en faisant un point toutes
-les semaines.
-
-[//]: # (TODO: pourquoi j'allais plus vite ??)
+les semaines. En effet, suivre une architecture prédéterminée rendait le
+travail d'implémentation plus simple en réduisant le nombre de questions que
+j'avait.
 
 L'équipe GPS fait une réunion d'avancement chaque semaine. Pendant cette
 réunion chaque membre parle de ses tâches en cours de leur avancement. L'équipe
@@ -582,7 +572,7 @@ erreurs et d'améliorer mon code.
 ## Gestion des problèmes
 
 Dans le cas de mon stage, nous générions du code à partir de fichiers de
-configurations. Lors de l'intégration de mon travail dans \gls{GPS}, nous aurions
+configurations. Lors de l'intégration de mon travail dans GPS, nous aurions
 aimé pouvoir relancer la génération de code automatiquement si l'utilisateur
 modifiait les fichiers de configuration.
 
@@ -591,7 +581,7 @@ de compilation (\gls{GPRbuild}). Cependant, du aux limitations de l'outil de com
 nous ne pouvions pas lancer l'outil automatiquement en cas des modifications
 des fichiers de configuration par l'utilisateur. L'utilisateur devrait relancer
 la génération de code manuellement dans un terminal. Pour pallier à ça, nous
-allons rajouter un bouton dans l'interface graphique de \gls{GPS} qui
+allons rajouter un bouton dans l'interface graphique de GPS qui
 permettrait de relancer la génération de code.
 
 # Aspects techniques
@@ -599,22 +589,20 @@ permettrait de relancer la génération de code.
 ## Faire fonctionner les harnais de test avec GNATemu
 ### Objectifs
 
-\gls{GPS} possède un outil appellé GNATtest. Cet outil permet de générer un projet
+GPS possède un outil appellé GNATtest. Cet outil permet de générer un projet
 qui va se charger de tester les fonctions d'un autre projet, ce sont les
 harnais de test.
 
-Dans \gls{GPS}, pour un projet embarqué, il est possible de lancer
-le projet sur un émulateur : GNATemu. Il se repose sur l'émulateur libre QEMU.
-GNATemu est utilisé pour tester des projets plus facilement que sur une carte
-physique. Il permet également d'émuler des devices sur un bus (AMBA ou PCI)
-via l'outil GNATbus.
-
-[//]: # (TODO: détailler GNATemu et GNATbus ??, QEMU émule le CPU)
+Dans GPS, pour un projet embarqué, il est possible de lancer
+le projet sur un émulateur : GNATemu.
+Il utilise l'émulateur libre QEMU afin d'émuler le CPU de la cible.
+GNATemu utilise GNATbus afin d'émuler des périphériques sur un bus (AMBA ou PCI)
+afin de pouvoir simuler une carte embarquée.
 
 L'objectif de cette tâche était de pouvoir exécuter le harnais de test sur
 l'émulateur dans le cas d'un projet embarqué.
 
-GNATtest était déjà intégré dans \gls{GPS} avec un \gls{plugin}. Il fallait modifier
+GNATtest était déjà intégré dans GPS avec un \gls{plugin}. Il fallait modifier
 ce dernier dans le cas où le code était compilé pour une carte embarquée.
 
 ### Cadre de la tâche
@@ -625,7 +613,7 @@ système de revues de code.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
-Le plugin \gls{GPS} a été modifié pour tenir compte de la cible et permet de lancer
+Le plugin GPS a été modifié pour tenir compte de la cible et permet de lancer
 la suite de test sur l'émulateur. J'ai utilisé les bibliothèques de workflows
 python pour rendre mon code asynchrone. J'ai également utilisé les
 \gls{generator functions} pour rendre mon code plus efficace.
@@ -637,11 +625,9 @@ Ce \gls{plugin} possède néanmoins une limitation.
 Normalement, lorsque des tests échouent, GPS peut afficher directement quel test
 échoue et à quelle ligne. Nous avons ce comportement lorsque l'on lance
 l'émulateur sur un harnais de test. Cependant, lorsque l'on lance l'émulateur
-sur une liste de harnais de test, \gls{GPS} ne peut pas récupérer les différentes
+sur une liste de harnais de test, GPS ne peut pas récupérer les différentes
 sorties et ne peut donc pas les afficher correctement. Nous avons
 donc decider de les afficher dans une console, une par harnais de test.
-
-[//]: # (TODO: pluriel et singulier pointent vers la meme entree)
 
 Ce projet m'a permis de me familiariser avec l'API des \gls{plugin}s Python
 dans GPS. J'ai pu également aussi prendre en main le système de revue de code.
@@ -715,7 +701,7 @@ nécessaires au projet.
 ### Cadre de la tâche
 
 Le cadre de la tâche était de créer des outils portables. Il
-fallait donc complêtement décorréler l'intégration dans \gls{GPS} et le
+fallait donc complêtement décorréler l'intégration dans GPS et le
 fonctionnnement des outils. Il fallait pouvoir utiliser ces outils depuis un
 terminal ou bien depuis un script Python. Ces outils doivent utiliser les
 langages Python et Ada.
@@ -726,13 +712,12 @@ Nous avons décidé de laisser tomber la génération de runtime. En effet, il
 existe un projet d'AdaCore appellé \href{https://github.com/AdaCore/bb-runtimes}{`bb-runtimes`}.
 
 Le but de ce projet est de fournir des runtimes spécifiques à un CPU et non à
-une carte. Cela permet de simplifier 
-
-[//]: # (TODO: BSP and rewrite the bit down)
-Le support de la board est dans le \gls{BSP} à la place.
-Le but de ce projet est de réduire le
-nombre de runtimes à supporter et de simplifier le processus de création de
-runtimes. J'allais donc me reposer sur les runtimes de ce projet.
+une carte. Les runtimes actuelles sont distribuees pour une carte specifique.
+Avoir des runtimes specifiques aux CPU permettrait de reduire le nombre de
+runtimes differentes a maintenir et a isoler le code specifique a un certain
+CPU. Les runtimes plus complexes (\gls{Ravenscar}) utilisent un \gls{BSP} pour
+interragir avec la carte.
+J'allais donc me reposer sur les runtimes de ce projet.
 
 Une partie importante de l'organisation était la séparation du pilotage de la
 chaîne d'outils et de l'intégration dans GPS. En effet, on devait pouvoir
@@ -753,18 +738,14 @@ Il fallait ensuite écrire un script qui allait piloter la chaîne d'outils et
 enfin intégrer ce script dans GPS. Il fallait que les outils soient utilisables
 depuis la ligne de commande ou comme un module Python.
 
-[//]: # (TODO: rewrite it)
-
-Une fois cette architecture définie j'ai pu commencer à travailler sur le
-programme qui allait générer le \gls{startup code} et le \gls{linker script}.
-Il est plus pertinent de commencer par expliquer le fonctionnement de
-la base de données.
+Les sections suivantes décrivent les différents outils que j'ai développé.
 
 ## Base de données
 ### Objectifs
 
-La base de données doit pouvoir récupérer et organiser toutes les informations nécessaires
-à la génération du \gls{linker script} et du \gls{startup code}. C'est à dire à la fois les
+La base de données doit pouvoir récupérer et organiser toutes les informations
+nécessaires à la génération du \gls{linker script} et du \gls{startup code}.
+C'est à dire à la fois les
 informations liées au CPU et les informations liées à la `board`. Il faut
 également stocker la description des interruptions, c'est à dire l'index dans
 le tableau d'interruptions ainsi que son nom (pour que l'utilisateur puisse
@@ -775,18 +756,18 @@ mis à jour. Il est également intéressant de stocker la hiérachie de famille 
 de sous-familles afin de permettre, lors de l'intégration, à l'utilisateur de
 filtrer les résultats de recherche à la sous-famille de son choix.
 
-[//]: # (TODO: clarify devices and families and boards)
-
-Un `device` représente la puce sur une carte. Par exemple, la carte
-STM32F429-Discovery possède un device STM32F429IG. Il est important de
+Un device représente la puce sur une carte. Tandis que la carte definie les
+peripheriques physique avec lesquels le device peut interragir. Par exemple,
+la carte STM32F429-Discovery possède un device STM32F429IG. Il est important de
 représenter les deux. En effet, deux cartes peuvent avoir le même device et
 nous ne voulons pas de duplicata d'information.
 
-[//]: # (TODO: mal dit down rewrite)
+Un device est defini par plusieurs attributs:
 
-Un device possède plusieurs régions mémoires et plusieurs fichier de documentation.
-Un device possède un seul CPU et un seul fichier SVD. Un fichier SVD possède
-toutes les interruptions concernant un device.
+- des regions memoires
+- des fichiers de documentations
+- un CPU
+- un fichier SVD
 
 Certains paquets ne respectent pas la hiérarchie famille/sous-famille et
 possèdent uniquement des familles. C'est pour cela qu'une famille peut
@@ -802,17 +783,6 @@ La base de données a été développée en Python en utilisant le module SQLite
 de la bibliothèque standard
 
 ### Difficultés rencontrés
-
-Lors de la conception de la base de données, j'ai rencontré plusieurs obstacles.
-
-
-[//]: # (TODO: rewrite that)
-
-SQLite3 ne possède que les types INTEGER, TEXT,
-BLOB, REAL et NUMERIC. Elle convertit les types utilisés vers le type interne
-utilisé (par exemple un champ VARCHAR(10) devient un champ TEXT). Dans le cas
-précédent, cela ralentit la vitesse des requêtes qui récupèrent la valeur
-du champ.
 
 Certains paquets ne respectaient pas la syntaxe XML et j'ai du les modifier
 afin de les rendre conforme à la syntaxe attendue.
@@ -835,11 +805,10 @@ changer ces information en cours d'éxécution
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
-[//]: # (TODO : commenter les résultats)
-
 À la fin de cette tâche, j'avais un design de base de données fonctionnel.
 Une fois tous les paquets ajoutés à la base de données, elle faisait une taille
-d'à peu près 3 Mo.
+d'à peu près 3 Mo. Etant donné le volume important de device avec un processeur
+cortex-m, une base de donnés de cette taille est acceptable.
 
 ## Outil d'interrogation de la base de données
 ### Objectifs
@@ -855,9 +824,6 @@ Il faut que cet outil soit utilisable depuis un module python ou depuis la
 ligne de commande. Cela permet d'utiliser l'outil depuis un script ou
 depuis le code Python. Les informations concernant un device donné sont
 affichées dans le format JSON, pour permettre facilement leur interprétation.
-Cet outil ne doit pas avoir à gérer la base de données.
-
-[//]: # (TODO: cet outil travaille sur une base de données pré existante)
 
 ### Difficultés rencontrés
 
@@ -879,8 +845,9 @@ partie du fichier qui nous intéresse, cet analyseur nous permet d'analyser les
 éléments du fichier pendant son parcours et ainsi d'être beaucoup plus
 efficace. En changeant d'analyseur, on passe de trente minutes à un peu en
 dessous de trois minutes pour l'ajout du contenu de tous les paquets.
-
-[//]: # (TODO: commenter les résultats up there)
+Sachant que c'est une étape qui est faite une fois lors de la configuration de
+la base de données, un temps de trois minutes d'attente est largement
+acceptable.
 
 ### Solutions envisagées
 
@@ -964,8 +931,6 @@ project Spec is
 end Spec;
 ```
 
-[//]: # (TODO: specify the fonts of the numbers)
-
 Sur l'exemple ci-dessus on peut voir que le CPU gère les nombres à virgules
 flottantes avec du logiciel (certaines plates-formes ont des co-processeurs
 spécifiques à ce genre d'opérations). Dans l'exemple ci-dessus, la carte
@@ -978,7 +943,7 @@ en hexadécimal) et a une taille de `8000` (en hexadécimal) octets.
 Le formalisme précédent permet de gagner fortement en clarté par rapport à un
 \gls{linker script}. L'utilisation de la syntaxe des fichiers projets permet
 également de profiter des outils utilisant ce format. Par exemple, cela rend la
-modification dans \gls{GPS} plus aisée et permettrait de représenter
+modification dans GPS plus aisée et permettrait de représenter
 graphiquement les différentes mémoires.
 
 ## Génération du startup code et du linker script
@@ -1019,8 +984,6 @@ la place on utilise des patrons de code assembleurs.
 
 ### Difficultés rencontrés
 
-[//]: # (TODO: détailler un probleme rencontré dans lapprentissage Ada ??)
-
 Avant ce projet, j'avais écris un court projet en Ada. J'ai donc passé un peu
 de temps à me familiariser avec les subtilités du langage. J'ai du utiliser des
 bibliothèques Ada pour lire les fichiers projets. La bibliothèque
@@ -1049,10 +1012,8 @@ le code.
 Nous n'avions pas de tests pour ce projet ce qui a posé problème quand un
 collègue a rajouté des fonctionnalités au projet. Grâce à son aide pour créer
 la testsuite, j'ai pu rajouter des tests basiques mais qui permettent de
-vérifier que les modification n'ont pas de problèmes graves.
-
-[//]: # (TODO: test on veut éviter les régressions + parler de la test suite
-               et rajouter quoi)
+vérifier que les modifications n'ajoutent pas de régressions dans la suite de
+tests.
 
 Enfin, lorsque je testais les linkerscript qui étaient générés, j'ai passé du
 temps à trouver d'oû venaient certains problêmes car les message d'erreurs de
@@ -1063,18 +1024,18 @@ l'éditeur de liens n'étaient pas explicites ce qui compliquait le déboguage.
 Une fois cet outil terminé j'ai pu tester les fichiers générés. J'ai trouvé
 quelques problèmes dans la création du \gls{linker script} liés à l'allocation
 de certains symboles (\gls{stack} and \gls{heap}). Une fois cet outil terminé j'ai pu
-commencé à travailler sur l'intégration des outils dans \gls{GPS}.
+commencé à travailler sur l'intégration des outils dans GPS.
 
 ## Intégration dans GPS
 ### Objectifs
 
-Le but de cette tâche est d'intégrer les outils que j'ai développés dans \gls{GPS}.
+Le but de cette tâche est d'intégrer les outils que j'ai développés dans GPS.
 Il faut que lors de la création d'un projet embarqué, l'utilisateur puisse
 choisir la carte sur laquelle il va développer pour que GPS puisse générer les
 fichiers. L'utilisateur doit pouvoir relancer la génération si les fichiers décrivant
 la carte ont été modifiés. L'utilisateur doit pouvoir interagir avec la base de
-données depuis \gls{GPS}. Il doit pouvoir la mettre à jour et y rajouter des paquets
-manuellement depuis \gls{GPS}. L'utilisateur doit également pouvoir consulter
+données depuis GPS. Il doit pouvoir la mettre à jour et y rajouter des paquets
+manuellement depuis GPS. L'utilisateur doit également pouvoir consulter
 toute la documentation liée à la carte sélectionnée. Cette documentation doit
 cependant être téléchargée et ne sera donc consultable que si l'utilisateur veut
 télécharger le paquet associé à la carte sélectionnée.
@@ -1094,8 +1055,8 @@ des macros faisant des conversions de type (comme en C).
 
 ### Cadre de la tâche
 
-Le plugin \gls{GPS} a été développé en Python tandis que les éventuelles modifications
-à \gls{GPS} ont été faites en Ada.
+Le plugin GPS a été développé en Python tandis que les éventuelles modifications
+à GPS ont été faites en Ada.
 
 ### Solutions envisagées
 
@@ -1123,7 +1084,7 @@ actuelle ne permettait pas de créer une interface graphique pour un projet
 spécifique. Elle permettait seulement d'exécuter du code après la création du
 projet. J'ai donc dû rajouter une fonctionnalité pour pouvoir exécuter du code
 pendant la création de projet et permettre de construire une interface
-graphique personnalisable. Pour cela, \gls{GPS} va appeller une fonction du script
+graphique personnalisable. Pour cela, GPS va appeller une fonction du script
 Python. Cette fonction peut renvoyer des éléments qui vont constituer les pages
 successives correspondant au projet en question.
 
@@ -1138,8 +1099,6 @@ de génération de \gls{linker script} à besoin de fichier de configuration qui
 décrivent les architectures supportées en fournissant les patrons d'assembleur
 correspondants. Il fallait donc trouver une solution pour installer ces
 fichiers de configuration.
-
-[//]: # (TODO: Come back when it is fixed)
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
@@ -1170,13 +1129,14 @@ est réalisé en Java, ce qui rend l'intégration dans d'autres outils quasi-imp
 
 ## Intérêt du stage pour l'entreprise
 
-Le projet fait pendant mon stage est surtout un avantage à long terme pour AdaCore. En effet, en
+Le projet fait pendant mon stage est surtout un avantage à long terme pour AdaCore.
+En effet, en
 réduisant la barrière à l'entrée de la programmation embarquée en Ada, mon
 stage permet de faciliter la transition du C vers l'Ada.
 Il permet d'aider au support des runtimes ZFP et pourrait même être utiliser en
-interne pour générer les futures runtimes distribuées aux clients.
-
-[//]: # (TODO: laisse penser que les clients ne verraient pas l'outil)
+interne pour générer les futures runtimes distribuées aux clients. Il pourrait
+également etre très utile pour des clients qui voudraient générer une runtime
+pour leurs propres projets.
 
 Enfin, il est possible d'utiliser la chaîne d'outils actuelle pour d'autres
 architectures qu'ARM et il serait très intéressant à long terme de supporter
@@ -1184,17 +1144,17 @@ les architectures LEON et PowerPC de cette manière.
 
 ## Perspectives d'amélioration
 
-Toutes les fonctionnalitées que fournit Eclipse sont très intéressantes pour
+Les outils de programmation en C/C++ visant l'embarqueé sont très développés,
+cependant GPS n'intègre pas beaucoup de ces fonctionnalités.
+Toutes les fonctionnalitées que fournit Eclipse sont donc très intéressantes pour
 l'utilisateur et seraient un atout pour AdaCore si elles étaient intégrées dans GPS.
-Elles pourraient vraiment améliorer le développement en C dans GPS.
-
-[//]: # (TODO: développement en C dans GPS)
-[//]: # (TODO: out of the box in french )
+Elles pourraient vraiment améliorer le développement en C dans GPS et permettre
+de manipuler plus aisément des projets utilisant l'Ada et le C.
 
 On pourrait
 également imaginer le cas où l'utilisateur pourrait utiliser certains pilotes du
 paquet depuis le code Ada, il pourrait être intéressant de fournir cette
-fonctionnalité 'out-of-the-box'. On pourrait utiliser l'option '-fdump-ada-spec'
+fonctionnalité dans GPS. On pourrait utiliser l'option '-fdump-ada-spec'
 du compilateur qui génére des fichiers de spécifications qui permettent au code Ada
 d'appeller le code C.
 
@@ -1289,10 +1249,8 @@ mes tâches à réaliser dans mon cahier. Cela m'a permis de prioriser mon trava
 et de me donner des buts à accomplir chaque jour. Si j'avais quelquechose à
 changer dans cette organisation ce serait d'utiliser un programme plutôt qu'un
 cahier pour organiser mes tâches. Il existe des outils permettant de gérer un
-tableau de tâches Kanban et cela semble être le meilleur choix pour s'organiser
+tableau de tâches \gls{Kanban} et cela semble être le meilleur choix pour s'organiser
 efficacement.
-
-[//]: # (TODO: expliquer Kanban ??)
 
 ## Retours sur le stage et pertinence de la formation
 
