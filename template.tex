@@ -7,6 +7,7 @@ $endif$
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$if(beamer)$ignorenonframetext,$if(handout)$handout,$endif$$if(aspectratio)$aspectratio=$aspectratio$,$endif$$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
 
 \usepackage{placeins}
+\usepackage{float}
 
 \usepackage[french]{babel}
 \usepackage{titlesec}
@@ -277,7 +278,7 @@ $endif$
 
 % set default figure placement to htbp
 \makeatletter
-\def\fps@figure{htbp}
+\def\fps@figure{H}
 \makeatother
 
 $for(header-includes)$
@@ -444,4 +445,7 @@ $for(include-after)$
 $include-after$
 
 $endfor$
+
+\nocite{pizza}
+
 \end{document}

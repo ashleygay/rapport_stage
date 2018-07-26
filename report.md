@@ -9,6 +9,7 @@ fontfamily: utopia
 glossary: true
 graphics: true
 biblatex: true
+lof: true
 link-citations: true
 header-includes:
     - \usepackage{hyperref}
@@ -71,7 +72,7 @@ header-includes:
        description={(Product Engineering) C'est le cercle responsable de la
 	   maintenance et de l'amélioration technique des produits d'AdaCore}}
     - \newglossaryentry{ZFP}{name=ZFP,
-       description={(Zero FootPrint) C'est la runtime la plus minimale (en
+       description={(Zero Foot Print) C'est la runtime la plus minimale (en
 	   termes de taille et de fonctionnalités) pour faire tourner du code Ada}}
     - \newglossaryentry{stack}{name=stack,
        description={Zone mémoire utilisée pour l'allocation mémoire statique}}
@@ -102,8 +103,6 @@ header-includes:
 	  description={Runtime Ada implémentant plus les fonctionnalités du
 	  langage. Plus complète que les runtimes ZFP}}
 ---
-
-\listoffigures
 
 # Résumé
 
@@ -428,7 +427,7 @@ suivants :
   des services de mesure du temps dans un noyau temps-réel.
 
 Lorsque j'ai commencé à tester mon travail, j'avais trois cartes
-différentes à ma disposition : 
+différentes à ma disposition :
 
 - une STM32F420
 - une SAMD20
@@ -464,7 +463,7 @@ Gantt.
 
 Voici un schéma présentant les tâches que j'ai réalisé et dans quel ordre.
 
-![Étapes et organisation du stage](organisation.png)
+![Étapes et organisation du stage](schema.png)
 
 #### Écriture d'un plugin GPS
 
@@ -728,17 +727,30 @@ intégrer facilement mon travail dans les autres \gls{IDE} supportés par AdaCor
 [//]: # (TODO: séparer le schéma en 2, une partie phase de compilation et une
 		partie outils)
 
-![Architecture des outils](newplan.png)
-
 Pour que la chaîne d'outils soit extensible il fallait que chaque outil soit
 clairement défini et qu'il n'accomplisse qu'un rôle, le plus simple possible et
 le plus simplement possible.
 
 Il fallait ensuite écrire un script qui allait piloter la chaîne d'outils et
 enfin intégrer ce script dans GPS. Il fallait que les outils soient utilisables
-depuis la ligne de commande ou comme un module Python.
+depuis la ligne de commande ou comme un module Python. L'architecture retenue
+est décrite ci-dessous.
 
-Les sections suivantes décrivent les différents outils que j'ai développé.
+![Architecture des outils](newplan.png)
+
+L'outil 'querytool' se charge d'interagir avec la base de données, il permet de
+récupérer le contenu des CMSIS-Packs ou d'en rajouter. Dans le cas des
+informations relatives à une carte, cet outil génère du JSON qui permet de
+décrire le device associé à la carte.
+
+Le JSON est ensuite transformé en deux fichiers projets grâce à l'outil 'json2gpr'.
+Ces fichiers projets décrivent le device sélectionné par l'utilisateur.
+
+Ces fichiers projets sont ensuite utilisés par 'gpr2ld' pour générer le \gls{startup
+code} et le \gls{linker script}. Ces deux fichiers sont utilisés à
+différentes étapes de la compilation pour générer l'exécutable final.
+
+![Phases de compilation](compilation.png)
 
 ## Base de données
 ### Objectifs
@@ -1300,3 +1312,6 @@ appris qu'AdaCore cherchait à recruter un ingénieur pour intégrer l'équipe q
 s'occupe de la compilation croisée. J'ai candidaté pour ce poste et j'ai
 reçu une offre d'AdaCore que j'ai accepté.
 
+\clearpage
+
+# Bibliographie

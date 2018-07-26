@@ -1,0 +1,37 @@
+digraph Compilation {
+
+	graph [dpi = 100];
+
+	program startup
+	gcc
+	objects [label = "Fichiers objets"]
+	runtime ldscript
+	linker [label = "Éditeur de liens"]
+	exec
+	dev
+
+	subgraph cluster_compilation {
+		penwidth=0;
+		labelloc="t";
+
+		{rank = same; startup; program;}
+		{rank = same; linker; ldscript; runtime;}
+
+		program -> gcc
+		runtime -> linker [weight = 0, minlen = 0]
+		startup -> gcc
+		ldscript -> linker
+		gcc -> objects [label = " Produit"]
+		objects -> linker
+		linker -> exec [label = " Produit"]
+		exec -> dev [label=" Chargement\nsur la cible"]
+	}
+
+	runtime [label="Runtime"]
+	gcc [shape=box; style=dotted; label="Compilateur"];
+	exec [label="Exécutable"];
+	program [label="Programme\nutilisateur"];
+	startup [label="startup code"];
+	ldscript [label="linker script"];
+	dev [penwidth=0 width=1 height=1 fixedsize=true image="embedded.png" label=""]
+}

@@ -1,20 +1,15 @@
 digraph Plan {
 	graph [dpi = 100];
 
-	edge[arrowhead="vee"];
-
 	json projectfiles database
 
 	gpr2ld json2gpr querytool
 
-	program files
-	runtime gcc
-	exec
-	dev
+	startup [label = "startup code"]
+	ldscript [label = "linker script"]
 
 	subgraph cluster_tool {
 		penwidth=0;
-		label="Chaîne d'outils"
 		labelloc="t";
 
 		{rank = same; querytool; json2gpr; gpr2ld;}
@@ -27,32 +22,14 @@ digraph Plan {
 		json2gpr -> projectfiles
 		projectfiles -> gpr2ld
 
+		gpr2ld -> startup
+		gpr2ld -> ldscript
+
 	}
-
-	subgraph cluster_compilation {
-		penwidth=0;
-		label="Phase de compilation"
-		labelloc="t";
-
-		{rank = same; files; program;}
-		{rank = same; runtime; gcc;}
-
-		program -> gcc
-		files -> gcc -> exec
-		exec -> dev [label=" Chargement\nsur la cible"]
-	}
-
-	runtime -> gcc [weight = 0]
-
-	gcc [shape=box; style=dotted; label="GCC"];
-	exec [label="Exécutable"];
-	program [label="Programme\nutilisateur"];
-	files [label="Fichiers"];
-	dev [penwidth=0 width=1 height=1 fixedsize=true image="embedded.png" label=""]
-
-	gpr2ld -> files [constraint = false, headport="sw"]
-
+	projectfiles [label = "Fichiers projets"]
+	database [label = "Base de données"]
 	querytool [shape = box]
 	gpr2ld [shape = box]
 	json2gpr [shape = box]
+	json [label = "JSON"]
 }

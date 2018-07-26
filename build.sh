@@ -1,6 +1,6 @@
 # Compile the markdown to a pdf
 
-STYLE=pygments
+STYLE=tango
 DOT_FONT=Helvetica
 # In the case where we include code, we have nice syntax highlighting.
 
@@ -12,9 +12,9 @@ build_image () {
 build_image newplan
 build_image database
 build_image organisation
+build_image compilation
 
 pandoc \
-	--latex-engine=pdflatex\
 	--bibliography=biblio.bib\
 	--number-sections\
 	--from=markdown+grid_tables+pipe_tables\
