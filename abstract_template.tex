@@ -1,8 +1,10 @@
 \PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
 \PassOptionsToPackage{hyphens}{url}
+$if(colorlinks)$
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+$endif$
 %
-\documentclass[12pt,]{article}
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$if(beamer)$ignorenonframetext,$if(handout)$handout,$endif$$if(aspectratio)$aspectratio=$aspectratio$,$endif$$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
 
 \usepackage{placeins}
 \usepackage{float}
@@ -10,44 +12,183 @@
 \usepackage[french]{babel}
 \usepackage{titlesec}
 % Adds page clear before each new section
+\newcommand{\sectionbreak}{}
+$if(beamer)$
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
+$endif$
+$if(beamerarticle)$
+\usepackage{beamerarticle} % needs to be loaded first
+$else$
 \usepackage{titletoc}
-\usepackage[]{utopia}
+$endif$
+$if(fontfamily)$
+\usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
+$else$
+\usepackage{lmodern}
+$endif$
+$if(linestretch)$
+\usepackage{setspace}
+\setstretch{$linestretch$}
+$endif$
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
+  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{csquotes}
   \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
+$if(mathspec)$
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{unicode-math}
+  \fi
+$else$
   \usepackage{unicode-math}
+$endif$
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+$for(fontfamilies)$
+  \newfontfamily{$fontfamilies.name$}[$fontfamilies.options$]{$fontfamilies.font$}
+$endfor$
+$if(mainfont)$
+    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
+$endif$
+$if(sansfont)$
+    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
+$endif$
+$if(monofont)$
+    \setmonofont[Mapping=tex-ansi$if(monofontoptions)$,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$$endif$]{$monofont$}
+$endif$
+$if(mathfont)$
+$if(mathspec)$
+  \ifxetex
+    \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+  \else
+    \setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+  \fi
+$else$
+  \setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+$endif$
+$endif$
+$if(CJKmainfont)$
+  \ifxetex
+    \usepackage{xeCJK}
+    \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+  \fi
+$endif$
+$if(luatexjapresetoptions)$
+  \ifluatex
+    \usepackage[$for(luatexjapresetoptions)$$luatexjapresetoptions$$sep$,$endfor$]{luatexja-preset}
+  \fi
+$endif$
+$if(CJKmainfont)$
+  \ifluatex
+    \usepackage[$for(luatexjafontspecoptions)$$luatexjafontspecoptions$$sep$,$endfor$]{luatexja-fontspec}
+    \setmainjfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+  \fi
+$endif$
 \fi
+$if(beamer)$
+$if(theme)$
+\usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
+$endif$
+$if(colortheme)$
+\usecolortheme{$colortheme$}
+$endif$
+$if(fonttheme)$
+\usefonttheme{$fonttheme$}
+$endif$
+$if(mainfont)$
+\usefonttheme{serif} % use mainfont rather than sansfont for slide text
+$endif$
+$if(innertheme)$
+\useinnertheme{$innertheme$}
+$endif$
+$if(outertheme)$
+\useoutertheme{$outertheme$}
+$endif$
+$endif$
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
+\usepackage[$for(microtypeoptions)$$microtypeoptions$$sep$,$endfor$]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+$if(indent)$
+$else$
 \IfFileExists{parskip.sty}{%
 \usepackage{parskip}
 }{% else
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
 }
+$endif$
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+$endif$
+$if(colorlinks)$
 \usepackage{xcolor}
+$endif$
 \usepackage{hyperref}
 \hypersetup{
-            pdftitle={Internship Report Abstract},
-            pdfauthor={Corentin Gay GISTRE 2018; Intenship Mentor : Anthony Leonardo Gracio},
+$if(title-meta)$
+            pdftitle={$title-meta$},
+$endif$
+$if(author-meta)$
+            pdfauthor={$author-meta$},
+$endif$
+$if(keywords)$
+            pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
+$endif$
+$if(colorlinks)$
             colorlinks=true,
-            linkcolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$Maroon$endif$,
+            citecolor=$if(citecolor)$$citecolor$$else$Blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
+$else$
+            pdfborder={0 0 0},
+$endif$
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allows verbatim text in footnotes
+$endif$
+$if(geometry)$
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+$endif$
+$if(beamer)$
+\newif\ifbibliography
+$endif$
+$if(listings)$
+\usepackage{listings}
+\newcommand{\passthrough}[1]{#1}
+$endif$
+$if(lhs)$
+\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+$endif$
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+$if(tables)$
+\usepackage{longtable,booktabs}
+$if(beamer)$
+\usepackage{caption}
+% These lines are needed to make table captions work with longtable:
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+$else$
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
+$endif$
+$endif$
+$if(graphics)$
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -58,10 +199,68 @@
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 \FloatBarrier
+$endif$
+$if(beamer)$
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+$if(section-titles)$
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+\FloatBarrier
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+\FloatBarrier
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+\FloatBarrier
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+$endif$
+$endif$
+$if(links-as-notes)$
+% Make links footnotes instead of hotlinks:
+\DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$
+$if(strikeout)$
+\usepackage[normalem]{ulem}
+% avoid problems with \sout in headers with hyperref:
+\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+$endif$
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
+$if(numbersections)$
+\setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
+$else$
+\setcounter{secnumdepth}{0}
+$endif$
+$if(beamer)$
+$else$
+$if(subparagraph)$
+$else$
 % Redefines (sub)paragraphs to behave more like sections
 \ifx\paragraph\undefined\else
 \let\oldparagraph\paragraph
@@ -71,21 +270,95 @@
 \let\oldsubparagraph\subparagraph
 \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+$endif$
+$endif$
+$if(pagestyle)$
+\pagestyle{$pagestyle$}
+$endif$
 
 % set default figure placement to htbp
 \makeatletter
 \def\fps@figure{H}
 \makeatother
 
+$for(header-includes)$
+$header-includes$
+$endfor$
+$if(lang)$
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
+$if(babel-newcommands)$
+  $babel-newcommands$
+$endif$
+\else
+  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
+$for(polyglossia-otherlangs)$
+  \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
+$endfor$
+\fi
+$endif$
+$if(dir)$
+\ifxetex
+  % load bidi as late as possible as it modifies e.g. graphicx
+  $if(latex-dir-rtl)$
+  \usepackage[RTLdocument]{bidi}
+  $else$
+  \usepackage{bidi}
+  $endif$
+\fi
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \TeXXeTstate=1
+  \newcommand{\RL}[1]{\beginR #1\endR}
+  \newcommand{\LR}[1]{\beginL #1\endL}
+  \newenvironment{RTL}{\beginR}{\endR}
+  \newenvironment{LTR}{\beginL}{\endL}
+\fi
+$endif$
+$if(natbib)$
+\usepackage[$natbiboptions$]{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
+$endif$
 
+$if(title)$
 \clearpage
-\title{Internship Report Abstract}
-\author{Corentin Gay GISTRE 2018 \and Intenship Mentor : Anthony Leonardo Gracio}
-\date{From 19/02/2018 to 24/08/2018 (6 months)}
+\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+$endif$
+$if(subtitle)$
+\providecommand{\subtitle}[1]{}
+\subtitle{$subtitle$}
+$endif$
+$if(author)$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$endif$
+$if(institute)$
+\providecommand{\institute}[1]{}
+\institute{$for(institute)$$institute$$sep$ \and $endfor$}
+$endif$
+\date{$date$}
+$if(beamer)$
+$if(titlegraphic)$
+\titlegraphic{\includegraphics{$titlegraphic$}}
+$endif$
+$if(logo)$
+\logo{\includegraphics{$logo$}}
+$endif$
+$endif$
 
 \begin{document}
 \addtocontents{toc}{\protect\thispagestyle{empty}}
 
+$if(title)$
+$if(beamer)$
+\frame{\titlepage}
+$else$
 \maketitle
 \begin{figure}
 \centering
@@ -96,113 +369,86 @@
 
 \thispagestyle{empty}
 \clearpage
+$endif$
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+$endif$
 
+$for(include-before)$
+$include-before$
+
+$endfor$
+$if(toc)$
+$if(beamer)$
+\begin{frame}
+\tableofcontents[hideallsubsections]
+\end{frame}
+$else$
 {
-\hypersetup{linkcolor=}
-\setcounter{tocdepth}{3}
+$if(colorlinks)$
+\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
+$endif$
+\setcounter{tocdepth}{$toc-depth$}
 \pagenumbering{gobble}
 \addtocontents{toc}{\protect\thispagestyle{empty}}
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{$toc-depth$}
 }
 
 \pagenumbering{arabic}
+$endif$
+$endif$
+$if(lot)$
+\listoftables
+$endif$
+$if(lof)$
+\listoffigures
+$endif$
 
-\hypertarget{presentation}{%
-\section{Presentation}\label{presentation}}
+$body$
 
-AdaCore is a company specializing in compiler technology. They develop
-and maintain an Ada compiler named GNAT. They target embedded targets
-with or without operating systems. They offer technical expertise to
-their clients, allowing them to easily inquire about existing features
-or report technical issues.
+$if(glossary)$
+\clearpage
+\thispagestyle{empty}
+\printglossaries
+$endif$
 
-The team I worked in is called the IDE team. Its goal is to maintain and
-develop the Ada IDE of AdaCore called GPS (GNAT Programming Studio).
-This IDE integrates multiple tools specific to Ada, allowing developpers
-to be more efficient in their work.
+$if(natbib)$
+$if(bibliography)$
+$if(biblio-title)$
+$if(book-class)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+$endif$
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+$if(beamer)$
+\end{frame}
+$endif$
 
-My mentor is Anthony Leonardo Gracio. He handles all the graphical
-display of the IDE. He is an former EPITA student. I also interacted a
-lot with Fabien Chouteau (also a former EPITA student) that is part of
-the \enquote{bare-board} team. He handles work related to embedded
-devices and makes sure that the AdaCore products are working on the
-different platforms that the clients use.
+$endif$
+$endif$
+$if(biblatex)$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+\bibliographytrue
+\printbibliography[heading=none]
+\end{frame}
+$else$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+$endif$
 
-My work was focused on improving the bare-metal\footnote{To have an
-  overview of their work, go
-  \href{https://www.adacore.com/industries}{here}} support in GPS.
-Bare-metal development in Ada requires more work than in C because Ada
-code needs a runtime in order to compile and run. An Ada runtime
-implements the functionalities of the language such as multi-tasking
-support or memory allocation.
+$endif$
+$for(include-after)$
+$include-after$
 
-In order to target a new platform, one must recompile a runtime adapted
-to the platform. This is something that is extremely repetitive. For
-example, the code behind the runtimes was the same, it was just compiled
-differently.
-
-We want to avoid having to do that work each time. So, I settled on
-using the CMSIS-Packs. It is a standard designed by ARM that describes
-harware and software of a device family using the Cortex-M processors.
-Using the information in those packs, we can generate the code that is
-specific to our target. In our case, we generate two files. First, a
-linker script describing how the executable is to be mapped in physical
-memory. Second, an assembly file called the \enquote{startup code} that
-takes care of initializing memory regions before the execution of the
-user program. The final goal was to be able to start developping on a
-board from GPS right away without having to look up documentation to
-configure the different files.
-
-I was expected to have some knowledge bare metal programming and how
-compilers work. I was also expected to know how to present my work as we
-had monthly intern presentations. I needed to be able to research
-efficiently and be able to design program architectures. Finally, I
-needed to be able to communicate efficiently with my colleagues as I had
-to integrate the project that I had made in the work of other people.
-
-I demonstrated my working prototype in the start of july during my
-monthly presentation. I am currently working on integrating my work into
-GPS.
-
-\hypertarget{intenship-schedule}{%
-\section{Intenship Schedule}\label{intenship-schedule}}
-
-The first phase of my internship was a research phase. Thus. I did not
-plan a weekly schedule. Here is the the schedule :
-
-INSERT SCHEMA HERE
-
-\hypertarget{general-appreciation}{%
-\section{General appreciation}\label{general-appreciation}}
-
-I really enjoyed my time at AdaCore. I had great colleagues to which I
-could ask technical questions and get great answers. I could even
-contribute to the code of the project the team was maintaining. When I
-found bugs, I reported them and made sure the fix worked on my machine.
-
-\hypertarget{skills-acquired-during-the-internship}{%
-\section{Skills acquired during the
-internship}\label{skills-acquired-during-the-internship}}
-
-I acquired a lot of knowledge regarding compiler technologies. I also
-learned how to better code in Ada as I only had a basic understanding of
-the language features. I imporved my skills at reading unfamiliar code.
-When I discovered a bug in the tools I was using, I peeked in the code
-in order to understand the different systems working together and where
-the bug was coming from. I learned a lot doing that and I found it
-really enjoyable.
-
-\hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
-
-I had a very positive experience at AdaCore. I learned a lot and they
-work with great clients on amazing projects\footnote{To have an overview
-  of their work, go \href{https://www.adacore.com/industries}{here}}.
-During my internship, I candidated for an open position they had. I
-received an offer that I accepted and I plan on starting by the end of
-September
-
-
+$endfor$
 
 \nocite{pizza}
 
