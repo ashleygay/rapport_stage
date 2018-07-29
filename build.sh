@@ -20,7 +20,7 @@ build_doc () {
 	--metadata link-citations=true\
 	--highlight-style=$STYLE\
         $1.md\
-        -s -o $1.tex
+        -s -o $2.tex
 
 	pdflatex $1.tex -o $1.pdf
 	makeglossaries $1
