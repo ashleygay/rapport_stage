@@ -9,23 +9,30 @@ build_image () {
 	convert $1.png -fuzz 1% -transparent white $1.png
 }
 
-build_image newplan
-build_image database
-build_image organisation
-build_image compilation
-
-pandoc \
+build_doc () {
+	pandoc \
 	--bibliography=biblio.bib\
 	--number-sections\
 	--from=markdown+grid_tables+pipe_tables\
-	--template=./template.tex\
+	--template=./$2.tex\
 	--toc\
 	--variable urlcolor=blue\
 	--metadata link-citations=true\
 	--highlight-style=$STYLE\
-        report.md\
-        -s -o report.tex
+        $1.md\
+        -s -o $1.tex
 
-pdflatex report.tex -o report.pdf
-makeglossaries report
-pdflatex report.tex -o report.pdf
+	pdflatex $1.tex -o $1.pdf
+	makeglossaries $1
+	pdflatex $1.tex -o $1.pdf
+}
+
+#build_image newplan
+#build_image database
+#build_image organisation
+#build_image compilation
+
+#build_doc report template
+build_doc abstract abstract_template
+
+

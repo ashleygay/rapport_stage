@@ -353,6 +353,7 @@ $endif$
 $endif$
 
 \begin{document}
+\addtocontents{toc}{\protect\thispagestyle{empty}}
 
 $if(title)$
 $if(beamer)$
@@ -390,11 +391,15 @@ $else$
 $if(colorlinks)$
 \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
 $endif$
+\setcounter{tocdepth}{$toc-depth$}
+\pagenumbering{gobble}
 \addtocontents{toc}{\protect\thispagestyle{empty}}
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 \clearpage
 }
+
+\pagenumbering{arabic}
 $endif$
 $endif$
 $if(lot)$
@@ -403,6 +408,7 @@ $endif$
 $if(lof)$
 \listoffigures
 $endif$
+
 $body$
 
 $if(glossary)$

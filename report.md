@@ -154,26 +154,26 @@ projet durant l'avant dernier mois de mon stage.
 ## Rappel du sujet de stage
 
 Mon sujet de stage s'intitulait 'Améliorer le support du \gls{bare-metal} dans
-GPS'. Le développement \gls{bare-metal} se réfere a du développement logiciel
-visant des plates-formes sans systemes d'exploitation. Ce genre de logiciel est
-surtout trouve dans les domaines critiques ou la presence de systeme
+GPS'. Le développement \gls{bare-metal} se réfère à du développement logiciel
+visant des plates-formes sans système d'exploitation. Ce genre de logiciel est
+surtout trouvé dans les domaines critiques ou la présence de système
 d'exploitation est un frein a la certification.
 
 Mon stage comportait les axes potentiels suivants:
 
 1. On peut décrire les périphériques d'une carte avec des fichiers \gls{SVD}.
  Depuis ces fichiers, on peut générer des en-têtes Ada décrivant les
- périphériques et leur agencement mémoire avec des structures associés.
+ périphériques et leur agencement mémoire avec des structures associées.
  L'objectif de ce sujet est de créer une vue dans GPS qui serait capable
  d'afficher les valeurs des différents champs des périphériques. L'ajout
  de cette fonctionnalité permettrait de grandement simplifier le débugging
- sur les plate-formes embarqués. Par exemple, on pourrait rajouter des points
+ sur les plates-formes embarquées. Par exemple, on pourrait rajouter des points
  d'arrêts conditionnels depuis cette vue.
 
 2. Les CMSIS-Packs sont des archives permettant de décrire le materiel d'une
  plate-forme ainsi que des logiciels l'accompagnant. Par exemple,
  STMicroelectronics distribue un paquet decrivant la famille STM32. Dans ce
- paquet on trouve des exemples de code, des pilotes, des description de
+ paquet on trouve des exemples de code, des pilotes, des descriptions de
  hardware et de la documentation. Cet axe visait a investiguer comment on
  pourrait utiliser les CMSIS-Packs pour ameliorer l'experience de developpement
  \gls{bare-metal} dans GPS.
@@ -188,8 +188,8 @@ embarquée en Ada plus facile d'accès.
 
 Pour pouvoir exécuter du code Ada sur une cible donnée, il faut
 avoir une bibliothèque appellé une runtime. Ce logiciel implémente des
-fonctionnalités du langage qui sont utilisée par le programme de l'utilisateur 
-comme le support multi-tâches, la propagation des exceptions ou les allocation mémoires
+fonctionnalités du langage qui sont utilisées par le programme de l'utilisateur
+comme le support multi-tâches, la propagation des exceptions ou les allocations mémoires
 dynamiques.
 
 Étant donné que la runtime doit tourner sur la cible, il
@@ -210,7 +210,7 @@ pas acceptable dans certains contextes.
 Dans le cas décrit ci-dessus, les modifications à effectuer dans le code de la
 runtime elle-même sont nulles. Cependant, il faut tout de même modifier le
 \gls{startup code}. Ce bout de code permet d'initialiser la mémoire et se charge
-d'appeller le point d'entrée du programme. Il faut également modifier le
+d'appeler le point d'entrée du programme. Il faut également modifier le
 \gls{linker script}. Ce fichier permet de spécifier les zones mémoires et quelles
 portions du code y mettre.
 
@@ -222,7 +222,7 @@ archive zip. On appelle ces archives des CMSIS-Packs.
 
 La solution est donc d'utiliser les CMSIS-Packs pour automatiser le processus de
 modification du \gls{startup code} et du \gls{linker script}. Cette automatisation
-permet à l'utilisateur de choisir sa carte de dévelopement lors de la
+permet à l'utilisateur de choisir sa carte de développement lors de la
 création d'un projet.
 
 ## Présentation de l'entreprise
@@ -230,17 +230,17 @@ création d'un projet.
 
 En 1975, le \gls{DoD} commença à rédiger un standard décrivant un langage visant à
 remplacer les 450 langages utilisés à l'intérieur de l'organisation.
-En 1978, le dernier standard appellé 'Steelman' est finalisé. Le \gls{DoD} organisa
+En 1978, le dernier standard appelé 'Steelman' est finalisé. Le \gls{DoD} organisa
 ensuite un concours visant à trouver le langage implémentant au mieux le standard
 Steelman. Ce langage allait remplacer les 450 langages utilisés par le \gls{DoD}.
-Quatres équipes sont créées et parmis ces quatres, c'est l'équipe
+Quatres équipes sont créées et parmis elles, c'est l'équipe
 'Green' qui remporte le concours. Le langage 'Green' est rebaptisé 'Ada'.
 Ce langage est nommé en hommage à Ada Lovelace, mathématicienne anglaise du
 19ème siècle. Elle est considérée comme le premier programmeur, ayant écrit un
 programme pour la \gls{machine analytique} de Charles Babbage.
 
-J'ai beaucoup appris en consultant le site de Mary Van Deusen[^fn] expliquant
-comment la compétition s'est déroulée.
+J'ai beaucoup appris sur ce sujet en consultant le site de Mary Van Deusen[^fn]
+qui explique comment la compétition s'est déroulée.
 
 [^fn]:Lien vers le \href{http://iment.com/maida/computer/redref/index.htm}{site} en question
 
@@ -253,7 +253,7 @@ que ACT-Europe rachète Ada Core Technologies pour ne former plus qu'une seule
 entreprise, AdaCore.
 
 AdaCore vend un compilateur Ada appellé GNAT. Ce compilateur est distribué
-en plusieurs versions, chaqune visant un public différent.
+en plusieurs versions, chacune visant un public différent.
 Par exemple la version `Community` ne supporte que la dernière version du
 standard Ada, Ada 2012, et vise principalement les développeurs amateurs.
 
@@ -270,13 +270,13 @@ claires à leurs interrogations ou à leurs problèmes.
 
 Une partie importante d'AdaCore est le support des logiciels open-source. C'est
 a dire les logiciels dont le code source est ouvert au public. Cette demarche
-garantie aux clients une transparence dans les modifications apporteés par
+garantit aux clients une transparence dans les modifications apportées par
 AdaCore au compilateur. Régulierement, les patchs et les bugs trouvés dans GCC
-sont communiqués a la FSF (Free Software Foundation) qui maintient GCC.
+sont communiqués à la FSF (Free Software Foundation) qui maintient GCC.
 
 Pour aller avec le compilateur, AdaCore peut également aider les clients avec
 des projets de certifications. En effet,
-une partie des outils fournis par AdaCore, comme GNATcoverage, est qualifié
+une partie des outils fournis par AdaCore, comme GNATcoverage, sont qualifiés
 pour le développement d'outil en \gls{DO-178}B en \gls{DAL} A. C'est à dire le niveau de
 criticité le plus élevé du standard avionique. GNATcoverage aide à
 l'analyse de couverture de code ce qui permet de garantir qu'il n'y a pas de
@@ -297,7 +297,7 @@ Voici deux exemples de projets menés par des clients d'AdaCore :
 
 \newpage
 
-### Contexte concurentiel
+### Contexte concurrentiel
 
 AdaCore n'est pas la seule entreprise  dans le domaine des compilateurs Ada.
 Voici un rapide aperçu des principaux compilateurs concurrents.
@@ -344,7 +344,7 @@ afin de pouvoir facilement faire tourner des applications en Ada sur les
 différentes versions de VxWorks, un OS propriétaire très utilisé dans le
 domaine du \gls{realtime} embarqué. J'ai également beaucoup interragi avec l'équipe
 CROSS. Cette équipe s'occupe de porter la suite d'outils GNAT vers de nouvelles
-plates-formes. Ces plates-formes ont parfois des spécificitées qui demandent la
+plates-formes. Ces plates-formes ont parfois des spécificités qui demandent la
 modification des outils.
 
 Dans ce contexte j'ai surtout interagi avec l'équipe GPS dont mon maître de
@@ -352,7 +352,7 @@ stage fait partie. Comme je devait intégrer mon travail dans GPS, cela a été
 très utile de pouvoir communiquer facilement avec les personnes qui
 travaillent sur l'outil. J'ai également beaucoup travaillé avec un membre de l'équipe
 CROSS qui a été à l'origine de mon sujet de stage. Il a pu me guider lorsque
-j'avais des questions techniques vis-a-vis des runtimes Ada.
+j'avais des questions techniques vis-à-vis des runtimes Ada.
 
 ## État des connaissances sur le sujet
 
@@ -412,9 +412,9 @@ fonctionnement d'Ada dans le domaine de l'embarqué.
 
 Concernant le sujet du stage, un collègue avait déjà réalisé un prototype
 utilisant les CMSIS-Packs, j'ai pu m'en inspirer afin d'avancer plus vite
-dans mon travail. De plus, la haute disponibilité de mes deux encadrants m'a permis
+dans mon travail. De plus, la grande disponibilité de mes deux encadrants m'a permis
 d'avancer vite et de ne pas rester bloqué sur des problèmes qu'ils pouvaient
-m'aider a resoudre.
+m'aider à resoudre.
 
 Pour comprendre comment fonctionnaient les runtimes et à quels problèmes elles
 répondaient, j'ai consulté Fabien qui m'a recommandé la lecture des articles
@@ -506,7 +506,7 @@ Voici une présentation des différentes procédures qualité que j'ai suivi, la
 plupart étant communes au cercle \gls{PE}.
 
 En premier lieu, chaque patch doit avoir un numéro de ticket associé. Cela
-permet de facilement tracer les bugs et de comprendre pourquoi un patch a été
+permet de trouver facilement les bugs et de comprendre pourquoi un patch a été
 fait. Par exemple, dans le cas d'un bug introduit dans un patch, avoir le
 numéro de ticket permet de savoir quel était le but du patch et quel
 comportement adopter face au problème, que ce soit le retrait du patch ou la
@@ -521,18 +521,18 @@ certains aspects des règles de codage que pep8 ne vérifie pas.
 Dans le cas où le code n'est pas conforme à cette règle, l'outil de
 versionement refuse d'envoyer le patch.
 
-Une fois que le patch est prèt, il faut l'envoyer sur \gls{gerrit}. Cet outil permet
-faire des revues de code et lance la suite de teste du projet associé au patch.
+Une fois que le patch est prêt, il faut l'envoyer sur \gls{gerrit}. Cet outil permet
+faire des revues de code et lance la suite de tests du projet associé au patch.
 La revue de code est faite par un pair qui connait le sujet de patch. Cette
 revue permet de s'assurer que le code est facilement lisible par un humain.
 L'examinateur peut anoter le code afin de spécifier les endroits manquants de
-documentation ou les endroits ou un bug pourrait arriver.
+documentation ou les endroits où un bug pourrait arriver.
 
 Lorsqu'un patch est envoyé sur \gls{gerrit}, des tests automatiques sont lancés. Le
-résultats des tests est ensuite reporté sur la page des test, ce qui permet au
+résultat des tests est ensuite affiché sur la page des test, ce qui permet au
 développeur de trouver les problèmes dans son patch. Pour qu'un patch soit
 accepté dans le code il faut que les tests automatiques soient validés
-et qu'une personne ait revue le code.
+et qu'une personne ait revu le code.
 
 ## Points de contrôle
 
@@ -548,7 +548,7 @@ travailler sur les différents outils, nous avons fait un point toutes les deux
 semaines, ce qui m'a permis d'avancer plus vite qu'en faisant un point toutes
 les semaines. En effet, suivre une architecture prédéterminée rendait le
 travail d'implémentation plus simple en réduisant le nombre de questions que
-j'avait.
+j'avais.
 
 L'équipe GPS fait une réunion d'avancement chaque semaine. Pendant cette
 réunion chaque membre parle de ses tâches en cours de leur avancement. L'équipe
@@ -561,8 +561,8 @@ travaillais.
 Tous les mois, AdaCore organise des "Monthly Interns Commits". Ce sont des
 présentations durant lesquelles les stagiaires d'AdaCore présentent leur
 avancement et les problèmes qu'ils ont rencontrés. Ces séances m'ont permis de
-présenter mon travail et situer le contexte de mon stage. Le retours de
-mes différents collègues m'a permis d'améliorer ma présentation et comment je
+présenter mon travail et situer le contexte de mon stage. Les retours de
+mes différents collègues m'ont permis d'améliorer ma présentation et comment je
 présentais mon sujet de stage.
 
 Enfin les revues de code sur GitHub et \gls{gerrit} m'ont permis de corriger mes
@@ -635,7 +635,7 @@ dans GPS. J'ai pu également aussi prendre en main le système de revue de code.
 ### Objectifs
 
 L'objectif principal était de me familiariser avec le comportement des runtimes
-Ada et comment elles fonctionnaient. Je devais également explorer ce qu'il était
+Ada et de comprendre leur fonctionnement. Je devais également explorer ce qu'il était
 possible de faire avec les CMSIS-Packs et comment nous pouvions les utiliser
 dans le contexte de la programmation embarqué Ada.
 
@@ -651,23 +651,24 @@ le contenu des paquets et générer les fichiers nécessaires.
 ### Solutions envisagées
 
 En découvrant qu'ARM avait son propre compilateur, assembleur et syntaxe de
-linker script (appellés scatter file par le l'éditeur de liens ARM), j'ai pensé qu'un
+linker script (appellés scatter file par l'éditeur de liens ARM), j'ai pensé qu'un
 outil transformant la syntaxe ARM en son équivalent GCC pouvait être
 réalisable. Cependant, après en avoir discuter avec mon maître de stage il
 s'avère que générer les fichiers serait plus simple que les traduire, nous
-n'avont donc pas continué avec cette idée. La difficultée principale venait de
+n'avons donc pas continué avec cette idée. La difficulté principale venait de
 la transformation du \gls{startup code} qui demandait une interprétation de certains
 éléments du code assembleur car certaines directives ARM n'avaient pas leur
 équivalent en assembleur GCC et vice-versa.
 
-### Difficultés rencontrés
+### Difficultés rencontrées
 
 Je n'était pas très familier du parsing XML en Python. J'ai donc passé un
 peu de temps à comprendre comment récupérer les informations intéressantes dans
 le fichier XML.
 
 J'ai également passé du temps à comprendre la structure des CMSIS-Packs.
-Le ficher XML peut associer certains fichiers à des conditions. Par exemple, le
+Le ficher XML peut associer certains de ses composants à des conditions.
+Par exemple, le
 pack peut faire la distinction entre le compilateur GCC et le compilateur ARM
 et peut spécifier quels fichiers utiliser pour un compilateur donné. GNAT est
 basé sur GCC, il était donc nécessaire dans notre cas de ne récupérer que les
@@ -675,16 +676,16 @@ informations utilisables avec GCC.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
-À la fin de cette tâche, j'avais réaliser deux outils. Le premier outil
+À la fin de cette tâche, j'avais réalisé deux outils. Le premier outil
 sert à générer les fichiers utilisés lors de la compilation comme le
 \gls{linker script} ou le \gls{startup code}.
 
-Le second outil génére la structure d'une runtime prête à compiler. C'est à
+Le second outil génère la structure d'une runtime prête à compiler. C'est à
 dire les fichiers projets qui décrivaient à \gls{GPRbuild} comment compiler la
 runtime.
 
 Cette tâche m'a permis de comprendre comment étaient agencés les packs et
-quelles fonctionnalitées pouvaient être utiliser depuis le contenu des packs.
+quelles fonctionnalités pouvaient être utilisées depuis le contenu des packs.
 Certains packs possèdent un \gls{linker script} et un \gls{startup code}
 compatible avec GCC mais ce n'est pas le cas de tout les packs. Il fallait dont
 générer ces fichiers à partir des informations contenus dans les packs.
@@ -713,7 +714,7 @@ existe un projet d'AdaCore appellé \href{https://github.com/AdaCore/bb-runtimes
 Le but de ce projet est de fournir des runtimes spécifiques à un CPU et non à
 une carte. Les runtimes actuelles sont distribuees pour une carte specifique.
 Avoir des runtimes specifiques aux CPU permettrait de reduire le nombre de
-runtimes differentes a maintenir et a isoler le code specifique a un certain
+runtimes differentes a maintenir et à isoler le code specifique a un certain
 CPU. Les runtimes plus complexes (\gls{Ravenscar}) utilisent un \gls{BSP} pour
 interragir avec la carte.
 J'allais donc me reposer sur les runtimes de ce projet.
@@ -728,7 +729,7 @@ intégrer facilement mon travail dans les autres \gls{IDE} supportés par AdaCor
 		partie outils)
 
 Pour que la chaîne d'outils soit extensible il fallait que chaque outil soit
-clairement défini et qu'il n'accomplisse qu'un rôle, le plus simple possible et
+clairement définit et qu'il n'accomplisse qu'un rôle, le plus simple possible et
 le plus simplement possible.
 
 Il fallait ensuite écrire un script qui allait piloter la chaîne d'outils et
@@ -769,14 +770,14 @@ de sous-familles afin de permettre, lors de l'intégration, à l'utilisateur de
 filtrer les résultats de recherche à la sous-famille de son choix.
 
 Un device représente la puce sur une carte. Tandis que la carte definie les
-peripheriques physique avec lesquels le device peut interragir. Par exemple,
+peripheriques physiques avec lesquels le device peut interragir. Par exemple,
 la carte STM32F429-Discovery possède un device STM32F429IG. Il est important de
 représenter les deux. En effet, deux cartes peuvent avoir le même device et
 nous ne voulons pas de duplicata d'information.
 
 Un device est defini par plusieurs attributs:
 
-- des regions memoires
+- des régions memoires
 - des fichiers de documentations
 - un CPU
 - un fichier SVD
@@ -792,12 +793,12 @@ posséder des sous-familles ou directement des devices.
 ### Cadre de la tâche
 
 La base de données a été développée en Python en utilisant le module SQLite3
-de la bibliothèque standard
+de la bibliothèque standard.
 
-### Difficultés rencontrés
+### Difficultés rencontrées
 
-Certains paquets ne respectaient pas la syntaxe XML et j'ai du les modifier
-afin de les rendre conforme à la syntaxe attendue.
+Certains paquets ne respectaient pas la syntaxe XML et j'ai dû les modifier
+afin de les rendre conformes à la syntaxe attendue.
 
 ### Solutions envisagées
 
@@ -809,24 +810,24 @@ informations du device mais aussi celles de la sous-famille et de la famille
 associée.
 
 Après relecture du code, j'ai décidé de remplacer cette table par 3 tables
-distincts qui représentaient une famille, une sous-famille et un device.
+distinctes qui représentaient une famille, une sous-famille et un device.
 Toutes les informations nécessaires sont maintenant dans la table représentant
 les devices. En effet, la hiérarchie d'information ne change que lors de
 l'ajout ou le retrait d'un paquet, il n'était donc pas utile de pouvoir
-changer ces information en cours d'éxécution
+changer ces informations en cours d'éxécution
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
 À la fin de cette tâche, j'avais un design de base de données fonctionnel.
 Une fois tous les paquets ajoutés à la base de données, elle faisait une taille
-d'à peu près 3 Mo. Etant donné le volume important de device avec un processeur
-cortex-m, une base de donnés de cette taille est acceptable.
+d'à peu près 3 Mo. Étant donné le volume important de device avec un processeur
+cortex-m, une base de données de cette taille est acceptable.
 
 ## Outil d'interrogation de la base de données
 ### Objectifs
 
 Le but de cet outil est de fournir une API de communication avec la base de
-données. Elle doit permettre de récupérer tous les paquets ainsi que leurs
+données. Elle doit permettre de récupérer tous les paquets ainsi que leur
 contenu. Elle doit également permettre de récupérer toutes les informations
 concernant un device donné.
 
@@ -837,7 +838,7 @@ ligne de commande. Cela permet d'utiliser l'outil depuis un script ou
 depuis le code Python. Les informations concernant un device donné sont
 affichées dans le format JSON, pour permettre facilement leur interprétation.
 
-### Difficultés rencontrés
+### Difficultés rencontrées
 
 En testant cet outil, il est apparu clair que les performances n'étaient pas
 suffisantes, en effet, l'outil mettait à peu près trente minutes à rajouter le
@@ -845,7 +846,7 @@ contenu de tous les paquets dans la base de données ce qui était beaucoup trop
 long.
 
 Il y a plusieurs types d'analyseur syntaxique pour le XML dans la bibliothèque
-standard Python. Celui utilisé par l'outil jusqu'a présent par l'outil
+standard Python. Celui utilisé jusqu'a présent par l'outil
 fonctionne en alouant tout le fichier en mémoire pour ensuite pouvoir le
 parcourir via des fonctions associées. Dans le cas de l'ajout des
 interruptions, le fichier XML les décrivant pouvant faire jusqu'a
@@ -868,7 +869,7 @@ version de l'outil, un objet Python faisait des requêtes au fur et à mesure
 pour aggréger les résultats.
 
 Cette méthode posait des problèmes de performances. En effet, récupérer les
-informations de tous les devices de la base de données prennait quelques
+informations de tous les devices de la base de données prenait quelques
 secondes. En modifiant le code pour générer des requêtes à la place de les
 faire au fur et à mesure, le code a gagné en efficacité, passant de quelques
 secondes à un résultat quasiment instantané.
@@ -889,7 +890,7 @@ des paquets.
 ### Objectifs
 
 Le but de cet outil est de traduire le JSON en syntaxe de fichier projet. Cela
-permet de transformer la sortie de l'outil précédent en fichiers projet
+permet de transformer la sortie de l'outil précédent en fichiers projets
 représentant le matériel sélectionné.
 
 ### Alternatives
@@ -901,7 +902,7 @@ fichiers projets simplement depuis GPS.
 
 ### Cadre de la tâche
 
-Comme les autres outils, ce programme doit pouvoir être appellé depuis la ligne
+Comme les autres outils, ce programme doit pouvoir être appelé depuis la ligne
 de commande ou depuis un script Python.
 
 ### Résultats obtenus et impact sur l'avancement du stage
@@ -948,8 +949,8 @@ flottantes avec du logiciel (certaines plates-formes ont des co-processeurs
 spécifiques à ce genre d'opérations). Dans l'exemple ci-dessus, la carte
 possède deux régions mémoires une \gls{ROM} et une \gls{RAM}. La mémoire de
 démarage sélectionnée est la mémoire \gls{ROM}. Le mémoire ROM commence à
-l'addresse `0` (en hexadécimal) et a `256` kilo octets de capacité.
-La mémoire RAM commence à l'addresse `16#20000000#` (syntaxe Ada pour `20000000`
+l'adresse `0` (en hexadécimal) et a `256` kilo octets de capacité.
+La mémoire RAM commence à l'adresse `16#20000000#` (syntaxe Ada pour `20000000`
 en hexadécimal) et a une taille de `8000` (en hexadécimal) octets.
 
 Le formalisme précédent permet de gagner fortement en clarté par rapport à un
@@ -972,7 +973,7 @@ ou deux sections mémoires sont supperposées.
 
 Dans le \gls{linker script}, chaque section de l'exécutable doit être
 mise dans une section mémoire spécifique. Par exemple, la section .text
-contenant le code doit être mise dans la région mémoire de démarrage afin
+contenant le code doit être mise dans la région mémoire de démarage afin
 d'être exécuté.
 
 ### Cadre de la tâche
@@ -989,12 +990,12 @@ des architectures différentes sans avoir à recompiler l'outil.
 
 Actuellement, l'outil utilise des patrons de code assembleur afin de générer du
 code. Une proposition était d'écrire un langage de
-description d'assembleur qui serait ensuite traduits dans l'assembleur cible.
+description d'assembleur qui serait ensuite traduit dans l'assembleur cible.
 
 Cette idée n'a pas été retenue car beaucoup trop complexe à mettre en place, à
 la place on utilise des patrons de code assembleurs.
 
-### Difficultés rencontrés
+### Difficultés rencontrées
 
 Avant ce projet, j'avais écris un court projet en Ada. J'ai donc passé un peu
 de temps à me familiariser avec les subtilités du langage. J'ai du utiliser des
@@ -1027,9 +1028,9 @@ la testsuite, j'ai pu rajouter des tests basiques mais qui permettent de
 vérifier que les modifications n'ajoutent pas de régressions dans la suite de
 tests.
 
-Enfin, lorsque je testais les linkerscript qui étaient générés, j'ai passé du
-temps à trouver d'oû venaient certains problêmes car les message d'erreurs de
-l'éditeur de liens n'étaient pas explicites ce qui compliquait le déboguage.
+Enfin, lorsque je testais les linker scripts qui étaient générés, j'ai passé du
+temps à trouver d'oû venaient certains problèmes car les messages d'erreurs de
+l'éditeur de liens n'étaient pas explicites ce qui compliquait le débugging.
 
 ### Résultats obtenus et impact sur l'avancement du stage
 
@@ -1054,14 +1055,14 @@ télécharger le paquet associé à la carte sélectionnée.
 
 Dans les CMSIS-Packs se trouvent des fichiers .svd. Ces fichiers décrivent
 comment les périphériques de la carte sont représentées en mémoire.
-C'est à dire à quelles addresses et comment sont arrangés les périphériques.
+C'est à dire à quelles adresses et comment sont arrangés les périphériques.
 Un outil existe pour générer des en-têtes Ada depuis ces fichiers. Cela permet
 de simplifier le code et de pouvoir utiliser les périphériques sans
 avoir à écrire son propre code décrivant le périphérique. Le typage fort d'Ada
 permet de contrôler comment les champs sont utilisés. Par exemple, il permet
 d'utiliser un entier comme un tableau de bits et vice-versa tout en vérifiant les
 bornes du tableau et la valeur de l'entier. Ada permet également de créer un
-objet de ce type tout en spécifiant son addresse mémoire. Cela permet
+objet de ce type tout en spécifiant son adresse mémoire. Cela permet
 d'utiliser l'objet pour interragir avec le périphérique sans avoir à passer par
 des macros faisant des conversions de type (comme en C).
 
@@ -1082,12 +1083,12 @@ re-génération des fichiers de manière générique. L'outil utilisé pour pilo
 les étapes de compilation ne permet donc pas de rajouter l'execution d'un outil
 lors de la compilation.
 
-### Difficultés rencontrés
+### Difficultés rencontrées
 
 GPS utilise un environnement Python spécifique et cet environnement ne
 contenait pas le module sqlite3 nécessaire au fonctionnement de mes outils.
 Cet environnement utilise un outil appellé ANOD pour déployer des paquets
-simplement, cependant le module dont j'avais besoins n'était pas déployé.
+simplement, cependant le module dont j'avais besoin n'était pas déployé.
 J'ai du créer un ticket pour résoudre ce problème, il fallait rajouter le
 module sqlite3 dans la compilation de l'environnement.
 
@@ -1107,7 +1108,7 @@ ce qui rend le flux d'exécution compliquer à suivre car on ne sait pas à
 l'avance si on modifie une variable globale ou non.
 
 J'ai également eu des problèmes liés à des fichiers de configuration. L'outil
-de génération de \gls{linker script} à besoin de fichier de configuration qui
+de génération de \gls{linker script} a besoin de fichiers de configuration qui
 décrivent les architectures supportées en fournissant les patrons d'assembleur
 correspondants. Il fallait donc trouver une solution pour installer ces
 fichiers de configuration.
@@ -1132,7 +1133,7 @@ au Scala.
 ARM a réalisé un plugin permettant de sélectionner quel pack utiliser et de
 sélectionner précisément quels éléments (pilotes, exemples) du pack l'utilisateur
 veut utiliser dans son projet. Le plugin permet également à l'utilisateur
-d'accéder à toute la documentation concernant les éléments qu'il a choisi.
+d'accéder à toute la documentation concernant les éléments qu'il a choisis.
 
 Le plugin est également capable de générer des \gls{linker script}s.
 Cependant, le plugin génère un type de \gls{linker script} spécifique à l'éditeur de
@@ -1156,7 +1157,7 @@ les architectures LEON et PowerPC de cette manière.
 
 ## Perspectives d'amélioration
 
-Les outils de programmation en C/C++ visant l'embarqueé sont très développés,
+Les outils de programmation en C/C++ visant l'embarqué sont très développés,
 cependant GPS n'intègre pas beaucoup de ces fonctionnalités.
 Toutes les fonctionnalitées que fournit Eclipse sont donc très intéressantes pour
 l'utilisateur et seraient un atout pour AdaCore si elles étaient intégrées dans GPS.
@@ -1180,7 +1181,7 @@ Concernant la base de données stockant le contenu des packs, il serait
 intéressant de pouvoir la synchroniser avec une version distante.
 En effet, certains CMSIS-Packs, sont non-fonctionnels ou mal formatés et il
 pourrait être intéressant pour AdaCore de fournir des versions corrigées de ces
-packs. Cela permet également à AdaCore de corriger des bogues trouvés dans le
+packs. Cela permet également à AdaCore de corriger des bugs trouvés dans le
 contenu des packs et de propager rapidement le patch.
 
 Certaines architectures possèdent une cartographie mémoire particulière (deux
@@ -1226,10 +1227,10 @@ patron de linker script à générer, j'ai également approfondi ma connaissance
 différentes sections du linker et de leurs rôles.
 
 A certains moments de mon stage, j'ai dû aller lire du code, soit parce que
-j'avais des interrogations et que personne ne connaissait le réponse, soit
-parceque j'avais un doute sur la façon dont certaines fonctions étaient
+j'avais des interrogations et que personne ne connaissait la réponse, soit
+parce que j'avais un doute sur la façon dont certaines fonctions étaient
 implémentées. Notamment, je n'ai pas trouvé de documentation qui expliquait
-clairement quelles unitées de mesure de mémoire utilisait l'éditeur de liens,
+clairement quelles unitées de mesure de mémoire utilisaient l'éditeur de liens,
 j'ai dû donc aller lire le code.
 
 AdaCore organise des `Monthly Interns Commits`. Ce sont des séances d'une heure
@@ -1282,8 +1283,8 @@ avec l'assembleur de manière générale, ce qui m'a été très utile pour lire
 La formation Ada de GISTRE m'a aider à me familiariser avec le langage et m'a
 permis d'avancer plus vite sur l'outil écrit en Ada. Le projet accompli dans le
 contexte de cette matière m'a permis d'étudier comment interfacer de l'Ada et
-du C++ sur une plate-forme embarqué et les difficultés qui s'ensuivaient, par
-exemple lié à l'usage d'initialisation statique.
+du C++ sur une plate-forme embarquée et les difficultés qui s'ensuivaient, par
+exemple liées à l'usage d'initialisation statique.
 
 Grâce à cette formation, j'ai pu me renseigner en cherchant et en lisant des
 papiers de recherche que j'ai pu lire et appréhender moi-même. Notamment des
@@ -1293,18 +1294,18 @@ la runtime Ada.
 Les aspects \gls{realtime} de la formation de GISTRE m'ont aidé à comprendre les
 enjeux des clients d'AdaCore. Par exemple, le cours d'architecture distribuée
 de Christian Garnier m'a permis de comprendre quels étaient les enjeux et les
-garanties que devaient apporté un système temps réel. Le cours de freeRTOS de
+garanties que devaient apporter un système temps réel. Le cours de freeRTOS de
 Thierry Joubert m'a permis de comprendre comment fonctionnait un OS temps réel,
 et les problèmes que le système résolvait. Enfin le cours de José Ruiz sur la
 norme \gls{DO-178} était très intéressant car il permettait de comprendre comment le
 processus de certifaction fonctionnait et comment on pouvait tracer les
 exigences de haut-niveau jusqu'au code source.
 
-J'aimerait remercier AdaCore pour mon maître de stage, Anthony Leonardo Gracio,
-pour ses précieux précieux et les bonnes directions qu'il a pu me donner.
+J'aimerais remercier mon maître de stage, Anthony Leonardo Gracio,
+pour ses précieux conseils et les bonnes directions qu'il a su me donner.
 J'aimerais également remercier Fabien Chouteau qui a été d'une grande aide
-lorsque j'avait des questions techniques et qui a pu me pointer vers des
-ressources qui m'ont aidés à comprendre certains points de technique.
+lorsque j'avait des questions techniques et qui a pu me diriger vers des
+ressources qui m'ont aidées à comprendre certains points de technique.
 Je remercie également mon collègue Adrien Boulanger qui a relu ce rapport et m'a
 permis de l'améliorer. Enfin, j'aimerais remercier AdaCore qui m'a permis
 de travailler sur un sujet de stage très intéressant. Pendant mon stage, j'ai
