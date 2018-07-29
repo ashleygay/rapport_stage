@@ -1,0 +1,209 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
+\documentclass[12pt,]{article}
+
+\usepackage{placeins}
+\usepackage{float}
+
+\usepackage[french]{babel}
+\usepackage{titlesec}
+% Adds page clear before each new section
+\usepackage{titletoc}
+\usepackage[]{utopia}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{csquotes}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={Internship Report Abstract},
+            pdfauthor={Corentin Gay GISTRE 2018; Intenship Mentor : Anthony Leonardo Gracio},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\FloatBarrier
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{H}
+\makeatother
+
+
+\clearpage
+\title{Internship Report Abstract}
+\author{Corentin Gay GISTRE 2018 \and Intenship Mentor : Anthony Leonardo Gracio}
+\date{From 19/02/2018 to 24/08/2018 (6 months)}
+
+\begin{document}
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+
+\maketitle
+\begin{figure}
+\centering
+	\includegraphics{adacore.jpg}
+	\includegraphics[height=7cm]{epita.png}
+\end{figure}
+\FloatBarrier
+
+\thispagestyle{empty}
+\clearpage
+
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{3}
+\pagenumbering{gobble}
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+\setcounter{tocdepth}{3}
+}
+
+\pagenumbering{arabic}
+
+\hypertarget{presentation}{%
+\section{Presentation}\label{presentation}}
+
+AdaCore is a company specializing in compiler technology. They develop
+and maintain an Ada compiler named GNAT. They target embedded targets
+with or without operating systems. They offer technical expertise to
+their clients, allowing them to easily inquire about existing features
+or report technical issues.
+
+The team I worked in is called the IDE team. Its goal is to maintain and
+develop the Ada IDE of AdaCore called GPS (GNAT Programming Studio).
+This IDE integrates multiple tools specific to Ada, allowing developpers
+to be more efficient in their work.
+
+My mentor is Anthony Leonardo Gracio. He handles all the graphical
+display of the IDE. He is an former EPITA student. I also interacted a
+lot with Fabien Chouteau (also a former EPITA student) that is part of
+the \enquote{bare-board} team. He handles work related to embedded
+devices and makes sure that the AdaCore products are working on the
+different platforms that the clients use.
+
+My work was focused on improving the bare-metal\footnote{To have an
+  overview of their work, go
+  \href{https://www.adacore.com/industries}{here}} support in GPS.
+Bare-metal development in Ada requires more work than in C because Ada
+code needs a runtime in order to compile and run. An Ada runtime
+implements the functionalities of the language such as multi-tasking
+support or memory allocation.
+
+In order to target a new platform, one must recompile a runtime adapted
+to the platform. This is something that is extremely repetitive. For
+example, the code behind the runtimes was the same, it was just compiled
+differently.
+
+We want to avoid having to do that work each time. So, I settled on
+using the CMSIS-Packs. It is a standard designed by ARM that describes
+harware and software of a device family using the Cortex-M processors.
+Using the information in those packs, we can generate the code that is
+specific to our target. In our case, we generate two files. First, a
+linker script describing how the executable is to be mapped in physical
+memory. Second, an assembly file called the \enquote{startup code} that
+takes care of initializing memory regions before the execution of the
+user program. The final goal was to be able to start developping on a
+board from GPS right away without having to look up documentation to
+configure the different files.
+
+I was expected to have some knowledge bare metal programming and how
+compilers work. I was also expected to know how to present my work as we
+had monthly intern presentations. I needed to be able to research
+efficiently and be able to design program architectures. Finally, I
+needed to be able to communicate efficiently with my colleagues as I had
+to integrate the project that I had made in the work of other people.
+
+I demonstrated my working prototype in the start of july during my
+monthly presentation. I am currently working on integrating my work into
+GPS.
+
+\hypertarget{intenship-schedule}{%
+\section{Intenship Schedule}\label{intenship-schedule}}
+
+The first phase of my internship was a research phase. Thus. I did not
+plan a weekly schedule. Here is the the schedule :
+
+INSERT SCHEMA HERE
+
+\hypertarget{general-appreciation}{%
+\section{General appreciation}\label{general-appreciation}}
+
+I really enjoyed my time at AdaCore. I had great colleagues to which I
+could ask technical questions and get great answers. I could even
+contribute to the code of the project the team was maintaining. When I
+found bugs, I reported them and made sure the fix worked on my machine.
+
+\hypertarget{skills-acquired-during-the-internship}{%
+\section{Skills acquired during the
+internship}\label{skills-acquired-during-the-internship}}
+
+I acquired a lot of knowledge regarding compiler technologies. I also
+learned how to better code in Ada as I only had a basic understanding of
+the language features. I imporved my skills at reading unfamiliar code.
+When I discovered a bug in the tools I was using, I peeked in the code
+in order to understand the different systems working together and where
+the bug was coming from. I learned a lot doing that and I found it
+really enjoyable.
+
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+I had a very positive experience at AdaCore. I learned a lot and they
+work with great clients on amazing projects\footnote{To have an overview
+  of their work, go \href{https://www.adacore.com/industries}{here}}.
+During my internship, I candidated for an open position they had. I
+received an offer that I accepted and I plan on starting by the end of
+September
+
+
+
+\nocite{pizza}
+
+\end{document}

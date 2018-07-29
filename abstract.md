@@ -66,7 +66,7 @@ presentation. I am currently working on integrating my work into GPS.
 The first phase of my internship was a research phase. Thus. I did not plan a
 weekly schedule. Here is the the schedule :
 
-![Étapes et organisation du stage](schema_abstract.png)
+![Schedule](schema_abstract.png)
 
 # General appreciation
 
