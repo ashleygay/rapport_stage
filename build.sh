@@ -32,7 +32,7 @@ build_doc () {
 #build_image organisation
 #build_image compilation
 
-#build_doc report template
+build_doc report template
 build_doc abstract abstract_template
 
 
